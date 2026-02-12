@@ -12,7 +12,7 @@
 .deck-generator__source-options {
   list-style-type: none;
   display: flex;
-  background-color: #113a5d;
+  background-color: var(--bg-primary);
   padding: 10px;
   border-radius: 10px;
   justify-content: space-around;

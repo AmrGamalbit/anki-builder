@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
+:root {
+    --primary-color: #F6FCDF;
+    --bg-primary: #1A1A19;
+    --bg-secondary: #31511E;
+    --button-primary: #859F3D;
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -7,5 +14,5 @@
 }
 
 body {
-  background-color: #f9f9f9;
+  background-color: var(--primary-color);
 }

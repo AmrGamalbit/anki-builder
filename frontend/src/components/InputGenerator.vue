@@ -22,9 +22,9 @@ import FormatOptions from '@/components/GeneratorFormatOptions.vue';
 .deck-generator {
   margin: 20px;
   font-family: 'Inter', sans-serif;
-  background-color: #062743;
+  background-color: var(--bg-secondary);
   padding: 50px;
-  color: #e5e7eb;
+  color: var(--primary-color);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -46,7 +46,8 @@ import FormatOptions from '@/components/GeneratorFormatOptions.vue';
 }
 
 button {
-  background-color: #c4ffdd;
+  background-color: var(--button-primary);
+  color: var(--color-primary);
   font-family: inherit;
   font-size: inherit;
   border: none;

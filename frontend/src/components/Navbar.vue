@@ -17,8 +17,8 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #062743;
-  color: #e5e7eb;
+  background-color: var(--bg-secondary);
+  color: var(--primary-color);
   padding: 1rem;
   font-family: 'Inter', sans-serif;
   font-weight: bold;
@@ -37,7 +37,7 @@ nav {
 
 .navbar__right ul li button {
   all: inherit;
-  background-color: #113a5d;
+  background-color: var(--button-primary);
   padding: 0.5rem;
   border: none;
   border-radius: 10px;
@@ -45,7 +45,7 @@ nav {
 }
 
 .navbar__right ul li button:hover {
-  background-color: #c4ffdd;
+  background-color: var(--button-primary);
   color: black;
   transition-property: background-color, color;
   transition-duration: 0.5s, 0.5s;

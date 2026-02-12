@@ -6,8 +6,14 @@
     <div class="format-options">
       <div class="general-options">
         <ul>
-          <li><input type="checkbox" id="1" /> <label for="1">Include Photos</label></li>
-          <li><input type="checkbox" id="1" /> <label for="1">Include Photos</label></li>
+          <li>
+            <input type="checkbox" id="include-Pronunciation" />
+            <label for="include-Pronunciation">Include Pronunciation</label>
+          </li>
+          <li>
+            <input type="checkbox" id="include-photos" />
+            <label for="include-photos">Include Photos</label>
+          </li>
         </ul>
       </div>
       <div class="definition-options">
