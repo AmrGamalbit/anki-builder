@@ -1,54 +1,11 @@
 <script setup lang="ts"></script>
 
 <template>
-  <nav class="navbar">
-    <div class="navbar__left">AnkiBuilder</div>
-    <div class="navbar__right">
-      <ul>
-        <li><button>Export</button></li>
-        <li><button>Settings</button></li>
-      </ul>
-    </div>
+  <nav class="bg-neutral flex justify-between align-center text-surface p-2 font-bold">
+    <h2 class="cursor-pointer text-2xl">AnkiBuilder</h2>
+    <ul class="flex list-none gap-2">
+      <li><button class="cursor-pointer">Export</button></li>
+      <li><button class="cursor-pointer">Settings</button></li>
+    </ul>
   </nav>
 </template>
-
-<style scoped>
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--bg-secondary);
-  color: var(--primary-color);
-  padding: 1rem;
-  font-family: 'Inter', sans-serif;
-  font-weight: bold;
-}
-
-.navbar__left {
-    cursor: pointer;
-    font-size: 1.2rem;
-}
-
-.navbar__right ul {
-  display: flex;
-  list-style-type: none;
-  gap: 2rem;
-}
-
-.navbar__right ul li button {
-  all: inherit;
-  background-color: var(--button-primary);
-  padding: 0.5rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.navbar__right ul li button:hover {
-  background-color: var(--button-primary);
-  color: black;
-  transition-property: background-color, color;
-  transition-duration: 0.5s, 0.5s;
-  transition-timing-function: ease-in, ease-out;
-}
-</style>
