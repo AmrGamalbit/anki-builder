@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import Navbar from '@/components/Navbar.vue';
-import { RouterView } from 'vue-router';
+import InputGenerator from '@/components/InputGenerator.vue';
 import '@/assets/global.css';
 </script>
 
 <template>
-  <Navbar />
-  <RouterView />
+  <div class="wrapper">
+    <InputGenerator />
+    <InputGenerator />
+  </div>
 </template>
 
 <style scoped>
