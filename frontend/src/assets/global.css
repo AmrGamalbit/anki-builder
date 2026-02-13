@@ -1,18 +1,19 @@
-/*@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');*/
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import 'tailwindcss';
 
 @theme {
-    --color-surface: #FDFDFF;
-    --color-primary: #62929E;
-    --color-primary-muted: #546A7B;
-    --color-accent: #C6C5B9;
-    --color-neutral: #393D3F;
+  --color-surface: #fdfdff;
+  --color-primary: #62929e;
+  --color-primary-muted: #546a7b;
+  --color-accent: #c6c5b9;
+  --color-neutral: #393d3f;
+  --font-koho: 'KoHo', sans-serif;
 }
 
 @utility flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /** {
