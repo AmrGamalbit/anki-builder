@@ -14,7 +14,7 @@
           pronunciation. 25+ languages available.
         </div>
       </div>
-      <div class="bg-surface rounded-2xl flex-center text-4xl font-medium text-neutral">
+      <div class="bg-surface rounded-2xl flex-center text-4xl font-medium text-neutral h-76">
         Ich Bin Amr
       </div>
     </div>
