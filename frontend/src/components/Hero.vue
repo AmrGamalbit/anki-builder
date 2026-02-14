@@ -10,7 +10,7 @@
           What does AnkiBuilder Include?
         </div>
         <div class="bg-accent rounded-2xl flex-center p-5 text-neutral">
-          Free and premium flashcard decks with contextual sentences, translations, and natural
+          Free flashcard decks with contextual sentences, translations, and natural
           pronunciation. 25+ languages available.
         </div>
       </div>

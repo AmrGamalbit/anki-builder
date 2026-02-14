@@ -16,6 +16,10 @@
   justify-content: center;
 }
 
+.btn-primary {
+    @apply cursor-pointer bg-primary-muted text-surface p-3 rounded-lg mb-10 flex;
+}
+
 /** {
   margin: 0px;
   padding: 0px;
