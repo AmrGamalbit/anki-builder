@@ -17,7 +17,7 @@
 }
 
 .btn-primary {
-    @apply cursor-pointer bg-primary-muted text-surface p-3 rounded-lg mb-10 flex;
+    @apply cursor-pointer bg-primary-muted text-surface p-3 rounded-lg mb-10 flex w-fit;
 }
 
 /** {

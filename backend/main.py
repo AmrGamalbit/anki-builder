@@ -1,8 +1,10 @@
 import genanki
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from models import GenerateRequest
 
 
-def create_deck(cards):
+def create_anki_deck(cards):
     new_deck = genanki.Deck(deck_id=123456, name="AnkiBuilder")
     new_model = genanki.Model(
         model_id=554,
@@ -31,10 +33,23 @@ def create_deck(cards):
 
 app = FastAPI()
 
+origins = ["http://localhost:5173"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def index():
-    cards = [
-        ("People", "More than one person")
-    ]
-    return create_deck(cards)
+    return "Server is running!"
+
+
+@app.post("/generate-deck")
+def generate_deck(data: GenerateRequest):
+    cards = [("People", "More than one person")]
+    return data.words
+    # return create_anki_deck(cards)

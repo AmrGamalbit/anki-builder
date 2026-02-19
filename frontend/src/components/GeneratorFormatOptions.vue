@@ -1,24 +1,23 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="deck-generator__format-options">
-    <h3>Options</h3>
-    <div class="format-options">
+    <h3 class="text-2xl font-medium">Options</h3>
+    <div class="p-2">
       <div class="general-options">
-        <ul>
-          <li>
-            <input type="checkbox" id="include-Pronunciation" />
+        <ul class="flex-col accent-neutral">
+          <li class="flex gap-2">
+            <input type="checkbox" id="include-Pronunciation" class="cursor-pointer" />
             <label for="include-Pronunciation">Include Pronunciation</label>
           </li>
-          <li>
-            <input type="checkbox" id="include-photos" />
+          <li class="flex gap-2">
+            <input type="checkbox" id="include-photos" class="cursor-pointer" />
             <label for="include-photos">Include Photos</label>
           </li>
         </ul>
       </div>
-      <div class="definition-options">
-        <h4>Definition Source</h4>
-        <div class="definition-options-choices">
+      <div class="mt-2 flex justify-between">
+        <h4 class="font-medium">Definition Source</h4>
+        <div>
           <select name="" id="">
             <option value="a">AI</option>
           </select>
@@ -28,10 +27,9 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 h3 {
   margin: 10px 0;
 }
@@ -55,4 +53,4 @@ h3 {
   display: flex;
   gap: 10px;
 }
-</style>
+</style> -->

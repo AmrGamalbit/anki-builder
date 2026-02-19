@@ -4,15 +4,5 @@ import '@/assets/global.css';
 </script>
 
 <template>
-  <div class="wrapper">
-    <InputGenerator />
-    <InputGenerator />
-  </div>
+  <InputGenerator />
 </template>
-
-<style scoped>
-.wrapper {
-  display: flex;
-  justify-content: space-between;
-}
-</style>

@@ -19,6 +19,6 @@ import FeatureCard from '@/components/FeatureCard.vue';
         content="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusantium assumenda fugit atque accusamus nam inventore quae ducimus sequi perspiciatis! Debitis?"
       />
     </div>
-    <button class="btn-primary ml-auto mt-10">Start Generating</button>
+    <RouterLink class="btn-primary ml-auto mt-10" to="/generator">Start Generating</RouterLink>
   </section>
 </template>
