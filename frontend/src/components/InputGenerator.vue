@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import SourceOptions from '@/components/GeneratorSourceOptions.vue';
 import FormatOptions from '@/components/GeneratorFormatOptions.vue';
+import FileInput from '@/components/FileInput.vue';
+import SingleWordInput from '@/components/WordInput.vue';
+import TextInput from '@/components/TextInput.vue';
+
+import { ref } from 'vue';
 
 const text = defineModel();
+const selectedSource = ref(1);
 
 async function generateDeck() {
   const response = await fetch('http://127.0.0.1:8000/generate-deck', {
@@ -18,23 +24,17 @@ async function generateDeck() {
     },
   });
   const data = await response.json();
-  console.log(data)
 }
 </script>
 
 <template>
-  <section class="p-20 bg-surface text-neutral font-koho">
+  <section class="p-20 bg-gray-50 text-neutral font-koho">
     <h2 class="text-4xl font-semibold">Input</h2>
     <form action="" class="mt-10">
-      <SourceOptions />
-      <label for="deck-generator__input"></label>
-      <textarea
-        name="Words Input"
-        id="deck-generator__input"
-        class="w-full h-50 rounded-bl-sm rounded-br-sm border-4 border-primary-muted border-t-0 focus:outline-none p-2"
-        placeholder="Place your words, separated by commas"
-        v-model="text"
-      ></textarea>
+      <SourceOptions @selectSource="(active) => (selectedSource = active)" />
+      <SingleWordInput v-if="selectedSource == 0" />
+      <TextInput v-else-if="selectedSource == 1" />
+      <FileInput v-else />
       <FormatOptions />
       <button
         type="submit"

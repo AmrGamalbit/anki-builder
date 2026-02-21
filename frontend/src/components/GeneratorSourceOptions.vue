@@ -3,8 +3,10 @@ import { ref } from 'vue';
 
 const options = ['Single Word', 'Paste Text', 'CSV File'];
 const active = ref()
-function addClass() {
-  active;
+const emit = defineEmits(['selectSource'])
+function selectSource(index) {
+  active.value = index;
+  emit("selectSource", active.value)
 }
 </script>
 
@@ -15,7 +17,7 @@ function addClass() {
     <li
       :class="`cursor-pointer items-center p-2.5 flex-center ${active === index ? 'bg-primary w-1/2' : ''}`"
       v-for="(option, index) in options"
-      @click="active = index"
+      @click="selectSource(index)"
     >
       {{ option }}
     </li>
