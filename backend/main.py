@@ -1,7 +1,9 @@
 import genanki
-from fastapi import FastAPI
+from definition_sources.groq_definition import get_groq_definition
+from fastapi import FastAPI, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from models import GenerateRequest
+from models import GenerateRequest, VocabularyResponse
+from typing import Annotated
 
 
 def create_anki_deck(cards):
@@ -49,7 +51,16 @@ def index():
 
 
 @app.post("/generate-deck")
-def generate_deck(data: GenerateRequest):
-    cards = [("People", "More than one person")]
-    return data.words
-    # return create_anki_deck(cards)
+def generate_deck(data: Annotated[GenerateRequest, Form()]):
+    return {"type": type}
+    # cards = []
+    # vocabulary = get_groq_definition(
+    #     f"These are the words {data.words}, I want to learn Arabic"
+    # )
+
+    # for entry in vocabulary.entries:
+    #     cards.append((entry.word, entry.meaning))
+
+    # create_anki_deck(cards)
+
+    # return vocabulary
