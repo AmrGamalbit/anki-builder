@@ -4,7 +4,9 @@ import '@/assets/global.css';
 </script>
 
 <template>
-  <div class="w-full py-9 bg-gray-50 rounded-bl-sm rounded-br-sm border border-gray-300 gap-3 grid border-dashed">
+  <div
+    class="w-full py-9 bg-gray-50 rounded-bl-sm rounded-br-sm border border-gray-300 gap-3 grid border-dashed"
+  >
     <div class="grid gap-1">
       <svg
         class="mx-auto"
@@ -32,7 +34,7 @@ import '@/assets/global.css';
       </h4>
       <div class="flex items-center justify-center">
         <label>
-          <input type="file" hidden />
+          <input type="file" @change="$emit('update:modelValue', $event.target.files[0])" />
           <div
             class="flex w-28 h-9 px-2 flex-col bg-primary-muted rounded-full shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none"
           >

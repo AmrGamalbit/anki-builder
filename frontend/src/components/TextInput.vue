@@ -8,7 +8,7 @@
       id="deck-generator__input"
       class="w-full h-50 rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2"
       placeholder="Place your words, separated by commas"
-      v-model="text"
+      @input="$emit('update:modelValue', $event.target.value)"
     ></textarea>
   </div>
 </template>

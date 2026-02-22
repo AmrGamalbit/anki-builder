@@ -9,6 +9,7 @@
       id="single-word-input"
       pattern="^\S+$"
       class="w-full h-50 rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2 text-center text-3xl font-light"
+      @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>
 </template>
