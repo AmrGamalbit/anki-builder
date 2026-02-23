@@ -1,9 +1,12 @@
+import io
+from typing import List, Literal
+
 import genanki
+import pandas as pd
 from definition_sources.groq_definition import get_groq_definition
-from fastapi import FastAPI, Form, UploadFile, File
+from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from models import GenerateRequest, VocabularyResponse
-from typing import Annotated
+from models import VocabularyResponse
 
 
 def create_anki_deck(cards):
@@ -51,16 +54,27 @@ def index():
 
 
 @app.post("/generate-deck")
-def generate_deck(data: Annotated[GenerateRequest, Form()]):
-    return {"type": type}
-    # cards = []
-    # vocabulary = get_groq_definition(
-    #     f"These are the words {data.words}, I want to learn Arabic"
-    # )
+async def generate_deck(
+    content: List[str] | None = Form(None),
+    file: UploadFile | None = File(None),
+    type: Literal["text", "file"] = Form(...),
+    include_pronunciation: bool = Form(...),
+    include_photos: bool = Form(...),
+    definition_source: Literal["ai", "dictionary", "translation", "corpus", "user"] = Form(...),
+):
+    if type == "file":
+        content = await file.read()
+        df = pd.read_csv(io.BytesIO(content))
+        return content
+    else:
+        cards = []
+        vocabulary = get_groq_definition(
+            f"These are the words {content}, I want to learn Arabic"
+        )
 
-    # for entry in vocabulary.entries:
-    #     cards.append((entry.word, entry.meaning))
+        for entry in vocabulary.entries:
+            cards.append((entry.word, entry.meaning))
 
-    # create_anki_deck(cards)
+        create_anki_deck(cards)
 
-    # return vocabulary
+        return cards
