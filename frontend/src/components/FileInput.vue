@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import InputGenerator from '@/components/InputGenerator.vue';
 import '@/assets/global.css';
+
+async function handleSubmit() {
+  const response = await fetch('http://127.0.0.1:8000/generate-deck', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Content-type': 'multipart/form-data',
+    },
+  });
+  const data = await response.json();
+}
 </script>
 
 <template>

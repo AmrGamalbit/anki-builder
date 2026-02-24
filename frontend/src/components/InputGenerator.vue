@@ -13,27 +13,27 @@ const type = ref('');
 const selectedSource = ref(1);
 
 async function handleSubmit() {
-  formData.append('data', {
+  if (selectedSource.value == 0 || selectedSource.value == 1) {
+    type.value = 'text';
+    formData.append('content', content.value);
+  } else {
+    type.value = 'file';
+    formData.append('file', content.value);
+  }
+  const payload = {
     type: type.value,
     include_pronunciation: false,
     include_photos: false,
     definition_source: 'ai',
-  });
+  };
 
-  if (selectedSource == 0 || selectedSource == 1) {
-    type.value = 'text';
-    form.data.append('text', content.value.split(','));
-  } else {
-    type.value = 'file';
-    formData.append('file', content.value);
+  for (const key in payload) {
+    formData.append(key, payload[key]);
   }
 
   const response = await fetch('http://127.0.0.1:8000/generate-deck', {
     method: 'POST',
     body: formData,
-    headers: {
-      'Content-type': 'multipart/form-data',
-    },
   });
   const data = await response.json();
 }
