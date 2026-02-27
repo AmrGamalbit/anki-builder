@@ -65,16 +65,18 @@ async def generate_deck(
     if type == "file":
         content = await file.read()
         df = pd.read_csv(io.BytesIO(content))
-        return content
+        words = df.iloc[:, 0].values.tolist()
     else:
-        cards = []
-        vocabulary = get_groq_definition(
-            f"These are the words {content}, I want to learn Arabic"
-        )
+        words = content
 
-        for entry in vocabulary.entries:
-            cards.append((entry.word, entry.meaning))
+    cards = []
+    vocabulary = get_groq_definition(
+        f"These are the words {words}, I want to learn Arabic"
+    )
 
-        create_anki_deck(cards)
+    for entry in vocabulary.entries:
+        cards.append((entry.word, entry.meaning))
 
-        return cards
+    create_anki_deck(cards)
+
+    return cards
