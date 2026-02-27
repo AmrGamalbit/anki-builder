@@ -11,6 +11,7 @@ const content = defineModel();
 const formData = new FormData();
 const type = ref('');
 const selectedSource = ref(1);
+const formatOptions = ref();
 
 async function handleSubmit() {
   if (selectedSource.value == 0 || selectedSource.value == 1) {
@@ -22,9 +23,10 @@ async function handleSubmit() {
   }
   const payload = {
     type: type.value,
-    include_pronunciation: false,
-    include_photos: false,
-    definition_source: 'ai',
+    include_pronunciation: formatOptions.value.includePronunciation,
+    include_picture: formatOptions.value.includePicture,
+    definition_source: formatOptions.value.definitionSource,
+    definition_provider: formatOptions.value.definitionProvider,
   };
 
   for (const key in payload) {
@@ -47,7 +49,7 @@ async function handleSubmit() {
       <SingleWordInput v-if="selectedSource == 0" v-model="content" />
       <TextInput v-else-if="selectedSource == 1" v-model="content" />
       <FileInput v-else v-model="content" />
-      <FormatOptions />
+      <FormatOptions v-model="formatOptions" />
       <button
         type="submit"
         class="bg-primary text-surface font-semibold p-2 rounded-sm cursor-pointer block ml-auto mt-10"

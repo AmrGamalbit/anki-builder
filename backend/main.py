@@ -59,9 +59,11 @@ async def generate_deck(
     file: UploadFile | None = File(None),
     type: Literal["text", "file"] = Form(...),
     include_pronunciation: bool = Form(...),
-    include_photos: bool = Form(...),
+    include_picture: bool = Form(...),
     definition_source: Literal["ai", "dictionary", "translation", "corpus", "user"] = Form(...),
+    definition_provider: str = Form(...)
 ):
+    return [definition_source, definition_provider]
     if type == "file":
         content = await file.read()
         df = pd.read_csv(io.BytesIO(content))
