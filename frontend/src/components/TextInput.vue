@@ -1,4 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps(['modelValue'])
+const emits = defineEmits(['update:modelValue'])
+</script>
 
 <template>
   <div>

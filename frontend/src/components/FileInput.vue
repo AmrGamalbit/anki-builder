@@ -2,6 +2,9 @@
 import InputGenerator from '@/components/InputGenerator.vue';
 import '@/assets/global.css';
 
+const props = defineProps(['modelValue'])
+const emits = defineEmits(['update:modelValue'])
+
 async function handleSubmit() {
   const response = await fetch('http://127.0.0.1:8000/generate-deck', {
     method: 'POST',
