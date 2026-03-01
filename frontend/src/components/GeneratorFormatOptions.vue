@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import DropDown from '@/components/DropDown.vue';
+
 const props = defineProps(['modelValue']);
 const emit = defineEmits(['update:modelValue']);
 
@@ -49,27 +51,27 @@ watch(
     </div>
     <div class="mt-2 flex justify-between">
       <h4 class="font-medium">Definition Source</h4>
-      <div>
-        <select name="definition-source" id="definition-source" v-model="options.definitionSource">
-          <option value="dictionary">Dictionary</option>
-          <option value="ai">AI</option>
-        </select>
-        <select
-          name="definition-provider"
-          id="definition-provider"
+      <div class="flex gap-2">
+        <DropDown
+          :options="[
+            { name: 'Dictionary', value: 'dictionary' },
+            { name: 'AI', value: 'ai' },
+          ]"
+          v-model="options.definitionSource"
+          id="definition-source"
+        />
+        <DropDown
+          :options="[{ name: 'Groq', value: 'groq' }]"
+          v-model="option"
           v-if="options.definitionSource == 'ai'"
-          v-model="options.definitionProvider"
-        >
-          <option value="groq">Groq</option>
-        </select>
-        <select
-          name="definition-provider"
           id="definition-provider"
+        />
+        <DropDown
+          :options="[{ name: 'Oxford', value: 'oxford' }]"
           v-model="options.definitionProvider"
           v-else
-        >
-          <option value="oxford">Oxford</option>
-        </select>
+          id="definition-provider"
+        />
       </div>
     </div>
   </div>
