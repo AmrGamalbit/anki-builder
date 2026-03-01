@@ -18,7 +18,7 @@ const selectedOption = ref<string | null>(null);
 const toggleOptionSelect = (option: string) => {
   selectedOption.value = option;
   isDropDownVisible.value = false;
-  emit('update:modelValue', option);
+  emit('update:modelValue', option.value);
 };
 const mappedSelectedOption = computed(() => {
   return selectedOption.value?.name || selectedOption.value || 'Please select something';
