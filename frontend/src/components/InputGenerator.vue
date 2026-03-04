@@ -4,6 +4,7 @@ import FormatOptions from '@/components/GeneratorFormatOptions.vue';
 import FileInput from '@/components/FileInput.vue';
 import SingleWordInput from '@/components/WordInput.vue';
 import TextInput from '@/components/TextInput.vue';
+import LanguagePairSelector from './LanguagePairSelector.vue';
 
 import { ref } from 'vue';
 
@@ -12,6 +13,7 @@ const formData = new FormData();
 const type = ref('');
 const selectedSource = ref(1);
 const formatOptions = ref();
+const languagePair = ref()
 
 async function handleSubmit() {
   if (selectedSource.value == 0 || selectedSource.value == 1) {
@@ -23,6 +25,8 @@ async function handleSubmit() {
   }
   const payload = {
     type: type.value,
+    source_language: languagePair.value.sourceLanguage,
+    target_language: languagePair.value.targetLanguage,
     include_pronunciation: formatOptions.value.includePronunciation,
     include_picture: formatOptions.value.includePicture,
     definition_source: formatOptions.value.definitionSource,
@@ -30,7 +34,7 @@ async function handleSubmit() {
   };
 
   for (const key in payload) {
-    formData.append(key, payload[key]);
+    formData.append(key, payload[key as keyof typeof payload]);
   }
 
   const response = await fetch('http://127.0.0.1:8000/generate-deck', {
@@ -49,12 +53,11 @@ async function handleSubmit() {
       <SingleWordInput v-if="selectedSource == 0" v-model="content" />
       <TextInput v-else-if="selectedSource == 1" v-model="content" />
       <FileInput v-else v-model="content" />
+      <LanguagePairSelector v-model="languagePair" />
       <FormatOptions v-model="formatOptions" />
-      <button
-        type="submit"
+      <button type="submit"
         class="bg-primary text-surface font-semibold p-2 rounded-sm cursor-pointer block ml-auto mt-10"
-        @click.prevent="handleSubmit"
-      >
+        @click.prevent="handleSubmit">
         Generate Anki Deck
       </button>
     </form>
