@@ -5,8 +5,8 @@ import QuestionIcon from './navbar-icons/QuestionIcon.vue';
 </script>
 
 <template>
-  <nav class="bg-neutral flex justify-between items-baseline text-surface p-2 font-bold">
-    <RouterLink class="cursor-pointer text-2xl" to="/">AnkiBuilder</RouterLink>
+  <nav class="bg-neutral flex justify-between items-center text-surface p-2 font-bold">
+    <RouterLink class="cursor-pointer text-3xl" to="/">AnkiBuilder</RouterLink>
     <ul class="flex list-none gap-5">
       <li>
         <RouterLink to="/generator" class="cursor-pointer">
