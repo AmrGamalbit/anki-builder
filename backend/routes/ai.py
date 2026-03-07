@@ -3,6 +3,7 @@ from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import AIRequest
 from utils.file_parser import handle_file
+from services.anki import generate_anki_deck
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -23,7 +24,8 @@ async def generate(request: AIRequest):
         """
     }
 
-    return await dispatch("ai", request.provider, payload)
+    ai_response = await dispatch("ai", request.provider, payload)
+    return generate_anki_deck(ai_response.data, "My new Deck")
 
 
 @router.post("/generate/upload")
@@ -45,4 +47,5 @@ async def generate_from_file(
         Your task is to {MODE_INSTRUCTIONS[mode].format(target_language=target_language)}.
         """
     }
-    return await dispatch("ai", provider, payload)
+    ai_response = await dispatch("ai", provider, payload)
+    return generate_anki_deck(ai_response.data)
