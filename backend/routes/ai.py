@@ -1,6 +1,8 @@
-from fastapi import APIRouter, File, Form, UploadFile
+from fastapi import APIRouter, Form, UploadFile, File
+from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import AIRequest
+from utils.file_parser import handle_file
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -26,11 +28,21 @@ async def generate(request: AIRequest):
 
 @router.post("/generate/upload")
 async def generate_from_file(
-    file: UploadFile = File(...),
+    file: UploadFile = File(description="The file must be a text file"),
+    mode: Literal["definition", "translation"] = Form(...),
     source_language=Form(...),
     target_language=Form(...),
     include_pronunciation: bool = Form(...),
     include_picture: bool = Form(...),
-    definition_provider: str = Form(...),
+    provider: str = Form(...),
 ):
-    return "He"
+    df = await handle_file(file)
+    terms = df.iloc[:, 0].values.tolist()
+    payload = {
+        "user_instructions": f"""
+        You are given the following terms in {source_language}: {terms}
+
+        Your task is to {MODE_INSTRUCTIONS[mode].format(target_language=target_language)}.
+        """
+    }
+    return await dispatch("ai", provider, payload)
