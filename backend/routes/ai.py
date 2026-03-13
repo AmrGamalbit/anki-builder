@@ -3,7 +3,7 @@ from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import AIRequest
 from utils.file_parser import handle_file
-from services.anki import AIDeckGenerator
+from services.ai import AIDeckGenerator
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 

@@ -3,7 +3,7 @@ from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import DictionaryRequest
 from utils.file_parser import handle_file
-from services.anki import DictionaryDeckGenerator
+from services.dictionary import DictionaryDeckGenerator
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
