@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from models.responses import UnifiedResponse
 
+
 class BaseProvider(ABC):
 
     @abstractmethod
@@ -8,5 +9,5 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    def normalize(self, raw: dict) -> UnifiedResponse:
+    def normalize(self, raw: dict | list) -> UnifiedResponse:
         pass

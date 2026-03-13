@@ -3,9 +3,9 @@ from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import AIRequest
 from utils.file_parser import handle_file
-from services.anki import AIDeckGenerator
+from services.anki import DictionaryDeckGenerator
 
-router = APIRouter(prefix="/ai", tags=["ai"])
+router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
 MODE_INSTRUCTIONS = {
     "definition": "provide a clear and simple definition for each term",
@@ -13,20 +13,14 @@ MODE_INSTRUCTIONS = {
 }
 
 
-@router.post("/generate")
+@router.post("/lookup")
 async def generate(request: AIRequest):
     terms = request.content.split(",")
-    payload = {
-        "user_instructions": f"""
-        You are given the following terms in {request.source_language}: {terms}
+    payload = {"words": terms}
 
-        Your task is to {MODE_INSTRUCTIONS[request.mode].format(target_language=request.target_language)}.
-        """
-    }
-
-    ai_response = await dispatch("ai", request.provider, payload)
-    generator = AIDeckGenerator()
-    generator.build(ai_response.data)
+    dictionary_response = await dispatch("dictionary", request.provider, payload)
+    generator = DictionaryDeckGenerator()
+    generator.build(dictionary_response.data, "Help me Dict")
     return generator.export_deck()
 
 
@@ -42,14 +36,8 @@ async def generate_from_file(
 ):
     df = await handle_file(file)
     terms = df.iloc[:, 0].values.tolist()
-    payload = {
-        "user_instructions": f"""
-        You are given the following terms in {source_language}: {terms}
-
-        Your task is to {MODE_INSTRUCTIONS[mode].format(target_language=target_language)}.
-        """
-    }
-    ai_response = await dispatch("ai", provider, payload)
-    generator = AIDeckGenerator()
-    generator.build(ai_response.data, "Help me ai")
+    payload = {"words": terms}
+    dictionary_response = await dispatch("dictionary", provider, payload)
+    generator = DictionaryDeckGenerator()
+    generator.build(dictionary_response.data, "Help me Dict")
     return generator.export_deck()

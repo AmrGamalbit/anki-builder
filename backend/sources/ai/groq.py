@@ -75,6 +75,7 @@ class GroqProvider(BaseProvider):
             raise
 
     def normalize(self, raw):
+        print(raw)
         definition_data = AIResponse.model_validate_json(raw)
         meta = {"model": MODEL}
         return UnifiedResponse(

@@ -2,6 +2,27 @@ from pydantic import BaseModel
 from typing import Any, Union
 
 
+class Definition(BaseModel):
+    text: str
+    synonyms: list[str] | None = None
+    antonyms: list[str] | None = None
+    example: str | None = None
+
+
+class Meaning(BaseModel):
+    part_of_speech: str
+    definitions: list[Definition]
+
+
+class DictionaryEntry(BaseModel):
+    term: str
+    meanings: list[Meaning]
+
+
+class DictionaryResponse(BaseModel):
+    results: list[DictionaryEntry]
+
+
 class AIResponseData(BaseModel):
     term: str
     result: str
@@ -12,15 +33,8 @@ class AIResponse(BaseModel):
     results: list[AIResponseData]
 
 
-class DictionaryData(BaseModel):
-    word: str
-    definitions: list[str]
-    examples: list[str]
-    synonyms: list[str]
-
-
 class UnifiedResponse(BaseModel):
     source: str
     provider: str
-    data: list[Union[DictionaryData, AIResponseData]]
+    data: list[Union[DictionaryEntry, AIResponseData]]
     meta: dict
