@@ -32,6 +32,7 @@ class FreeDictionaryProvider(BaseProvider):
         for response in raw:
             for entry in response:
                 term = entry.get("word")
+                pronunciation = entry.get("phonetics")[0].get("audio")
                 meanings = []
                 for meaning in entry.get("meanings"):
                     definitions = []
@@ -50,7 +51,11 @@ class FreeDictionaryProvider(BaseProvider):
                             definitions=definitions,
                         )
                     )
-                entries.append(DictionaryEntry(term=term, meanings=meanings))
+                entries.append(
+                    DictionaryEntry(
+                        term=term, pronunciation=pronunciation, meanings=meanings
+                    )
+                )
 
         # word_definitions = []
         # for record in raw:
