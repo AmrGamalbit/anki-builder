@@ -69,11 +69,20 @@ class BaseDeckGenerator:
         self.deck_name: str = "My Deck"
         self.media_files = []
         self.temp_dir = tempfile.TemporaryDirectory()
+        self.include_pronunciation = False
 
-    def create_note(self, term: str, result: str, example: str) -> genanki.Note:
-        audio_path = self._generate_pronunciation(term)
-        self.media_files.append(audio_path)
-        return genanki.Note(model=MODEL, fields=[term, result, f"[sound:{term}.mp3]"])
+    def create_note(self, term: str, result: str) -> genanki.Note:
+        if self.include_pronunciation:
+            audio_path = self._generate_pronunciation(term)
+            self.media_files.append(audio_path)
+        return genanki.Note(
+            model=MODEL,
+            fields=[
+                term,
+                result,
+                f"[sound:{term}.mp3]" if self.include_pronunciation else "",
+            ],
+        )
 
     def create_deck(self, notes: list, deck_name: str) -> genanki.Deck:
         deck = genanki.Deck(deck_id=random.randrange(1 << 30, 1 << 31), name=deck_name)
@@ -83,7 +92,6 @@ class BaseDeckGenerator:
 
     def _generate_pronunciation(self, term: str) -> str:
         audio_path = os.path.join(self.temp_dir.name, f"{term}.mp3")
-        print(term.split("<")[0])
         gTTS(text=term.split("<")[0], lang="en", slow=False).save(audio_path)
         return audio_path
 

@@ -20,6 +20,7 @@ async def generate(request: DictionaryRequest):
 
     dictionary_response = await dispatch("dictionary", request.provider, payload)
     generator = DictionaryDeckGenerator()
+    generator.include_pronunciation = request.include_pronunciation
     generator.build(dictionary_response.data, "Help me Dict")
     return generator.export_deck()
 

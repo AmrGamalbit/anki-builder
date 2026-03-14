@@ -15,9 +15,9 @@ class DictionaryDeckGenerator(BaseDeckGenerator):
         for entry in data:
             for meaning in entry.meanings:
                 for definition in meaning.definitions:
-                    front = f"{entry.term}<br>({meaning.part_of_speech})"
-                    back = f"{definition.text}"
                     example = definition.example if definition.example else ""
-                    note = self.create_note(front, back, example)
+                    front = f"{entry.term}<br>({meaning.part_of_speech})"
+                    back = f"{definition.text}<br>{example}"
+                    note = self.create_note(front, back)
                     notes.append(note)
         self.deck = self.create_deck(notes, self.deck_name)
