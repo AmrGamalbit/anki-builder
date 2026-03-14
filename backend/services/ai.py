@@ -1,7 +1,7 @@
 # This is the deck generator for AI models.
 # Simply provide data and a deck name to the constructor,
 # and it will generate and store the deck. You can then call export_deck() to save it.
-from base import BaseDeckGenerator
+from services.base import BaseDeckGenerator
 
 
 class AIDeckGenerator(BaseDeckGenerator):

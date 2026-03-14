@@ -1,7 +1,7 @@
 # This is the deck generator for dictionaries.
 # Simply provide data and a deck name to the constructor,
 # and it will generate and store the deck. You can then call export_deck() to save it.
-from base import BaseDeckGenerator
+from services.base import BaseDeckGenerator
 
 
 class DictionaryDeckGenerator(BaseDeckGenerator):
@@ -15,7 +15,7 @@ class DictionaryDeckGenerator(BaseDeckGenerator):
         for entry in data:
             for meaning in entry.meanings:
                 for definition in meaning.definitions:
-                    front = f"{entry.term} - {meaning.part_of_speech}"
+                    front = f"{entry.term}<br>({meaning.part_of_speech})"
                     back = f"{definition.text}"
                     example = definition.example if definition.example else ""
                     note = self.create_note(front, back, example)
