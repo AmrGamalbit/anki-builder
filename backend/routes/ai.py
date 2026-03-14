@@ -26,6 +26,8 @@ async def generate(request: AIRequest):
 
     ai_response = await dispatch("ai", request.provider, payload)
     generator = AIDeckGenerator()
+    generator.include_pronunciation = request.include_pronunciation
+    generator.lang = request.target_language
     generator.build(ai_response.data)
     return generator.export_deck()
 
@@ -51,5 +53,7 @@ async def generate_from_file(
     }
     ai_response = await dispatch("ai", provider, payload)
     generator = AIDeckGenerator()
+    generator.include_pronunciation = include_pronunciation
+    generator.lang = target_language
     generator.build(ai_response.data, "Help me ai")
     return generator.export_deck()

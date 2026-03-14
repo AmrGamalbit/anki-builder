@@ -21,6 +21,7 @@ async def generate(request: DictionaryRequest):
     dictionary_response = await dispatch("dictionary", request.provider, payload)
     generator = DictionaryDeckGenerator()
     generator.include_pronunciation = request.include_pronunciation
+    generator.lang = request.target_language
     generator.build(dictionary_response.data, "Help me Dict")
     return generator.export_deck()
 
@@ -37,5 +38,7 @@ async def generate_from_file(
     payload = {"words": terms}
     dictionary_response = await dispatch("dictionary", provider, payload)
     generator = DictionaryDeckGenerator()
+    generator.include_pronunciation = include_pronunciation
+    generator.lang = target_language
     generator.build(dictionary_response.data, "Help me Dict")
     return generator.export_deck()

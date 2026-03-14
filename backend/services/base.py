@@ -67,9 +67,10 @@ class BaseDeckGenerator:
     def __init__(self):
         self.deck = None
         self.deck_name: str = "My Deck"
-        self.media_files = []
+        self.media_files: list[str] = []
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.include_pronunciation = False
+        self.include_pronunciation: bool = False
+        self.lang: str = "en"
 
     def create_note(self, term: str, result: str) -> genanki.Note:
         if self.include_pronunciation:
@@ -92,7 +93,7 @@ class BaseDeckGenerator:
 
     def _generate_pronunciation(self, term: str) -> str:
         audio_path = os.path.join(self.temp_dir.name, f"{term}.mp3")
-        gTTS(text=term.split("<")[0], lang="en", slow=False).save(audio_path)
+        gTTS(text=term.split("<")[0], lang=self.lang, slow=False).save(audio_path)
         return audio_path
 
     def export_deck(self):

@@ -13,4 +13,5 @@ class AIRequest(BaseModel):
     mode: Literal["definition", "translation"]
     source_language: str
     target_language: str
+    include_pronunciation: bool = False
     provider: Literal["gemini", "groq"]
