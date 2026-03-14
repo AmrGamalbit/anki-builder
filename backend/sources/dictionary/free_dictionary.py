@@ -56,33 +56,6 @@ class FreeDictionaryProvider(BaseProvider):
                         term=term, pronunciation=pronunciation, meanings=meanings
                     )
                 )
-
-        # word_definitions = []
-        # for record in raw:
-        #     meanings_by_pos = {}
-        #     entry = record[0]
-        #     term = entry.get("word")
-        #     meanings_by_pos["term"] = term
-        #     for meaning in entry.get("meanings", []):
-        #         pos = meaning.get("partOfSpeech")
-        #         definitions = meaning.get("definitions", [])
-        #         first_definition = (
-        #             definitions[0].get("definition") if definitions else None
-        #         )
-        #         first_example = next(
-        #             (
-        #                 d.get("example").split(".")[0]
-        #                 for d in definitions
-        #                 if d.get("example")
-        #             ),
-        #             None,
-        #         )
-        #         meanings_by_pos[pos] = {
-        #             "definition": first_definition,
-        #             "example": first_example,
-        #         }
-
-        #     word_definitions.append(meanings_by_pos)
         meta = {"total": len(raw)}
         return UnifiedResponse(
             source="dictionary", provider="free", data=entries, meta=meta

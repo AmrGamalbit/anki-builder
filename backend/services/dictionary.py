@@ -6,6 +6,7 @@ from services.base import BaseDeckGenerator
 
 class DictionaryDeckGenerator(BaseDeckGenerator):
     def __init__(self):
+        self.use_dictionary_audio = False
         super().__init__()
 
     def build(self, data, deck_name: str = None):
@@ -18,6 +19,15 @@ class DictionaryDeckGenerator(BaseDeckGenerator):
                     example = definition.example if definition.example else ""
                     front = f"{entry.term}<br>({meaning.part_of_speech})"
                     back = f"{definition.text}<br>{example}"
-                    note = self.create_note(front, back)
+                    note = self.create_note(
+                        front,
+                        back,
+                        self.use_dictionary_audio,
+                        (
+                            (entry.pronunciation or None)
+                            if self.use_dictionary_audio
+                            else None
+                        ),
+                    )
                     notes.append(note)
         self.deck = self.create_deck(notes, self.deck_name)

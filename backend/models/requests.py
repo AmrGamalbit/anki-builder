@@ -4,7 +4,9 @@ from typing import Literal
 
 class DictionaryRequest(BaseModel):
     content: str
+    target_language: str
     include_pronunciation: bool = False
+    use_dictionary_audio: bool = False
     provider: Literal["free_dictionary_api"]
 
 

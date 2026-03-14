@@ -4,7 +4,7 @@ import random
 import tempfile
 import os
 from gtts import gTTS
-import re
+import requests
 
 css = """
 .card {
@@ -72,9 +72,21 @@ class BaseDeckGenerator:
         self.include_pronunciation: bool = False
         self.lang: str = "en"
 
-    def create_note(self, term: str, result: str) -> genanki.Note:
+    def create_note(
+        self,
+        term: str,
+        result: str,
+        use_dictionary_audio: bool,
+        pronunciation_url: str | None = None,
+    ) -> genanki.Note:
         if self.include_pronunciation:
-            audio_path = self._generate_pronunciation(term)
+            if not use_dictionary_audio:
+                audio_path = self._generate_pronunciation(term)
+            else:
+                if pronunciation_url is not None:
+                    audio_path = self._fetch_pronunciation(term, pronunciation_url)
+                else:
+                    audio_path = self._generate_pronunciation(term)
             self.media_files.append(audio_path)
         return genanki.Note(
             model=MODEL,
@@ -94,6 +106,16 @@ class BaseDeckGenerator:
     def _generate_pronunciation(self, term: str) -> str:
         audio_path = os.path.join(self.temp_dir.name, f"{term}.mp3")
         gTTS(text=term.split("<")[0], lang=self.lang, slow=False).save(audio_path)
+        return audio_path
+
+    def _fetch_pronunciation(self, term: str, pronunciation_url: str) -> str:
+        audio_path = os.path.join(self.temp_dir.name, f"{term}.mp3")
+        response = requests.get(
+            pronunciation_url, headers={"User-Agent": "Mozilla/5.0"}
+        )
+        response.raise_for_status()
+        with open(audio_path, mode="wb") as file:
+            file.write(response.content)
         return audio_path
 
     def export_deck(self):

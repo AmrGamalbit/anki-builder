@@ -16,6 +16,7 @@ class Meaning(BaseModel):
 
 class DictionaryEntry(BaseModel):
     term: str
+    pronunciation: str | None = None
     meanings: list[Meaning]
 
 
