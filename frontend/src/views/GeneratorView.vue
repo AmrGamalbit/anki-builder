@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import InputGenerator from '@/components/InputGenerator.vue';
+import CardGenerator from '@/components/input/CardGenerator.vue';
 import '@/assets/global.css';
 </script>
 
 <template>
-  <InputGenerator />
+  <CardGenerator />
 </template>

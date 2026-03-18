@@ -2,14 +2,14 @@
 import { ref, computed } from 'vue';
 
 interface Option {
-  name: string,
-  value: string
+  name: string;
+  value: string;
 }
 
 const props = defineProps<{
-  options: Option[],
-  modelValue: string | null
-}>()
+  options: Option[];
+  modelValue: string | null;
+}>();
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -40,16 +40,22 @@ const changeDropDownVisibility = () => {
   <div class="inline-block cursor-pointer">
     <div
       class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
-      @click="changeDropDownVisibility">
+      @click="changeDropDownVisibility"
+    >
       <div>
         {{ mappedSelectedOption }}
       </div>
     </div>
-    <div v-if="isDropDownVisible"
-      class="w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in absolute">
-      <div v-for="(option, index) in props.options" :key="index"
+    <div
+      v-if="isDropDownVisible"
+      class="w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in absolute"
+    >
+      <div
+        v-for="(option, index) in props.options"
+        :key="index"
         class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden"
-        @click="toggleOptionSelect(option)">
+        @click="toggleOptionSelect(option)"
+      >
         {{ option.name }}
       </div>
     </div>

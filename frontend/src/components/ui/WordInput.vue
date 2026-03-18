@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const props = defineProps(['modelValue'])
-const emits = defineEmits(['update:modelValue'])
+const props = defineProps(['modelValue']);
+const emits = defineEmits(['update:modelValue']);
 </script>
 
 <template>
@@ -10,8 +10,9 @@ const emits = defineEmits(['update:modelValue'])
       type="text"
       name="Single Word Input"
       id="single-word-input"
+      autocomplete="off"
       pattern="^\S+$"
-      class="w-full h-50 rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2 text-center text-3xl font-light"
+      class="w-full h-50 rounded-bl-sm rounded-br-sm border bg-white border-gray-300 border-dashed focus:outline-none p-2 text-center text-3xl font-light"
       @input="$emit('update:modelValue', $event.target.value)"
     />
   </div>
