@@ -6,7 +6,7 @@ const isDark = useDark();
 </script>
 
 <template>
-  <section class="font-koho p-16 bg-surface text-neutral">
+  <section class="font-koho p-10 md:p-16 bg-surface text-neutral">
     <h2 class="text-4xl text-neutral mb-10 font-medium">Settings</h2>
     <OptionRow
       :option="{

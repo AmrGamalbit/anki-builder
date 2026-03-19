@@ -5,7 +5,7 @@ const languagePair = defineModel();
 </script>
 
 <template>
-  <section class="flex items-center justify-center gap-3 m-5">
+  <section class="flex items-center justify-center gap-3 my-5">
     <DropDown
       :options="[{ name: 'English', value: 'en' }]"
       v-model="languagePair.source_language"

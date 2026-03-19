@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
 
 interface Option {
   name: string;
@@ -13,6 +14,9 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue']);
 
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const isMobile = breakpoints.smaller('md');
+
 const isDropDownVisible = ref<boolean>(false);
 const selectedOption = ref<Option | null>(null);
 
@@ -23,7 +27,8 @@ const toggleOptionSelect = (option: Option) => {
 };
 
 const mappedSelectedOption = computed(() => {
-  return selectedOption.value?.name || selectedOption.value || 'Please select something';
+  const placeholder = isMobile.value ? 'Select...' : 'Please Select Something';
+  return selectedOption.value?.name || selectedOption.value || placeholder;
 });
 
 const changeDropDownVisibility = () => {
@@ -39,7 +44,7 @@ const changeDropDownVisibility = () => {
 <template>
   <div class="inline-block cursor-pointer">
     <div
-      class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
+      class="inline-flex w-18 md:w-48 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
       @click="changeDropDownVisibility"
     >
       <div>

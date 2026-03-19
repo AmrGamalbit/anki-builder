@@ -48,7 +48,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <section class="p-20 bg-surface text-neutral font-koho">
+  <section class="p-10 md:p-16 bg-surface text-neutral font-koho">
     <h2 class="text-4xl font-semibold">Input</h2>
     <form action="" class="mt-10">
       <SourceOptions v-model:content="content" v-model:selectedSource="selectedSource" />

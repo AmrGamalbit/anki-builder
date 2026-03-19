@@ -6,4 +6,5 @@ import Features from '@/components/hero/Features.vue';
 <template>
   <Hero />
   <Features />
+  <RouterLink class="btn-primary ml-auto mr-16" to="/generator">Start Generating</RouterLink>
 </template>
