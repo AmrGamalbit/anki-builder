@@ -15,7 +15,7 @@ const content = defineModel('content');
   >
     <li
       class="cursor-pointer items-center p-2.5 flex-center"
-      :class="active === index ? 'bg-primary w-1/2' : ''"
+      :class="active === index ? 'bg-primary w-1/2 text-neutral font-semibold' : ''"
       v-for="(option, index) in options"
       :key="index"
       @click="active = index"
@@ -23,7 +23,7 @@ const content = defineModel('content');
       {{ option }}
     </li>
   </ul>
-  <SingleWordInput v-if="acitve == 0" v-model="content" />
-  <TextInput v-else-if="acitve == 1" v-model="content" />
+  <SingleWordInput v-if="active == 0" v-model="content" />
+  <TextInput v-else-if="active == 1" v-model="content" />
   <FileInput v-else v-model="content" />
 </template>

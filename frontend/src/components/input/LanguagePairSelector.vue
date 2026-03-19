@@ -11,8 +11,8 @@ const languagePair = defineModel();
       v-model="languagePair.source_language"
     />
 
-    <svg class="w-24 h-6 shrink-0" viewBox="0 0 96 24" fill="none">
-      <line x1="0" y1="12" x2="72" y2="12" stroke="#546a7b" stroke-width="2" stroke-dasharray="6 3">
+    <svg class="w-24 h-6 shrink-0 stroke-neutral" viewBox="0 0 96 24" fill="none">
+      <line x1="0" y1="12" x2="72" y2="12" stroke-width="2" stroke-dasharray="6 3">
         <animate
           attributeName="stroke-dashoffset"
           from="18"
@@ -23,7 +23,6 @@ const languagePair = defineModel();
       </line>
       <polyline
         points="76,5 90,12 76,19"
-        stroke="#546a7b"
         stroke-width="2"
         stroke-linejoin="round"
         stroke-linecap="round"

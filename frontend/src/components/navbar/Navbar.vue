@@ -5,7 +5,9 @@ import QuestionIcon from './navbar-icons/QuestionIcon.vue';
 </script>
 
 <template>
-  <nav class="bg-neutral flex justify-between items-center text-surface p-2 font-bold">
+  <nav
+    class="bg-neutral dark:bg-gray-900 dark:text-white flex justify-between items-center text-surface p-2 font-bold"
+  >
     <RouterLink class="cursor-pointer text-3xl" to="/">AnkiBuilder</RouterLink>
     <ul class="flex list-none gap-5">
       <li>

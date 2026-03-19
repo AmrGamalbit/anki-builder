@@ -2,11 +2,11 @@
 
 <template>
   <section class="bg-primary p-16 font-koho">
-    <h2 class="text-surface text-5xl font-semibold italic">AnkiBuilder</h2>
-    <h4 class="text-surface font-semibold italic mb-10">Create smart Anki cards in seconds</h4>
+    <h2 class="text-white text-5xl font-semibold italic">AnkiBuilder</h2>
+    <h4 class="text-white font-semibold italic mb-10">Create smart Anki cards in seconds</h4>
     <div class="grid grid-cols-2 my-4 gap-10">
       <div class="grid gap-5 text-2xl">
-        <div class="bg-primary-muted text-surface p-5 rounded-2xl flex-center">
+        <div class="bg-primary-muted text-surface dark:text-[#fdfdff] p-5 rounded-2xl flex-center">
           What does AnkiBuilder Include?
         </div>
         <div class="bg-accent rounded-2xl flex-center p-5 text-neutral">

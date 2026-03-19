@@ -10,7 +10,7 @@ const isEnabled = defineModel<boolean>({ default: false });
     <input
       :id="id"
       type="checkbox"
-      class="peer appearance-none w-11 h-5 bg-accent rounded-full checked:bg-primary cursor-pointer transition-colors duration-300"
+      class="peer appearance-none w-11 h-5 bg-accent dark:bg-gray-300 rounded-full checked:bg-primary cursor-pointer transition-colors duration-300"
       v-model="isEnabled"
     />
     <label

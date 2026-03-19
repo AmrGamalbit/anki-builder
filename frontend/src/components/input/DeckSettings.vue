@@ -46,7 +46,7 @@ const sourceProvider = computed(() => ({
 </script>
 
 <template>
-  <h2 class="text-lg font-semibold text-slate-900 border-b pb-2 mb-4">Settings</h2>
+  <h2 class="text-lg font-semibold text-neutral border-b pb-2 mb-4">Settings</h2>
   <div class="flex flex-col gap-5">
     <OptionRow
       v-for="(option, key) in options"

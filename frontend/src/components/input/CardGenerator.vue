@@ -6,7 +6,7 @@ import LanguagePairSelector from './LanguagePairSelector.vue';
 
 import { ref } from 'vue';
 
-const selectedSource = ref<number>();
+const selectedSource = ref<number>(1);
 const content = ref<string>();
 const formData = new FormData();
 const type = ref<string>();
@@ -48,7 +48,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <section class="p-20 bg-gray-50 text-neutral font-koho">
+  <section class="p-20 bg-surface text-neutral font-koho">
     <h2 class="text-4xl font-semibold">Input</h2>
     <form action="" class="mt-10">
       <SourceOptions v-model:content="content" v-model:selectedSource="selectedSource" />
@@ -56,7 +56,7 @@ async function handleSubmit() {
       <DeckSettings v-model="settings" />
       <button
         type="submit"
-        class="bg-primary-muted text-surface font-semibold p-2 rounded-sm cursor-pointer block ml-auto mt-10"
+        class="bg-primary-muted text-surface dark:text-white font-semibold p-2 rounded-sm cursor-pointer block ml-auto mt-10"
         @click.prevent="handleSubmit"
       >
         Generate Anki Deck
