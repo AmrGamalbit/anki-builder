@@ -2,10 +2,12 @@
 import SourceOptions from './SourceInput.vue';
 import DeckSettings from './DeckSettings.vue';
 import LanguagePairSelector from './LanguagePairSelector.vue';
+import Alert from '../ui/BaseAlert.vue';
 
 import { ref } from 'vue';
 import { useApi } from '@/composables/useApi';
 
+const showSuccess = ref<boolean>(false);
 const selectedSource = ref<number>(1);
 const content = ref<string>();
 const type = ref<string>();
@@ -37,7 +39,7 @@ async function handleSubmit() {
       body: payload,
     });
     const r = await response.json();
-    console.log(r);
+    showSuccess.value = true;
   } else {
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -45,7 +47,7 @@ async function handleSubmit() {
       body: JSON.stringify(payload),
     });
     const r = await response.json();
-    console.log(r);
+    showSuccess.value = true;
   }
 }
 </script>
@@ -66,4 +68,5 @@ async function handleSubmit() {
       </button>
     </form>
   </section>
+  <Alert :intent="'success'" :title="'Your deck has been created'" v-model="showSuccess" />
 </template>
