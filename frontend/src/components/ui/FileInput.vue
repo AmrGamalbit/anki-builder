@@ -1,20 +1,7 @@
 <script setup lang="ts">
-import InputGenerator from '@/components/InputGenerator.vue';
 import '@/assets/global.css';
 
-const props = defineProps(['modelValue']);
-const emits = defineEmits(['update:modelValue']);
-
-async function handleSubmit() {
-  const response = await fetch('http://127.0.0.1:8000/generate-deck', {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'Content-type': 'multipart/form-data',
-    },
-  });
-  const data = await response.json();
-}
+const file = defineModel();
 </script>
 
 <template>
@@ -37,7 +24,11 @@ async function handleSubmit() {
           <input
             type="file"
             class="hidden"
-            @change="$emit('update:modelValue', $event.target.files[0])"
+            @change="
+              (e) => {
+                file = e.target.files[0];
+              }
+            "
           />
           <span
             class="flex w-28 h-9 px-2 bg-primary-muted rounded-full shadow text-white text-xs font-semibold items-center justify-center"

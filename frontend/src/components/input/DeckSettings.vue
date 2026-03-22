@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import OptionRow from '../ui/OptionRow.vue';
 
 const providers = {
-  dictionary: [{ label: 'Free Dictionary API', value: 'freeDictionaryAPI' }],
+  dictionary: [{ label: 'Free Dictionary API', value: 'free_dictionary_api' }],
   ai: [
     { label: 'Gemini', value: 'gemini' },
     { label: 'Groq', value: 'groq' },
@@ -12,7 +12,7 @@ const providers = {
 
 const optionValues = defineModel();
 
-const options = {
+const options = ref({
   include_pronunciation: {
     label: 'Include Pronunciation',
     type: 'boolean',
@@ -20,14 +20,6 @@ const options = {
   include_pictures: {
     label: 'Include Pictures',
     type: 'boolean',
-  },
-  mode: {
-    label: 'Mode',
-    type: 'select',
-    items: [
-      { label: 'Definition', value: 'definition' },
-      { label: 'Translation', value: 'translation' },
-    ],
   },
   source: {
     label: 'Source',
@@ -37,12 +29,40 @@ const options = {
       { label: 'AI', value: 'ai' },
     ],
   },
-};
+});
 const sourceProvider = computed(() => ({
   label: 'Provider',
   type: 'select',
   items: providers[optionValues.value.source],
 }));
+
+watchEffect(() => {
+  const v = optionValues.value;
+
+  const shouldShow = {
+    use_dictionary_audio: v.include_pronunciation && v.source === 'dictionary',
+    mode: v.source === 'ai',
+  };
+
+  if (shouldShow.use_dictionary_audio) {
+    options.value.use_dictionary_audio = { label: 'Use Dictionary Audio', type: 'boolean' };
+  } else {
+    delete options.value.use_dictionary_audio;
+  }
+
+  if (shouldShow.mode) {
+    options.value.mode = {
+      label: 'Mode',
+      type: 'select',
+      items: [
+        { label: 'Definition', value: 'definition' },
+        { label: 'Translation', value: 'translation' },
+      ],
+    };
+  } else {
+    delete options.value.mode;
+  }
+});
 </script>
 
 <template>
@@ -54,6 +74,6 @@ const sourceProvider = computed(() => ({
       :option="option"
       v-model="optionValues[key]"
     />
-    <OptionRow :option="sourceProvider" />
+    <OptionRow :option="sourceProvider" v-model="optionValues['provider']" />
   </div>
 </template>

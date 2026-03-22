@@ -34,15 +34,14 @@ async def generate(request: AIRequest):
 
 @router.post("/generate/upload")
 async def generate_from_file(
-    file: UploadFile = File(description="The file must be a text file"),
+    content: UploadFile = File(description="The file must be a text file"),
     mode: Literal["definition", "translation"] = Form(...),
-    source_language=Form(...),
-    target_language=Form(...),
+    source_language: str = Form(...),
+    target_language: str = Form(...),
     include_pronunciation: bool = Form(...),
-    include_picture: bool = Form(...),
     provider: str = Form(...),
 ):
-    df = await handle_file(file)
+    df = await handle_file(content)
     terms = df.iloc[:, 0].values.tolist()
     payload = {
         "user_instructions": f"""

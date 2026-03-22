@@ -27,16 +27,15 @@ async def generate(request: DictionaryRequest):
     return generator.export_deck()
 
 
-@router.post("/generate/upload")
+@router.post("/lookup/upload")
 async def generate_from_file(
-    file: UploadFile = File(description="The file must be a text file"),
+    content: UploadFile = File(description="The file must be a text file"),
     target_language: str = Form(...),
     include_pronunciation: bool = Form(...),
     use_dictionary_audio: bool = Form(...),
-    include_picture: bool = Form(...),
     provider: Literal["free_dictionary_api"] = Form(...),
 ):
-    df = await handle_file(file)
+    df = await handle_file(content)
     terms = df.iloc[:, 0].values.tolist()
     payload = {"words": terms}
     dictionary_response = await dispatch("dictionary", provider, payload)

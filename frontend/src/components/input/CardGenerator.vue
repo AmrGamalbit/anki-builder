@@ -1,49 +1,52 @@
 <script setup lang="ts">
 import SourceOptions from './SourceInput.vue';
 import DeckSettings from './DeckSettings.vue';
-
 import LanguagePairSelector from './LanguagePairSelector.vue';
 
 import { ref } from 'vue';
+import { useApi } from '@/composables/useApi';
 
 const selectedSource = ref<number>(1);
 const content = ref<string>();
-const formData = new FormData();
 const type = ref<string>();
-const settings = ref({
+const deckSettings = ref({
   include_pronunciation: false,
+  use_dictionary_audio: false,
   include_pictures: false,
   mode: 'definition',
   source: 'dictionary',
-  provider: 'freeDictionaryAPI',
+  provider: 'free_dictionary_api',
 });
 const languagePair = ref({
   source_language: 'en',
   target_language: 'en',
 });
 
+const { getEndpoint, buildPayload } = useApi();
+
 async function handleSubmit() {
-  if (selectedSource.value == 0 || selectedSource.value == 1) {
-    type.value = 'text';
-    formData.append('content', content.value);
+  const data = { ...deckSettings.value, ...languagePair.value, content: content.value };
+  selectedSource.value == 2 ? (type.value = 'file') : (type.value = 'text');
+
+  const endpoint = getEndpoint(data.source, type.value);
+  const payload = buildPayload(data, type.value);
+
+  if (type.value == 'file') {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: payload,
+    });
+    const r = await response.json();
+    console.log(r);
   } else {
-    type.value = 'file';
-    formData.append('file', content.value);
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const r = await response.json();
+    console.log(r);
   }
-  const payload = {
-    ...languagePair.value,
-    ...settings.value,
-  };
-
-  for (const key in payload) {
-    formData.append(key, payload[key as keyof typeof payload]);
-  }
-
-  const response = await fetch('http://127.0.0.1:8000/generate-deck', {
-    method: 'POST',
-    body: formData,
-  });
-  const data = await response.json();
 }
 </script>
 
@@ -53,7 +56,7 @@ async function handleSubmit() {
     <form action="" class="mt-10">
       <SourceOptions v-model:content="content" v-model:selectedSource="selectedSource" />
       <LanguagePairSelector v-model="languagePair" />
-      <DeckSettings v-model="settings" />
+      <DeckSettings v-model="deckSettings" />
       <button
         type="submit"
         class="bg-primary-muted text-surface dark:text-white font-semibold p-2 rounded-sm cursor-pointer block ml-auto mt-10"
