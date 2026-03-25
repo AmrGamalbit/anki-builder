@@ -5,13 +5,20 @@ from services.base import BaseDeckGenerator
 
 
 class AIDeckGenerator(BaseDeckGenerator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def get_pronunciation_path(self, term: str):
+        path = self.pronunciation.generate_pronunciation(term, self.temp_dir.name)
+        return path
 
     def build(self, data, deck_name: str = None):
-        if deck_name != None:
+        if deck_name is not None:
             self.deck_name = deck_name
         notes = [
-            self.create_note(entry.term, entry.result, entry.example) for entry in data
+            self.create_note(
+                entry.term, f"{entry.term}<br>{entry.example}", entry.result
+            )
+            for entry in data
         ]
         self.deck = self.create_deck(notes, self.deck_name)

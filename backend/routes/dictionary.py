@@ -19,8 +19,11 @@ async def generate(request: DictionaryRequest):
     payload = {"words": terms}
 
     dictionary_response = await dispatch("dictionary", request.provider, payload)
-    generator = DictionaryDeckGenerator()
-    generator.include_pronunciation = request.include_pronunciation
+    generator = DictionaryDeckGenerator(
+        include_pronunciation=request.include_pronunciation,
+        include_pictures=request.include_pictures,
+        target_language=request.target_language,
+    )
     generator.use_dictionary_audio = request.use_dictionary_audio
     generator.lang = request.target_language
     generator.build(dictionary_response.data, "Help me Dict")
@@ -32,6 +35,7 @@ async def generate_from_file(
     content: UploadFile = File(description="The file must be a text file"),
     target_language: str = Form(...),
     include_pronunciation: bool = Form(...),
+    include_pictures: bool = Form(...),
     use_dictionary_audio: bool = Form(...),
     provider: Literal["free_dictionary_api"] = Form(...),
 ):
@@ -41,6 +45,7 @@ async def generate_from_file(
     dictionary_response = await dispatch("dictionary", provider, payload)
     generator = DictionaryDeckGenerator()
     generator.include_pronunciation = include_pronunciation
+    generator.include_pictures = include_pictures
     generator.use_dictionary_audio = use_dictionary_audio
     generator.lang = target_language
     generator.build(dictionary_response.data, "Help me Dict")

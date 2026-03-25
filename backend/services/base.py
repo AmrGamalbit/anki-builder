@@ -2,9 +2,11 @@
 import genanki
 import random
 import tempfile
-import os
-from gtts import gTTS
-import requests
+from abc import ABC, abstractmethod
+
+from services.pronunciation import PronunciationService
+from services.pictogram import PictogramService
+
 
 css = """
 .card {
@@ -51,49 +53,62 @@ model = genanki.Model(
 MODEL = genanki.Model(
     model_id=1234567890,
     name="AnkiBuilderModel",
-    fields=[{"name": "Term"}, {"name": "Result"}, {"name": "Pronunciation"}],
+    fields=[
+        {"name": "Term"},
+        {"name": "Result"},
+        {"name": "Pronunciation"},
+        {"name": "Picture"},
+    ],
     templates=[
         {
             "name": "Card 1",
             "qfmt": "{{Term}}",
-            "afmt": '{{FrontSide}}<hr id="answer">{{Result}}<br><br>{{Pronunciation}}',
+            "afmt": '{{FrontSide}}<hr id="answer">{{Result}}<br>{{Picture}}<br>{{Pronunciation}}',
         },
     ],
     css=css,
 )
 
 
-class BaseDeckGenerator:
-    def __init__(self):
+class BaseDeckGenerator(ABC):
+    def __init__(
+        self,
+        include_pronunciation: bool = False,
+        include_pictures: bool = False,
+        target_language: str = "en",
+    ):
         self.deck = None
         self.deck_name: str = "My Deck"
         self.media_files: list[str] = []
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.include_pronunciation: bool = False
-        self.lang: str = "en"
+        self.pronunciation = (
+            PronunciationService(target_language) if include_pronunciation else None
+        )
+        self.pictogram = PictogramService() if include_pictures else None
 
     def create_note(
         self,
         term: str,
+        front: str,
         result: str,
-        use_dictionary_audio: bool,
-        pronunciation_url: str | None = None,
     ) -> genanki.Note:
-        if self.include_pronunciation:
-            if not use_dictionary_audio:
-                audio_path = self._generate_pronunciation(term)
-            else:
-                if pronunciation_url is not None:
-                    audio_path = self._fetch_pronunciation(term, pronunciation_url)
-                else:
-                    audio_path = self._generate_pronunciation(term)
-            self.media_files.append(audio_path)
+
+        if self.pronunciation:
+            pronunciation_path = self.get_pronunciation_path(term)
+            self.media_files.append(pronunciation_path)
+
+        if self.pictogram:
+            pictogram_path = self._get_pictogram(term)
+            if pictogram_path:
+                self.media_files.append(pictogram_path)
+
         return genanki.Note(
             model=MODEL,
             fields=[
-                term,
+                front,
                 result,
-                f"[sound:{term}.mp3]" if self.include_pronunciation else "",
+                f"[sound:{term}.mp3]" if self.pronunciation else "",
+                f"<img src='{term}.png'>" if self.pictogram and pictogram_path else "",
             ],
         )
 
@@ -103,20 +118,16 @@ class BaseDeckGenerator:
             deck.add_note(note)
         return deck
 
-    def _generate_pronunciation(self, term: str) -> str:
-        audio_path = os.path.join(self.temp_dir.name, f"{term}.mp3")
-        gTTS(text=term.split("<")[0], lang=self.lang, slow=False).save(audio_path)
-        return audio_path
+    @abstractmethod
+    def get_pronunciation_path(self, term: str) -> str | None:
+        pass
 
-    def _fetch_pronunciation(self, term: str, pronunciation_url: str) -> str:
-        audio_path = os.path.join(self.temp_dir.name, f"{term}.mp3")
-        response = requests.get(
-            pronunciation_url, headers={"User-Agent": "Mozilla/5.0"}
+    def _get_pictogram(self, term: str):
+        pictogram_url = self.pictogram.get_url(term)
+        pictogram_path = self.pictogram.fetch_pictogram(
+            pictogram_url, self.temp_dir.name
         )
-        response.raise_for_status()
-        with open(audio_path, mode="wb") as file:
-            file.write(response.content)
-        return audio_path
+        return pictogram_path
 
     def export_deck(self):
         package = genanki.Package(self.deck)

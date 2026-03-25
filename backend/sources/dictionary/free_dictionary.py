@@ -32,7 +32,10 @@ class FreeDictionaryProvider(BaseProvider):
         for response in raw:
             for entry in response:
                 term = entry.get("word")
-                pronunciation = entry.get("phonetics")[0].get("audio")
+                pronunciation = next(
+                    (p.get("audio") for p in entry.get("phonetics") if p.get("audio")),
+                    None,
+                )
                 meanings = []
                 for meaning in entry.get("meanings"):
                     definitions = []

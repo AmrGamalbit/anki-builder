@@ -25,8 +25,12 @@ async def generate(request: AIRequest):
     }
 
     ai_response = await dispatch("ai", request.provider, payload)
-    generator = AIDeckGenerator()
-    generator.include_pronunciation = request.include_pronunciation
+    generator = AIDeckGenerator(
+        include_pronunciation=request.include_pronunciation,
+        include_pictures=request.include_pictures,
+        target_language=request.target_language,
+    )
+    generator.include_pictures = request.include_pictures
     generator.lang = request.target_language
     generator.build(ai_response.data)
     return generator.export_deck()
@@ -39,6 +43,7 @@ async def generate_from_file(
     source_language: str = Form(...),
     target_language: str = Form(...),
     include_pronunciation: bool = Form(...),
+    include_pictures: bool = Form(...),
     provider: str = Form(...),
 ):
     df = await handle_file(content)
@@ -53,6 +58,7 @@ async def generate_from_file(
     ai_response = await dispatch("ai", provider, payload)
     generator = AIDeckGenerator()
     generator.include_pronunciation = include_pronunciation
+    generator.include_pictures = include_pictures
     generator.lang = target_language
     generator.build(ai_response.data, "Help me ai")
     return generator.export_deck()

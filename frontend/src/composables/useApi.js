@@ -5,8 +5,8 @@ const endpointMap = {
 };
 
 const payloads = {
-    dictionary: ['content', 'target_language', 'include_pronunciation', 'use_dictionary_audio', 'provider'],
-    ai: ['content', 'mode', 'source_language', 'target_language', 'include_pronunciation', 'provider'],
+    dictionary: ['content', 'target_language', 'include_pronunciation', 'include_pictures', 'use_dictionary_audio', 'provider'],
+    ai: ['content', 'mode', 'source_language', 'target_language', 'include_pronunciation', 'include_pictures', 'provider'],
 }
 
 function pick(obj, keys) {
