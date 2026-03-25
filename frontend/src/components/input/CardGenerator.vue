@@ -3,10 +3,14 @@ import SourceOptions from './SourceInput.vue';
 import DeckSettings from './DeckSettings.vue';
 import LanguagePairSelector from './LanguagePairSelector.vue';
 import Alert from '../ui/BaseAlert.vue';
+import Modal from '../ui/BaseModal.vue';
 
 import { ref } from 'vue';
 import { useApi } from '@/composables/useApi';
 
+import { WrenchIcon } from '@heroicons/vue/16/solid';
+
+const showModal = ref<boolean>(false);
 const showSuccess = ref<boolean>(false);
 const selectedSource = ref<number>(1);
 const content = ref<string>();
@@ -27,6 +31,7 @@ const languagePair = ref({
 const { getEndpoint, buildPayload } = useApi();
 
 async function handleSubmit() {
+  showModal.value = true;
   const data = { ...deckSettings.value, ...languagePair.value, content: content.value };
   selectedSource.value == 2 ? (type.value = 'file') : (type.value = 'text');
 
@@ -39,6 +44,7 @@ async function handleSubmit() {
       body: payload,
     });
     const r = await response.json();
+    showModal.value = false;
     showSuccess.value = true;
   } else {
     const response = await fetch(endpoint, {
@@ -47,6 +53,7 @@ async function handleSubmit() {
       body: JSON.stringify(payload),
     });
     const r = await response.json();
+    showModal.value = false;
     showSuccess.value = true;
   }
 }
@@ -68,5 +75,10 @@ async function handleSubmit() {
       </button>
     </form>
   </section>
+  <Modal :isOpen="showModal">
+    <WrenchIcon class="w-6 h-6 m-2" />
+    <h2 class="text-xl font-semibold">Hold Tight!</h2>
+    <p>Your deck is being <span class="text-green-900 font-semibold">generated</span> right now</p>
+  </Modal>
   <Alert :intent="'success'" :title="'Your deck has been created'" v-model="showSuccess" />
 </template>
