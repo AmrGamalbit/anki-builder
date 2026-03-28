@@ -27,7 +27,7 @@ async def generate(request: DictionaryRequest):
     )
     generator.use_dictionary_audio = request.use_dictionary_audio
     generator.lang = request.target_language
-    return await generator.export_deck("Help me Dict", dictionary_response.data)
+    return await generator.export_deck(dictionary_response.data, "Help me Dict")
 
 
 @router.post("/lookup/upload")
@@ -49,4 +49,4 @@ async def generate_from_file(
         target_language=target_language,
         use_dictionary_audio=use_dictionary_audio,
     )
-    return await generator.export_deck(dictionary_response.data, "Help me DICT")
+    return await generator.export_deck(dictionary_response.data, "HELP me dict")

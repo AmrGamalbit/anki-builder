@@ -31,7 +31,7 @@ async def generate(request: AIRequest):
         target_language=request.target_language,
     )
     generator.include_pictures = request.include_pictures
-    return await generator.export_deck("MY ULTIMATE DECK", ai_response.data)
+    return await generator.export_deck(ai_response.data, "MY ULTIMATE DECK")
 
 
 @router.post("/generate/upload")

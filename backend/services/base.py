@@ -137,7 +137,7 @@ class BaseDeckGenerator(ABC):
     def parse_content(self):
         pass
 
-    async def export_deck(self, deck_name, data):
+    async def export_deck(self, data, deck_name):
         notes = []
         entries, pronunciation_urls = self.parse_content(data)
         terms = [entry.term for entry in data]

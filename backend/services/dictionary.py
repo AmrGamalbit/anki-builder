@@ -6,6 +6,7 @@ from services.base import BaseDeckGenerator
 
 class DictionaryDeckGenerator(BaseDeckGenerator):
     def __init__(self, use_dictionary_audio: bool = False, **kwargs):
+        self.use_dictionary_audio = use_dictionary_audio
         super().__init__(**kwargs)
 
     async def get_pronunciations(self, terms: list[str], pronunciation_urls=None):
