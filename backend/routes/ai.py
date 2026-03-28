@@ -27,13 +27,11 @@ async def generate(request: AIRequest):
     ai_response = await dispatch("ai", request.provider, payload)
     generator = AIDeckGenerator(
         include_pronunciation=request.include_pronunciation,
-        include_pictures=request.include_pictures,
+        include_pictogram=request.include_pictures,
         target_language=request.target_language,
     )
     generator.include_pictures = request.include_pictures
-    generator.lang = request.target_language
-    generator.build(ai_response.data)
-    return generator.export_deck()
+    return await generator.export_deck("MY ULTIMATE DECK", ai_response.data)
 
 
 @router.post("/generate/upload")
@@ -57,8 +55,9 @@ async def generate_from_file(
     }
     ai_response = await dispatch("ai", provider, payload)
     generator = AIDeckGenerator()
-    generator.include_pronunciation = include_pronunciation
-    generator.include_pictures = include_pictures
-    generator.lang = target_language
-    generator.build(ai_response.data, "Help me ai")
-    return generator.export_deck()
+    generator = AIDeckGenerator(
+        include_pronunciation=include_pronunciation,
+        include_pictogram=include_pictures,
+        target_language=target_language,
+    )
+    return await generator.export_deck(ai_response.data, "Help me AI")

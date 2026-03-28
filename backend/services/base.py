@@ -74,43 +74,27 @@ class BaseDeckGenerator(ABC):
     def __init__(
         self,
         include_pronunciation: bool = False,
-        include_pictures: bool = False,
+        include_pictogram: bool = False,
         target_language: str = "en",
     ):
         self.deck = None
         self.deck_name: str = "My Deck"
-        self.media_files: list[str] = []
         self.temp_dir = tempfile.TemporaryDirectory()
-        self.pronunciation = (
-            PronunciationService(target_language) if include_pronunciation else None
-        )
-        self.pictogram = PictogramService() if include_pictures else None
+        self.media_folder = self.temp_dir.name
+        self.include_pictogram: bool = include_pictogram
+        self.include_pronunciation: bool = include_pronunciation
+        self.target_language = target_language
 
     def create_note(
         self,
-        term: str,
-        front: str,
-        result: str,
+        entry: tuple,
+        has_pronunciation: bool,
+        has_pictogram: bool,
     ) -> genanki.Note:
-
-        if self.pronunciation:
-            pronunciation_path = self.get_pronunciation_path(term)
-            self.media_files.append(pronunciation_path)
-
-        if self.pictogram:
-            pictogram_path = self._get_pictogram(term)
-            if pictogram_path:
-                self.media_files.append(pictogram_path)
-
-        return genanki.Note(
-            model=MODEL,
-            fields=[
-                front,
-                result,
-                f"[sound:{term}.mp3]" if self.pronunciation else "",
-                f"<img src='{term}.png'>" if self.pictogram and pictogram_path else "",
-            ],
-        )
+        term, front, back = entry
+        sound = f"[sound:{term}.mp3]" if has_pronunciation else ""
+        image = f"<img src='{term}.png'>" if has_pictogram else ""
+        return genanki.Note(model=MODEL, fields=[front, back, sound, image])
 
     def create_deck(self, notes: list, deck_name: str) -> genanki.Deck:
         deck = genanki.Deck(deck_id=random.randrange(1 << 30, 1 << 31), name=deck_name)
@@ -118,20 +102,63 @@ class BaseDeckGenerator(ABC):
             deck.add_note(note)
         return deck
 
+    async def prepare_media(self, terms: list[str], pronunciation_urls=None):
+        media_files = []
+        available_pictograms = []
+        available_pronunciations = []
+        if self.include_pictogram:
+            self.pictogram_service = PictogramService()
+            pictograms = await self.pictogram_service.fetch_many(
+                terms, self.media_folder
+            )
+            if pictograms:
+                available_pictograms = pictograms.keys()
+                media_files.extend(pictograms.values())
+            await self.pictogram_service.close_session()
+
+        if self.include_pronunciation:
+            self.pronunciation_service = PronunciationService(lang=self.target_language)
+            pronunciations = await self.get_pronunciations(terms, pronunciation_urls)
+            if pronunciations:
+                available_pronunciations = pronunciations.keys()
+                media_files.extend(pronunciations.values())
+            await self.pronunciation_service.close_session()
+
+        return media_files, available_pictograms, available_pronunciations
+
     @abstractmethod
-    def get_pronunciation_path(self, term: str) -> str | None:
+    async def get_pronunciations(self, terms: list[str]) -> str | None:
         pass
 
-    def _get_pictogram(self, term: str):
-        pictogram_url = self.pictogram.get_url(term)
-        pictogram_path = self.pictogram.fetch_pictogram(
-            pictogram_url, self.temp_dir.name
-        )
-        return pictogram_path
+    def get_pictograms(self, terms: list[str]):
+        self.pictogram.fetch_many(terms)
 
-    def export_deck(self):
-        package = genanki.Package(self.deck)
-        package.media_files = self.media_files
-        package.write_to_file(f"{self.deck_name}.apkg")
+    @abstractmethod
+    def parse_content(self):
+        pass
+
+    async def export_deck(self, deck_name, data):
+        notes = []
+        entries, pronunciation_urls = self.parse_content(data)
+        terms = [entry.term for entry in data]
+        (
+            media_files,
+            available_pictograms,
+            available_pronunciations,
+        ) = await self.prepare_media(terms, pronunciation_urls)
+        for entry in entries:
+            note = self.create_note(
+                entry,
+                entry[0] in available_pronunciations,
+                entry[0] in available_pictograms,
+            )
+            notes.append(note)
+
+        deck = self.create_deck(notes, deck_name)
+
+        package = genanki.Package(deck)
+        package.media_files = media_files
+
+        package.write_to_file(f"{deck_name}.apkg")
         self.temp_dir.cleanup()
         return "Deck was created! No worries"

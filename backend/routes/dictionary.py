@@ -21,13 +21,13 @@ async def generate(request: DictionaryRequest):
     dictionary_response = await dispatch("dictionary", request.provider, payload)
     generator = DictionaryDeckGenerator(
         include_pronunciation=request.include_pronunciation,
-        include_pictures=request.include_pictures,
+        include_pictogram=request.include_pictures,
         target_language=request.target_language,
+        use_dictionary_audio=request.use_dictionary_audio,
     )
     generator.use_dictionary_audio = request.use_dictionary_audio
     generator.lang = request.target_language
-    generator.build(dictionary_response.data, "Help me Dict")
-    return generator.export_deck()
+    return await generator.export_deck("Help me Dict", dictionary_response.data)
 
 
 @router.post("/lookup/upload")
@@ -43,10 +43,10 @@ async def generate_from_file(
     terms = df.iloc[:, 0].values.tolist()
     payload = {"words": terms}
     dictionary_response = await dispatch("dictionary", provider, payload)
-    generator = DictionaryDeckGenerator()
-    generator.include_pronunciation = include_pronunciation
-    generator.include_pictures = include_pictures
-    generator.use_dictionary_audio = use_dictionary_audio
-    generator.lang = target_language
-    generator.build(dictionary_response.data, "Help me Dict")
-    return generator.export_deck()
+    generator = DictionaryDeckGenerator(
+        include_pronunciation=include_pronunciation,
+        include_pictogram=include_pictures,
+        target_language=target_language,
+        use_dictionary_audio=use_dictionary_audio,
+    )
+    return await generator.export_deck(dictionary_response.data, "Help me DICT")

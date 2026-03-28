@@ -1,44 +1,63 @@
 import os
-import requests
+import asyncio
+import aiohttp
 
 
 class PictogramService:
     def __init__(self):
         self.BASE_URL = "https://api.arasaac.org/api/pictograms/en/search/{term}"
+        self.session = aiohttp.ClientSession()
 
-    def get_url(self, term: str) -> str:
-        self.term = term
-        print(self.term)
+    async def get_url(self, term: str) -> str:
+        term_url = self.BASE_URL.format(term=term)
         try:
-            response = requests.get(
-                self.BASE_URL.format(term=term),
-                headers={"User-Agent": "Mozilla/5.0"},
-            )
-            response.raise_for_status()
-            results = response.json()
-            pictogram_id = results[0].get("_id")
-            return f"https://static.arasaac.org/pictograms/{pictogram_id}/{pictogram_id}_300.png"
+            async with self.session.get(term_url) as response:
+                response.raise_for_status()
+                results = await response.json()
+                pictogram_id = results[0].get("_id")
+                pictogram_url = f"https://static.arasaac.org/pictograms/{pictogram_id}/{pictogram_id}_300.png"
+                return pictogram_url
 
-        except requests.exceptions.HTTPError as errh:
-            print("HTTP Error")
-            print(errh.args[0])
+        except aiohttp.ClientError as e:
+            print(f"Error fetching data from {term_url}: {e}")
             return None
 
-    def fetch_pictogram(self, pictogram_url: str, media_folder) -> list[str]:
-        pictogram_path = os.path.join(media_folder, f"{self.term}.png")
+        except asyncio.TimeoutError:
+            print(f"Request to {term} timed out")
+            return None
+
+    async def fetch_pictogram(
+        self, pictogram_url: str, media_folder: str, term: str
+    ) -> dict:
+        pictogram_path = os.path.join(media_folder, f"{term}.png")
         if not pictogram_url:
-            return None
+            return {term: None}
 
         try:
-            response = requests.get(
-                pictogram_url, headers={"User-Agent": "Mozilla/5.0"}
-            )
-            response.raise_for_status()
-            with open(pictogram_path, mode="wb") as file:
-                file.write(response.content)
-            return pictogram_path
+            async with self.session.get(pictogram_url) as response:
+                response.raise_for_status()
+                content = await response.read()
+                with open(pictogram_path, mode="wb") as file:
+                    file.write(content)
+                return {term: pictogram_path}
 
-        except requests.exceptions.HTTPError as errh:
-            print("HTTP Error")
-            print(errh.args[0])
-            return None
+        except aiohttp.ClientError as e:
+            print(f"Error fetching data from {pictogram_url}: {e}")
+            return {term: None}
+
+        except asyncio.TimeoutError:
+            print(f"Request to {term} timed out")
+            return {term: None}
+
+    async def fetch_many(self, terms: [str], media_folder: str) -> dict:
+        urls = await asyncio.gather(*[self.get_url(term) for term in terms])
+        results = await asyncio.gather(
+            *[
+                self.fetch_pictogram(url, media_folder, term)
+                for term, url in zip(terms, urls)
+            ]
+        )
+        return {k: v for d in results for k, v in d.items() if v is not None}
+
+    async def close_session(self):
+        await self.session.close()
