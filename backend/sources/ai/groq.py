@@ -1,8 +1,7 @@
-import json
 import os
 
 from dotenv import load_dotenv
-from groq import Groq, APIConnectionError, RateLimitError, APIStatusError
+from groq import Groq
 from models.responses import AIResponseData, UnifiedResponse, AIResponse
 from sources.base import BaseProvider
 
@@ -42,37 +41,27 @@ class GroqProvider(BaseProvider):
         )
 
     async def fetch(self, payload):
-        try:
-            chat_completion = self.client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": SYSTEM_INSTRUCTIONS,
-                    },
-                    {
-                        "role": "user",
-                        "content": payload.get("user_instructions"),
-                    },
-                ],
-                model=MODEL,
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {
-                        "name": "Learning_Code",
-                        "schema": AIResponse.model_json_schema(),
-                    },
+        chat_completion = self.client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_INSTRUCTIONS,
                 },
-            )
-            return chat_completion.choices[0].message.content
-
-        except RateLimitError:
-            raise
-
-        except APIConnectionError:
-            raise
-
-        except APIStatusError:
-            raise
+                {
+                    "role": "user",
+                    "content": payload.get("user_instructions"),
+                },
+            ],
+            model=MODEL,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "Learning_Vocab",
+                    "schema": AIResponse.model_json_schema(),
+                },
+            },
+        )
+        return chat_completion.choices[0].message.content
 
     def normalize(self, raw):
         print(raw)

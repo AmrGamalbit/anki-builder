@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, UploadFile, File
+from fastapi import APIRouter, Form, UploadFile, File, HTTPException
 from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import AIRequest
@@ -24,13 +24,18 @@ async def generate(request: AIRequest):
         """
     }
 
-    ai_response = await dispatch("ai", request.provider, payload)
+    try:
+        ai_response = await dispatch("ai", request.provider, payload)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
     generator = AIDeckGenerator(
         include_pronunciation=request.include_pronunciation,
         include_pictogram=request.include_pictures,
         target_language=request.target_language,
     )
-    generator.include_pictures = request.include_pictures
+
     return await generator.export_deck(ai_response.data, "MY ULTIMATE DECK")
 
 
@@ -53,8 +58,10 @@ async def generate_from_file(
         Your task is to {MODE_INSTRUCTIONS[mode].format(target_language=target_language)}.
         """
     }
-    ai_response = await dispatch("ai", provider, payload)
-    generator = AIDeckGenerator()
+    try:
+        ai_response = await dispatch("ai", provider, payload)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     generator = AIDeckGenerator(
         include_pronunciation=include_pronunciation,
         include_pictogram=include_pictures,

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, UploadFile, File
+from fastapi import APIRouter, Form, UploadFile, File, HTTPException
 from typing import Literal
 from core.dispatcher import dispatch
 from models.requests import DictionaryRequest
@@ -18,7 +18,11 @@ async def generate(request: DictionaryRequest):
     terms = request.content.split(",")
     payload = {"words": terms}
 
-    dictionary_response = await dispatch("dictionary", request.provider, payload)
+    try:
+        dictionary_response = await dispatch("dictionary", request.provider, payload)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
     generator = DictionaryDeckGenerator(
         include_pronunciation=request.include_pronunciation,
         include_pictogram=request.include_pictures,
