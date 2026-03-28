@@ -16,11 +16,20 @@ async def parse_csv(file: UploadFile):
         raise ValueError("Invalid CSV file")
 
 
-def prase_excel():
-    pass
+async def parse_excel(file: UploadFile):
+    try:
+        content = await file.read()
+        df = pd.read_excel(io.BytesIO(content))
+        return df
+
+    except pd.errors.EmptyDataError:
+        raise ValueError("Excel file is empty")
+
+    except pd.errors.ParserError:
+        raise ValueError("Invalid Excel file")
 
 
-FILE_HANDLERS = {"csv": parse_csv, "xlsx": prase_excel}
+FILE_HANDLERS = {"csv": parse_csv, "xlsx": parse_excel}
 
 
 async def get_file_handler(file: UploadFile):
