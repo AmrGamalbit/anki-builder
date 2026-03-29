@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 from google.genai import errors
 from groq import APIConnectionError, RateLimitError, APIStatusError
 from gtts.tts import gTTSError
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 
 def register_handlers(app: FastAPI):
@@ -31,3 +33,9 @@ def register_handlers(app: FastAPI):
     @app.exception_handler(gTTSError)
     def gtts_handler(request, exc):
         return JSONResponse(status_code=502, content={"detail": str(exc)})
+
+    # Exception handler for enforcing rate limits on API routes.
+    # Limits each user (or IP) to 60 requests per minute
+    @app.exception_handler(RateLimitExceeded)
+    def rate_error_handler():
+        return _rate_limit_exceeded_handler
