@@ -2,7 +2,7 @@
 import { useId } from 'vue';
 
 const id = useId();
-const isEnabled = defineModel<boolean>({ default: false });
+const isEnabled = defineModel();
 </script>
 
 <template>

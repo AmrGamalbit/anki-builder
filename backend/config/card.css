@@ -1,0 +1,40 @@
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 16px 0;
+}
+
+b, strong {
+  color: #2563eb;
+}
+
+code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+.night_mode code {
+  background: #2d2d2d;
+}
+
+/* === USER OVERRIDES === */
+.card {
+font-family: 'Segoe UI', sans-serif;
+  font-size: 33px;
+  line-height: 2.0;
+  padding: 20px;
+  text-align: right;
+  accent-color: #ff6e3d;
+  background-color: #ffffff;
+  color: #2c2546;
+}
+.card.night_mode {
+  background-color: #1e1e1e;
+  color: #e8e8e8;
+}
+.highlight {
+color: #ff6e3d;
+}

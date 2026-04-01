@@ -2,6 +2,8 @@
 import Toggle from './BaseToggle.vue';
 import ButtonGroup from './BaseButtonGroup.vue';
 import Dropdown from './BaseDropdown.vue';
+import ColorPicker from './BaseColorPicker.vue';
+import Range from './BaseRange.vue';
 
 interface OptionItem {
   label: string;
@@ -10,14 +12,17 @@ interface OptionItem {
 
 interface Option {
   label: string;
-  type: 'boolean' | 'select' | 'choice';
+  type: 'boolean' | 'select' | 'choice' | 'color' | 'range';
   items?: OptionItem[];
+  props?: {};
 }
 
 const components = {
   boolean: Toggle,
   select: ButtonGroup,
   choice: Dropdown,
+  range: Range,
+  color: ColorPicker,
 };
 
 defineProps<{ option: Option }>();
@@ -26,12 +31,11 @@ const optionValue = defineModel();
 
 <template>
   <div class="flex items-center justify-between">
-    <span>{{ option.label }}</span>
+    <span class="text-nowrap">{{ option.label }}</span>
     <component
       :is="components[option.type]"
-      v-bind="option.items ? { options: option.items } : {}"
+      v-bind="option.items ? { options: option.items } : option.props"
       v-model="optionValue"
-      @click="console.log(optionValue)"
     />
   </div>
 </template>

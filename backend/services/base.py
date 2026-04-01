@@ -6,50 +6,8 @@ from abc import ABC, abstractmethod
 
 from services.pronunciation import PronunciationService
 from services.pictogram import PictogramService
+from utils.card_styles import read_css
 
-
-css = """
-.card {
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 20px;
-  color: #1a1a1a;
-  background-color: #ffffff;
-  text-align: center;
-  padding: 20px;
-  line-height: 1.6;
-}
-
-.card.night_mode {
-  background-color: #1e1e1e;
-  color: #e8e8e8;
-}
-
-hr {
-  border: none;
-  border-top: 1px solid #ddd;
-  margin: 16px 0;
-}
-
-b, strong {
-  color: #2563eb;
-}
-
-code {
-  background: #f3f4f6;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.9em;
-}
-
-.night_mode code {
-  background: #2d2d2d;
-}
-"""
-
-model = genanki.Model(
-    model_id=1234567890, name="My Model", fields=[...], templates=[...], css=css
-)
 MODEL = genanki.Model(
     model_id=1234567890,
     name="AnkiBuilderModel",
@@ -63,10 +21,9 @@ MODEL = genanki.Model(
         {
             "name": "Card 1",
             "qfmt": "{{Term}}",
-            "afmt": '{{FrontSide}}<hr id="answer">{{Result}}<br>{{Picture}}<br>{{Pronunciation}}',
+            "afmt": '<span class="highlight">{{FrontSide}}</span><hr id="answer">{{Result}}<br>{{Picture}}<br>{{Pronunciation}}',
         },
     ],
-    css=css,
 )
 
 
@@ -84,6 +41,7 @@ class BaseDeckGenerator(ABC):
         self.include_pictogram: bool = include_pictogram
         self.include_pronunciation: bool = include_pronunciation
         self.target_language = target_language
+        MODEL.css = read_css("config/card.css")
 
     def create_note(
         self,

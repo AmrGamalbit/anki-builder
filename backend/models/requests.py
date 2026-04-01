@@ -19,3 +19,15 @@ class AIRequest(BaseModel):
     include_pronunciation: bool = False
     include_pictures: bool = False
     provider: Literal["gemini", "groq"]
+
+
+class UpdateStylesRequest(BaseModel):
+    font_family: str
+    font_size: int
+    line_height: float
+    padding: int
+    text_align: str
+    accent_color: str
+    background_color: str
+    color: str
+    night_mode: bool
