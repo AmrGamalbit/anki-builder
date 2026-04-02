@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
+import BaseDropdownPicker from './BaseDropdownPicker.vue';
 
 interface Option {
   label: string;
@@ -9,22 +10,13 @@ interface Option {
 
 const props = defineProps<{
   options: Option[];
-  modelValue: string | null;
 }>();
-
-const emit = defineEmits(['update:modelValue']);
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
 const isMobile = breakpoints.smaller('md');
 
 const isDropDownVisible = ref<boolean>(false);
-const selectedOption = ref<Option | null>(null);
-
-const toggleOptionSelect = (option: Option) => {
-  selectedOption.value = option;
-  isDropDownVisible.value = false;
-  emit('update:modelValue', option.value);
-};
+const selectedOption = defineModel<Option | null>();
 
 const mappedSelectedOption = computed(() => {
   const placeholder = isMobile.value ? 'Select...' : 'Please Select Something';
@@ -58,18 +50,11 @@ onBeforeUnmount(() => {
         {{ mappedSelectedOption }}
       </div>
     </div>
-    <div
+    <BaseDropdownPicker
       v-if="isDropDownVisible"
-      class="z-50 min-w-max overflow-y-auto max-h-60 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in absolute"
-    >
-      <div
-        v-for="(option, index) in props.options"
-        :key="index"
-        class="block px-4 py-2 text-sm text-gray-700 focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden"
-        @click="toggleOptionSelect(option)"
-      >
-        {{ option.label }}
-      </div>
-    </div>
+      :options="props.options"
+      v-model:selected-option="selectedOption"
+      v-model:is-drop-down-visible="isDropDownVisible"
+    />
   </div>
 </template>
