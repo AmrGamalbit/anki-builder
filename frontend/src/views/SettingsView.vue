@@ -66,7 +66,7 @@ onBeforeRouteLeave(async () => {
 
 <template>
   <section class="font-koho p-10 md:p-16 bg-surface text-neutral">
-    <h2 class="text-4xl text-neutral mb-10 font-medium">Settings</h2>
+    <h2 class="text-4xl text-neutral mb-10 font-medium">Deck</h2>
     <OptionRow
       :option="{
         label: 'Dark Mode',

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const props = defineProps(['modelValue']);
-const emits = defineEmits(['update:modelValue']);
+const model = defineModel();
+model.value.type = 'text';
 </script>
 
 <template>
@@ -13,7 +13,7 @@ const emits = defineEmits(['update:modelValue']);
       autocomplete="off"
       pattern="^\S+$"
       class="w-full h-50 rounded-bl-sm rounded-br-sm border bg-white border-gray-300 border-dashed focus:outline-none p-2 text-center text-3xl font-light"
-      @input="$emit('update:modelValue', $event.target.value)"
+      v-model="model.content"
     />
   </div>
 </template>

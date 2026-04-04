@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SourceOptions from './SourceInput.vue';
+import SourceOptions from '../generator/SourceInput.vue';
 import DeckSettings from './DeckSettings.vue';
 import LanguagePairSelector from './LanguagePairSelector.vue';
 import Alert from '../ui/BaseAlert.vue';

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const props = defineProps(['modelValue']);
-const emits = defineEmits(['update:modelValue']);
+const model = defineModel();
+model.value.type = 'text';
 </script>
 
 <template>
@@ -11,7 +11,7 @@ const emits = defineEmits(['update:modelValue']);
       id="deck-generator__input"
       class="bg-white dark:text-gray-900 w-full h-50 rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2"
       placeholder="Place your words, separated by commas"
-      @input="$emit('update:modelValue', $event.target.value)"
+      v-model="model.content"
     ></textarea>
   </div>
 </template>
