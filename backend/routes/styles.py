@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models.requests import UpdateStylesRequest
+from models.requests import StyleSettings
 import textwrap
 import re
 
@@ -70,6 +70,6 @@ def get_styles():
 
 
 @router.post("/styles")
-def update_styles(data: UpdateStylesRequest):
+def update_styles(data: StyleSettings):
     write_card_overrides(data.model_dump())
     return "Updated"

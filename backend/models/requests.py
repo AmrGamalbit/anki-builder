@@ -22,7 +22,7 @@ class WebOptions(BaseModel):
 class SourceInput(BaseModel):
     content: str
     options: Annotated[
-        CSVOptions, TextOptions, YoutubeOptions, WebOptions, Discriminator("type")
+        CSVOptions | TextOptions | YoutubeOptions | WebOptions, Discriminator("type")
     ]
 
 

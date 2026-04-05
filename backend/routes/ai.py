@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Form, UploadFile, File, HTTPException
 from typing import Literal
 from core.dispatcher import dispatch
-from models.requests import AIRequest
+from models.requests import GenerateRequest
 from utils.file_parser import handle_file
 from services.ai import AIDeckGenerator
 
@@ -14,7 +14,7 @@ MODE_INSTRUCTIONS = {
 
 
 @router.post("/generate")
-async def generate(request: AIRequest):
+async def generate(request: GenerateRequest):
     terms = request.content.split(",")
     payload = {
         "user_instructions": f"""
