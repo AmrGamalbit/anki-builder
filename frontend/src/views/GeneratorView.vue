@@ -4,6 +4,7 @@ import GeneratorStepper from '@/components/generator/GeneratorStepper.vue';
 import DeckSettings from '@/components/input/DeckSettings.vue';
 import SourceInput from '@/components/generator/SourceInput.vue';
 import DeckStyleEditor from '@/components/settings/DeckStyleEditor.vue';
+import { useApi } from '@/composables/useApi';
 import '@/assets/global.css';
 
 const currentStep = ref<number>(0);
@@ -30,6 +31,8 @@ const payload = ref({
     mode: 'definition',
     source: 'dictionary',
     provider: 'free_dictionary_api',
+    source_language: 'en',
+    target_language: 'en',
   },
   style: {
     font_family: `'Segoe UI', sans-serif`,
@@ -43,6 +46,8 @@ const payload = ref({
     night_mode: true,
   },
 });
+
+const { getEndpoint } = useApi();
 
 const text = computed(() => {
   if (currentStep.value < 2) {

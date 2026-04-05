@@ -5,7 +5,7 @@ const selectedOption = defineModel('selectedOption');
 const isDropDownVisible = defineModel('isDropDownVisible');
 
 const toggleOptionSelect = (option) => {
-  selectedOption.value = option;
+  selectedOption.value = option.value;
   isDropDownVisible.value = false;
 };
 </script>

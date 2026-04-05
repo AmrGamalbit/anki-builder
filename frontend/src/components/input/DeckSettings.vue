@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
 import OptionRow from '../ui/OptionRow.vue';
+import LanguagePairSelector from '../input/LanguagePairSelector.vue';
 
 const providers = {
   dictionary: [{ label: 'Free Dictionary API', value: 'free_dictionary_api' }],
@@ -69,6 +70,10 @@ watchEffect(() => {
   <div class="flex flex-col gap-5">
     <h2 class="text-4xl text-neutral font-medium">Deck</h2>
     <hr class="m-5" />
+    <LanguagePairSelector
+      v-model:sourceLanguage="optionValues['source_language']"
+      v-model:targetLanguage="optionValues['target_language']"
+    />
     <OptionRow
       v-for="(option, key) in options"
       :key="key"

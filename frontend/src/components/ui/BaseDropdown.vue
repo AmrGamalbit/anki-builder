@@ -16,11 +16,11 @@ const breakpoints = useBreakpoints(breakpointsTailwind);
 const isMobile = breakpoints.smaller('md');
 
 const isDropDownVisible = ref<boolean>(false);
-const selectedOption = defineModel<Option | null>();
+const selectedOption = defineModel<string | null>();
 
 const mappedSelectedOption = computed(() => {
   const placeholder = isMobile.value ? 'Select...' : 'Please Select Something';
-  return selectedOption.value?.label || selectedOption.value || placeholder;
+  return props.options.find((o) => o.value == selectedOption.value)?.label || placeholder;
 });
 
 const changeDropDownVisibility = () => {
