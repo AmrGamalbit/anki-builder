@@ -3,9 +3,9 @@ import { ref } from 'vue';
 
 import FileInput from './sources/BaseFileInput.vue';
 import TextInput from './sources/BaseTextInput.vue';
-import WordInput from './sources/BaseWordInput.vue';
-const options = ['Single Word', 'Paste Text', 'CSV File'];
-const selectedSource = ref<number>(1);
+import UrlInput from './sources/BaseUrlInput.vue';
+const options = ['Paste Text', 'CSV File', 'Web Article', 'Youtube'];
+const selectedSource = ref<number>(0);
 const sourceValues = defineModel();
 </script>
 
@@ -26,8 +26,19 @@ const sourceValues = defineModel();
         {{ option }}
       </li>
     </ul>
-    <WordInput v-if="selectedSource == 0" v-model="sourceValues" />
-    <TextInput v-else-if="selectedSource == 1" v-model="sourceValues" />
-    <FileInput v-else v-model="sourceValues" />
+    <TextInput v-if="selectedSource == 0" v-model="sourceValues" />
+    <FileInput v-else-if="selectedSource == 1" v-model="sourceValues" />
+    <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="sourceValues" />
+    <UrlInput v-else :source-type="'youtube'" v-model="sourceValues" />
+    <div class="flex justify-between items-center px-3">
+      <h2>Deck Name</h2>
+      <div class="w-48 max-w-sm min-w-[200px]">
+        <input
+          class="inline-flex h-9 w-48 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+          placeholder="Type here..."
+          v-model="sourceValues.deck_name"
+        />
+      </div>
+    </div>
   </section>
 </template>

@@ -67,19 +67,21 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-5">
+  <section>
     <h2 class="text-4xl text-neutral font-medium">Deck</h2>
     <hr class="m-5" />
-    <LanguagePairSelector
-      v-model:sourceLanguage="optionValues['source_language']"
-      v-model:targetLanguage="optionValues['target_language']"
-    />
-    <OptionRow
-      v-for="(option, key) in options"
-      :key="key"
-      :option="option"
-      v-model="optionValues[key]"
-    />
-    <OptionRow :option="sourceProvider" v-model="optionValues['provider']" />
-  </div>
+    <div class="flex flex-col gap-5">
+      <LanguagePairSelector
+        v-model:sourceLanguage="optionValues['source_language']"
+        v-model:targetLanguage="optionValues['target_language']"
+      />
+      <OptionRow
+        v-for="(option, key) in options"
+        :key="key"
+        :option="option"
+        v-model="optionValues[key]"
+      />
+      <OptionRow :option="sourceProvider" v-model="optionValues['provider']" />
+    </div>
+  </section>
 </template>

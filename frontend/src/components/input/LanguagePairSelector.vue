@@ -42,7 +42,7 @@ const languages = languageCodes.map((code) => {
 </script>
 
 <template>
-  <section class="flex items-center justify-center gap-3 my-5">
+  <section class="flex items-center justify-center gap-3 mb-5">
     <DropDown :options="languages" v-model="sourceLanguage" />
 
     <svg class="w-24 h-6 shrink-0 stroke-neutral" viewBox="0 0 96 24" fill="none">

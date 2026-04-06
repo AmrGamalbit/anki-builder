@@ -7,7 +7,7 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/16/solid';
 import { cva } from 'class-variance-authority';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 const isVisible = defineModel();
 const props = defineProps({
@@ -30,7 +30,7 @@ const iconComponents = {
 };
 
 const containerClass = computed(() => {
-  return cva('fixed bottom-4 left-4 flex p-4 rounded-md space-x-3', {
+  return cva('fixed bottom-4 left-4 z-100 flex p-4 rounded-md space-x-3', {
     variants: {
       intent: {
         info: 'bg-blue-100',

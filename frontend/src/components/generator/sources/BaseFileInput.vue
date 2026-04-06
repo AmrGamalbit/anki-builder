@@ -57,7 +57,7 @@ const options = {
         </div>
       </div>
     </div>
-    <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-2 p-3">
       <OptionRow
         v-for="(option, key) in options"
         :option="option"

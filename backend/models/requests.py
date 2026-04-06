@@ -27,7 +27,7 @@ class WebOptions(BaseModel):
 
 class SourceInput(BaseModel):
     content: str
-    type: str
+    deck_name: str
     options: Annotated[
         CSVOptions | TextOptions | YoutubeOptions | WebOptions, Discriminator("type")
     ] = None
