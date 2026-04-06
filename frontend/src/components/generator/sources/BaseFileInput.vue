@@ -3,7 +3,22 @@ import '@/assets/global.css';
 import OptionRow from '@/components/ui/OptionRow.vue';
 
 const model = defineModel();
-model.value.type = 'file';
+model.value.options = { type: 'file' };
+
+const options = {
+  delimiter: {
+    label: 'Delimiter',
+    type: 'select',
+    items: [
+      { label: 'Newline', value: '\n' },
+      { label: 'Comma', value: ',' },
+      { label: 'Space', value: ' ' },
+    ],
+  },
+  word_column: { label: 'Word Column', type: 'range', props: { min: 1, max: 10, step: 1 } },
+  has_header: { label: 'Has Header', type: 'boolean' },
+  base_form: { label: 'Base Form Only', type: 'boolean' },
+};
 </script>
 
 <template>
@@ -42,6 +57,13 @@ model.value.type = 'file';
         </div>
       </div>
     </div>
-    <div>This will be settings</div>
+    <div class="flex flex-col gap-5">
+      <OptionRow
+        v-for="(option, key) in options"
+        :option="option"
+        :key="key"
+        v-model="model.options[key]"
+      />
+    </div>
   </section>
 </template>

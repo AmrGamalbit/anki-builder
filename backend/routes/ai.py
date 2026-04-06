@@ -15,25 +15,27 @@ MODE_INSTRUCTIONS = {
 
 @router.post("/generate")
 async def generate(request: GenerateRequest):
-    terms = request.content.split(",")
+    deck, source, style = request.deck, request.source, request.style
+    terms = source.content.split(",")
     payload = {
         "user_instructions": f"""
-        You are given the following terms in {request.source_language}: {terms}
+        You are given the following terms in {deck.source_language}: {terms}
 
-        Your task is to {MODE_INSTRUCTIONS[request.mode].format(target_language=request.target_language)}.
+        Your task is to {MODE_INSTRUCTIONS[deck.mode].format(target_language=deck.target_language)}.
         """
     }
 
     try:
-        ai_response = await dispatch("ai", request.provider, payload)
+        ai_response = await dispatch("ai", deck.provider, payload)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
     generator = AIDeckGenerator(
-        include_pronunciation=request.include_pronunciation,
-        include_pictogram=request.include_pictures,
-        target_language=request.target_language,
+        include_pronunciation=deck.include_pronunciation,
+        include_pictogram=deck.include_pictogram,
+        target_language=deck.target_language,
+        style=style,
     )
 
     return await generator.export_deck(ai_response.data, "MY ULTIMATE DECK")

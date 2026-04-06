@@ -6,7 +6,10 @@ from abc import ABC, abstractmethod
 
 from services.pronunciation import PronunciationService
 from services.pictogram import PictogramService
-from utils.card_styles import read_css
+from utils.styles import build_css
+from models.requests import StyleSettings
+
+DEFAULT_STYLES = {}
 
 MODEL = genanki.Model(
     model_id=1234567890,
@@ -33,6 +36,7 @@ class BaseDeckGenerator(ABC):
         include_pronunciation: bool = False,
         include_pictogram: bool = False,
         target_language: str = "en",
+        style: StyleSettings = DEFAULT_STYLES,
     ):
         self.deck = None
         self.deck_name: str = "My Deck"
@@ -41,7 +45,8 @@ class BaseDeckGenerator(ABC):
         self.include_pictogram: bool = include_pictogram
         self.include_pronunciation: bool = include_pronunciation
         self.target_language = target_language
-        MODEL.css = read_css("config/card.css")
+        style_dict = style.model_dump()
+        MODEL.css = build_css(style_dict)
 
     def create_note(
         self,

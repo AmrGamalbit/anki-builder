@@ -1,11 +1,14 @@
 <script setup lang="ts">
-const value = defineModel();
+const value = defineModel<number>();
 
 const props = defineProps({
   min: { type: Number, default: 0 },
   max: { type: Number, default: 100 },
   step: { type: Number, default: 1 },
 });
+if (value.value === null || value.value === undefined) {
+  value.value = Math.ceil(props.max / 2);
+}
 </script>
 
 <template>
@@ -16,7 +19,7 @@ const props = defineProps({
       :min="props.min"
       :max="props.max"
       :step="props.step"
-      v-model="value"
+      v-model.number="value"
     />
     <span class="text-sm text-muted-foreground w-8 text-right">{{ value }}</span>
   </div>

@@ -4,11 +4,17 @@ from typing import Literal, Annotated
 
 class CSVOptions(BaseModel):
     type: Literal["file"]
+    had_header: bool = False
+    word_column: int = 0
     delimiter: str = ","
 
 
 class TextOptions(BaseModel):
     type: Literal["text"]
+    delimiter: str = ","
+    strip_punctuation: bool = True
+    lowercase: bool = True
+    base_form: bool = False
 
 
 class YoutubeOptions(BaseModel):
@@ -21,9 +27,10 @@ class WebOptions(BaseModel):
 
 class SourceInput(BaseModel):
     content: str
+    type: str
     options: Annotated[
         CSVOptions | TextOptions | YoutubeOptions | WebOptions, Discriminator("type")
-    ]
+    ] = None
 
 
 class BaseDeckRequest(BaseModel):

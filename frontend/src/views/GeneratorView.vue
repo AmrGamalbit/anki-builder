@@ -64,8 +64,18 @@ function onNext() {
   }
 }
 
-function generate() {
+async function generate() {
   console.log(payload.value);
+  const endpoint = getEndpoint(payload.value.deck.source, payload.value.source.type);
+  if (payload.value.source.type != 'file') {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload.value),
+    });
+    const r = await response.json();
+    console.log(r);
+  }
 }
 </script>
 
