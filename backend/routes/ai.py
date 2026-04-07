@@ -16,7 +16,7 @@ MODE_INSTRUCTIONS = {
 @router.post("/generate")
 async def generate(request: GenerateRequest):
     deck, source, style = request.deck, request.source, request.style
-    terms = source.content.split(",")
+    terms = source.content.split(source.options.delimiter)
     payload = {
         "user_instructions": f"""
         You are given the following terms in {deck.source_language}: {terms}
@@ -38,7 +38,7 @@ async def generate(request: GenerateRequest):
         style=style,
     )
 
-    return await generator.export_deck(ai_response.data, "MY ULTIMATE DECK")
+    return await generator.export_deck(ai_response.data, request.source.deck_name)
 
 
 @router.post("/generate/upload")

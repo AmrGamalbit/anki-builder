@@ -33,7 +33,7 @@ const payload = ref({
   deck: {
     include_pronunciation: false,
     use_dictionary_audio: false,
-    include_pictures: false,
+    include_pictogram: false,
     mode: 'definition',
     source: 'dictionary',
     provider: 'free_dictionary_api',
@@ -71,7 +71,6 @@ function onNext() {
 }
 
 async function generate() {
-  console.log(payload.value);
   showModal.value = true;
   const endpoint = getEndpoint(payload.value.deck.source, payload.value.source.type);
   if (payload.value.source.type != 'file') {

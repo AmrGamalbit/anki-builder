@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Form, UploadFile, File, HTTPException
 from typing import Literal
 from core.dispatcher import dispatch
-from models.requests import DictionaryRequest
+from models.requests import GenerateRequest
 from utils.file_parser import handle_file
 from services.dictionary import DictionaryDeckGenerator
 
@@ -14,24 +14,19 @@ MODE_INSTRUCTIONS = {
 
 
 @router.post("/lookup")
-async def generate(request: DictionaryRequest):
-    terms = request.content.split(",")
+async def generate(request: GenerateRequest):
+    deck, source, style = request.deck, request.source, request.style
+    terms = request.source.content.split(source.options.delimiter)
     payload = {"words": terms}
-
-    try:
-        dictionary_response = await dispatch("dictionary", request.provider, payload)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
+    dictionary_response = await dispatch("dictionary", deck.provider, payload)
     generator = DictionaryDeckGenerator(
-        include_pronunciation=request.include_pronunciation,
-        include_pictogram=request.include_pictures,
-        target_language=request.target_language,
-        use_dictionary_audio=request.use_dictionary_audio,
+        include_pronunciation=deck.include_pronunciation,
+        include_pictogram=deck.include_pictogram,
+        target_language=deck.target_language,
+        use_dictionary_audio=deck.use_dictionary_audio,
+        style=style,
     )
-    generator.use_dictionary_audio = request.use_dictionary_audio
-    generator.lang = request.target_language
-    return await generator.export_deck(dictionary_response.data, "Help me Dict")
+    return await generator.export_deck(dictionary_response.data, source.deck_name)
 
 
 @router.post("/lookup/upload")
