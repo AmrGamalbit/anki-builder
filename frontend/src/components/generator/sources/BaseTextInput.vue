@@ -2,7 +2,13 @@
 import OptionRow from '@/components/ui/OptionRow.vue';
 
 const model = defineModel();
-model.value.options = { type: 'text' };
+model.value.options = {
+  type: 'text',
+  delimiter: ',',
+  strip_punctuation: true,
+  lowercase: true,
+  base_from: false,
+};
 
 const options = {
   delimiter: {

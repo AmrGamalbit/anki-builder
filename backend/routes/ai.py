@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Form, UploadFile, File, HTTPException
-from typing import Literal
+from fastapi import APIRouter
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
-from utils.file_parser import handle_file
 from services.ai import AIDeckGenerator
+from utils.file_parser import handle_file, extract_words
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -25,12 +24,7 @@ async def generate(request: GenerateRequest):
         """
     }
 
-    try:
-        ai_response = await dispatch("ai", deck.provider, payload)
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
+    ai_response = await dispatch("ai", deck.provider, payload)
     generator = AIDeckGenerator(
         include_pronunciation=deck.include_pronunciation,
         include_pictogram=deck.include_pictogram,
@@ -39,34 +33,3 @@ async def generate(request: GenerateRequest):
     )
 
     return await generator.export_deck(ai_response.data, request.source.deck_name)
-
-
-@router.post("/generate/upload")
-async def generate_from_file(
-    content: UploadFile = File(description="The file must be a text file"),
-    mode: Literal["definition", "translation"] = Form(...),
-    source_language: str = Form(...),
-    target_language: str = Form(...),
-    include_pronunciation: bool = Form(...),
-    include_pictures: bool = Form(...),
-    provider: str = Form(...),
-):
-    df = await handle_file(content)
-    terms = df.iloc[:, 0].values.tolist()
-    payload = {
-        "user_instructions": f"""
-        You are given the following terms in {source_language}: {terms}
-
-        Your task is to {MODE_INSTRUCTIONS[mode].format(target_language=target_language)}.
-        """
-    }
-    try:
-        ai_response = await dispatch("ai", provider, payload)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    generator = AIDeckGenerator(
-        include_pronunciation=include_pronunciation,
-        include_pictogram=include_pictures,
-        target_language=target_language,
-    )
-    return await generator.export_deck(ai_response.data, "Help me AI")

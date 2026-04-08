@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import FileInput from './sources/BaseFileInput.vue';
 import TextInput from './sources/BaseTextInput.vue';
 import UrlInput from './sources/BaseUrlInput.vue';
 const options = ['Paste Text', 'CSV File', 'Web Article', 'Youtube'];
-const selectedSource = ref<number>(0);
+const selectedSource = ref<number>(1);
 const sourceValues = defineModel();
+watch(selectedSource, () => {
+  sourceValues.value.content = '';
+});
 </script>
 
 <template>

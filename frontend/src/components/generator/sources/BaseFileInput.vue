@@ -3,8 +3,13 @@ import '@/assets/global.css';
 import OptionRow from '@/components/ui/OptionRow.vue';
 
 const model = defineModel();
-model.value.options = { type: 'file' };
-
+model.value.options = {
+  type: 'file',
+  delimiter: ',',
+  word_column: 1,
+  has_header: false,
+  base_form: false,
+};
 const options = {
   delimiter: {
     label: 'Delimiter',

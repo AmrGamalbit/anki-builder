@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Discriminator
-from typing import Literal, Annotated
+from typing import Literal, Annotated, Any
 
 
-class CSVOptions(BaseModel):
+class FileOptions(BaseModel):
     type: Literal["file"]
-    had_header: bool = False
+    has_header: bool = False
     word_column: int = 0
     delimiter: str = ","
 
@@ -26,10 +26,10 @@ class WebOptions(BaseModel):
 
 
 class SourceInput(BaseModel):
-    content: str
+    content: Any
     deck_name: str
     options: Annotated[
-        CSVOptions | TextOptions | YoutubeOptions | WebOptions, Discriminator("type")
+        FileOptions | TextOptions | YoutubeOptions | WebOptions, Discriminator("type")
     ] = None
 
 

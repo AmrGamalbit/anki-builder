@@ -4,6 +4,7 @@ import GeneratorStepper from '@/components/generator/GeneratorStepper.vue';
 import DeckSettings from '@/components/input/DeckSettings.vue';
 import SourceInput from '@/components/generator/SourceInput.vue';
 import DeckStyleEditor from '@/components/settings/DeckStyleEditor.vue';
+import { WrenchIcon } from '@heroicons/vue/16/solid';
 import Alert from '@/components/ui/BaseAlert.vue';
 import Modal from '@/components/ui/BaseModal.vue';
 import { useApi } from '@/composables/useApi';
@@ -28,7 +29,7 @@ const steps = [
 const payload = ref({
   source: {
     content: '',
-    type: '',
+    options: undefined,
   },
   deck: {
     include_pronunciation: false,
@@ -70,25 +71,42 @@ function onNext() {
   }
 }
 
+async function extractWordsFromFile() {
+  const formData = new FormData();
+  formData.append('file', payload.value.source.content);
+  const entries = Object.entries(payload.value.source.options);
+  for (const [key, value] of entries.slice(0, -1)) {
+    formData.append(key, value);
+  }
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/file/extract`, {
+    method: 'POST',
+    body: formData,
+  });
+  const r = await response.json();
+  payload.value.source.content = r;
+}
+
 async function generate() {
   showModal.value = true;
-  const endpoint = getEndpoint(payload.value.deck.source, payload.value.source.type);
-  if (payload.value.source.type != 'file') {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload.value),
-    });
-    // const r = await response.json();
-    if (!response.ok) {
-      alertIntent.value = 'danger';
-      alertMessage.value = 'Something went wrong';
-    } else {
-      alertMessage.value = 'Deck was generated successfully';
-    }
-    showAlert.value = true;
-    showModal.value = false;
+  const endpoint = getEndpoint(payload.value.deck.source);
+  if (payload.value.source.options.type == 'file') {
+    await extractWordsFromFile();
   }
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload.value),
+  });
+  const r = await response.json();
+  console.log(r);
+  if (!response.ok) {
+    alertIntent.value = 'danger';
+    alertMessage.value = 'Something went wrong';
+  } else {
+    alertMessage.value = 'Deck was generated successfully';
+  }
+  showAlert.value = true;
+  showModal.value = false;
 }
 </script>
 

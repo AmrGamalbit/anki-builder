@@ -3,10 +3,11 @@ import pandas as pd
 import io
 
 
-async def parse_csv(file: UploadFile):
+async def parse_csv(file: UploadFile, delimiter: str, has_header: bool):
     try:
         content = await file.read()
-        df = pd.read_csv(io.BytesIO(content))
+        header = 0 if has_header else None
+        df = pd.read_csv(io.BytesIO(content), sep=delimiter, header=header)
         return df
 
     except pd.errors.EmptyDataError:
@@ -16,10 +17,11 @@ async def parse_csv(file: UploadFile):
         raise ValueError("Invalid CSV file")
 
 
-async def parse_excel(file: UploadFile):
+async def parse_excel(file: UploadFile, has_header: bool):
     try:
         content = await file.read()
-        df = pd.read_excel(io.BytesIO(content))
+        header = 0 if has_header else None
+        df = pd.read_excel(io.BytesIO(content), header=header)
         return df
 
     except pd.errors.EmptyDataError:
@@ -40,6 +42,11 @@ async def get_file_handler(file: UploadFile):
     return FILE_HANDLERS[file_type]
 
 
-async def handle_file(file: UploadFile):
+async def handle_file(file: UploadFile, delimiter: str, has_header: bool):
     handler = await get_file_handler(file)
-    return await handler(file)
+    return await handler(file, delimiter, has_header)
+
+
+def extract_words(df, word_column):
+    terms = df.iloc[:, word_column].values.tolist()
+    return terms

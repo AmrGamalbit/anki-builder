@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Form, UploadFile, File, HTTPException
-from typing import Literal
+from fastapi import APIRouter
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
-from utils.file_parser import handle_file
 from services.dictionary import DictionaryDeckGenerator
+from utils.file_parser import handle_file, extract_words
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
@@ -27,25 +26,3 @@ async def generate(request: GenerateRequest):
         style=style,
     )
     return await generator.export_deck(dictionary_response.data, source.deck_name)
-
-
-@router.post("/lookup/upload")
-async def generate_from_file(
-    content: UploadFile = File(description="The file must be a text file"),
-    target_language: str = Form(...),
-    include_pronunciation: bool = Form(...),
-    include_pictures: bool = Form(...),
-    use_dictionary_audio: bool = Form(...),
-    provider: Literal["free_dictionary_api"] = Form(...),
-):
-    df = await handle_file(content)
-    terms = df.iloc[:, 0].values.tolist()
-    payload = {"words": terms}
-    dictionary_response = await dispatch("dictionary", provider, payload)
-    generator = DictionaryDeckGenerator(
-        include_pronunciation=include_pronunciation,
-        include_pictogram=include_pictures,
-        target_language=target_language,
-        use_dictionary_audio=use_dictionary_audio,
-    )
-    return await generator.export_deck(dictionary_response.data, "HELP me dict")

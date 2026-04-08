@@ -17,11 +17,8 @@ function pick(obj, keys) {
 }
 
 export function useApi() {
-    function getEndpoint(source, type) {
+    function getEndpoint(source) {
         let endpoint = `${baseUrl}/${source}/${endpointMap[source]}`
-        if (type == 'file') {
-            endpoint += '/upload'
-        }
         return endpoint
     }
 

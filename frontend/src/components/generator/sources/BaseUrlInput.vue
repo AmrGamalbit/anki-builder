@@ -6,7 +6,12 @@ const props = defineProps({
   sourceType: String,
 });
 const model = defineModel();
-model.value.options = { type: props.sourceType };
+model.value.options = {
+  type: props.sourceType,
+  vocabulary_level: 'b1',
+  max_cards: 20,
+  include_idioms: true,
+};
 const placeholder = computed(() => {
   if (props.sourceType == 'web') {
     return 'https://';
@@ -52,7 +57,7 @@ const options = {
           v-for="(option, key) in options"
           :option="option"
           :key="key"
-          v-model="model[key]"
+          v-model="model.options[key]"
         />
       </div>
     </div>
