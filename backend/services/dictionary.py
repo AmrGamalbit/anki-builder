@@ -27,7 +27,7 @@ class DictionaryDeckGenerator(BaseDeckGenerator):
                 pronunciation_path = self.pronunciation_service.generate_pronunciation(
                     term, self.media_folder
                 )
-                pronunciations.append(pronunciation_path)
+                pronunciations.update(pronunciation_path)
         return pronunciations
 
     def parse_content(self, data):
