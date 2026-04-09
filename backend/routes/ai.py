@@ -29,7 +29,8 @@ async def generate(request: GenerateRequest):
         include_pronunciation=deck.include_pronunciation,
         include_pictogram=deck.include_pictogram,
         target_language=deck.target_language,
+        mode=deck.mode,
         style=style,
     )
 
-    return await generator.export_deck(ai_response.data, request.source.deck_name)
+    return await generator.export_deck(ai_response.data, source.deck_name)

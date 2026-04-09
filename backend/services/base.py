@@ -36,6 +36,7 @@ class BaseDeckGenerator(ABC):
         include_pronunciation: bool = False,
         include_pictogram: bool = False,
         target_language: str = "en",
+        mode: str = "definition",
         style: StyleSettings = DEFAULT_STYLES,
     ):
         self.deck = None
@@ -45,6 +46,7 @@ class BaseDeckGenerator(ABC):
         self.include_pictogram: bool = include_pictogram
         self.include_pronunciation: bool = include_pronunciation
         self.target_language = target_language
+        self.mode = mode
         style_dict = style.model_dump()
         MODEL.css = build_css(style_dict)
 
@@ -55,8 +57,9 @@ class BaseDeckGenerator(ABC):
         has_pictogram: bool,
     ) -> genanki.Note:
         term, front, back = entry
-        sound = f"[sound:{term}.mp3]" if has_pronunciation else ""
-        image = f"<img src='{term}.png'>" if has_pictogram else ""
+        lookup = term if self.mode == "definition" else back
+        sound = f"[sound:{lookup}.mp3]" if has_pronunciation else ""
+        image = f"<img src='{lookup}.png'>" if has_pictogram else ""
         return genanki.Note(model=MODEL, fields=[front, back, sound, image])
 
     def create_deck(self, notes: list, deck_name: str) -> genanki.Deck:
@@ -100,20 +103,24 @@ class BaseDeckGenerator(ABC):
     def parse_content(self):
         pass
 
+    def get_lockup_term(self, entry):
+        return entry.term if self.mode == "definition" else entry.result
+
     async def export_deck(self, data, deck_name):
         notes = []
         entries, pronunciation_urls = self.parse_content(data)
-        terms = [entry.term for entry in data]
+        terms = [self.get_lockup_term(entry) for entry in data]
         (
             media_files,
             available_pictograms,
             available_pronunciations,
         ) = await self.prepare_media(terms, pronunciation_urls)
         for entry in entries:
+            lookup_term = entry[0] if self.mode == "definition" else entry[-1]
             note = self.create_note(
                 entry,
-                entry[0] in available_pronunciations,
-                entry[0] in available_pictograms,
+                lookup_term in available_pronunciations,
+                lookup_term in available_pictograms,
             )
             notes.append(note)
 
