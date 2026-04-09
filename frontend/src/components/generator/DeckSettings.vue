@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
 import OptionRow from '../ui/OptionRow.vue';
-import LanguagePairSelector from '../input/LanguagePairSelector.vue';
+import LanguagePairSelector from './deck/LanguagePairSelector.vue';
 
 const providers = {
   dictionary: [{ label: 'Free Dictionary API', value: 'free_dictionary_api' }],

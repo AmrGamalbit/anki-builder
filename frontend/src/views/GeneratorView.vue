@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import GeneratorStepper from '@/components/generator/GeneratorStepper.vue';
-import DeckSettings from '@/components/input/DeckSettings.vue';
+import DeckSettings from '@/components/generator/DeckSettings.vue';
 import SourceInput from '@/components/generator/SourceInput.vue';
-import DeckStyleEditor from '@/components/settings/DeckStyleEditor.vue';
+import DeckStyleEditor from '@/components/generator/DeckStyleEditor.vue';
 import { WrenchIcon } from '@heroicons/vue/16/solid';
 import Alert from '@/components/ui/BaseAlert.vue';
 import Modal from '@/components/ui/BaseModal.vue';
@@ -42,7 +42,7 @@ const payload = ref({
     target_language: 'en',
   },
   style: {
-    font_family: `'Segoe UI', sans-serif`,
+    font_family: 'system-ui, sans-serif',
     font_size: 16,
     line_height: 1.4,
     padding: 20,
@@ -117,13 +117,13 @@ async function generate() {
     <div>
       <div class="flex justify-between mb-5">
         <button
-          class="bg-primary text-surface rounded p-2 cursor-pointer disabled:bg-gray-300"
+          class="bg-primary text-neutral rounded p-2 cursor-pointer disabled:bg-gray-300 disabled:text-gray-900"
           @click="currentStep--"
           :disabled="previousDisabled"
         >
           Previous
         </button>
-        <button class="bg-primary text-surface rounded p-2 cursor-pointer" @click="onNext">
+        <button class="bg-primary text-neutral rounded p-2 cursor-pointer" @click="onNext">
           {{ text }}
         </button>
       </div>

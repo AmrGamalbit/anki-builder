@@ -31,7 +31,7 @@ const optionValue = defineModel();
 
 <template>
   <div class="flex items-center justify-between">
-    <span class="text-nowrap">{{ option.label }}</span>
+    <span class="text-nowrap text-gray-900 dark:text-gray-100">{{ option.label }}</span>
     <component
       :is="components[option.type]"
       v-bind="option.items ? { options: option.items } : option.props"

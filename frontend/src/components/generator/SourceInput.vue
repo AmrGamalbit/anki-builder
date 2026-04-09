@@ -34,7 +34,7 @@ watch(selectedSource, () => {
     <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="sourceValues" />
     <UrlInput v-else :source-type="'youtube'" v-model="sourceValues" />
     <div class="flex justify-between items-center px-3">
-      <h2>Deck Name</h2>
+      <h2 class="text-gray-900 dark:text-gray-100">Deck Name</h2>
       <div class="w-48 max-w-sm min-w-[200px]">
         <input
           class="inline-flex h-9 w-48 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
