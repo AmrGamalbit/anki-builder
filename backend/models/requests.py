@@ -17,19 +17,18 @@ class TextOptions(BaseModel):
     base_form: bool = False
 
 
-class YoutubeOptions(BaseModel):
-    type: Literal["youtube"]
-
-
-class WebOptions(BaseModel):
-    type: Literal["web"]
+class UrlOptions(BaseModel):
+    type: Literal["youtube", "web"]
+    vocabulary_level: str
+    max_cards: int
+    include_idioms: bool
 
 
 class SourceInput(BaseModel):
     content: Any
     deck_name: str
     options: Annotated[
-        FileOptions | TextOptions | YoutubeOptions | WebOptions, Discriminator("type")
+        FileOptions | TextOptions | UrlOptions, Discriminator("type")
     ] = None
 
 

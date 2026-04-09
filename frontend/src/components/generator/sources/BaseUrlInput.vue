@@ -50,6 +50,7 @@ const options = {
       <input
         type="url"
         :placeholder="placeholder"
+        v-model="model.content"
         class="bg-white dark:text-gray-900 w-full h-10 rounded-md rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2 text-gray-900 placeholder:text-gray-400"
       />
       <div class="flex flex-col gap-2 p-3">

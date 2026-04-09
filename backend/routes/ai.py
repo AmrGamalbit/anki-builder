@@ -2,28 +2,33 @@ from fastapi import APIRouter
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.ai import AIDeckGenerator
-from utils.file_parser import handle_file, extract_words
+from services.youtube import get_transcript
+from utils.prompt_builders import build_user_instructions
 
 router = APIRouter(prefix="/ai", tags=["ai"])
-
-MODE_INSTRUCTIONS = {
-    "definition": "provide a clear and simple definition for each term",
-    "translation": "translate each term into {target_language}",
-}
 
 
 @router.post("/generate")
 async def generate(request: GenerateRequest):
     deck, source, style = request.deck, request.source, request.style
-    terms = source.content.split(source.options.delimiter)
+
+    if source.options.type == "youtube":
+        content = get_transcript(source.content)
+        content_type = "transcript"
+
+    else:
+        content = source.content
+        content_type = "terms"
     payload = {
-        "user_instructions": f"""
-        You are given the following terms in {deck.source_language}: {terms}
-
-        Your task is to {MODE_INSTRUCTIONS[deck.mode].format(target_language=deck.target_language)}.
-        """
+        "user_instructions": build_user_instructions(
+            content,
+            deck.source_language,
+            deck.mode,
+            content_type,
+            source.options,
+            deck.target_language,
+        )
     }
-
     ai_response = await dispatch("ai", deck.provider, payload)
     generator = AIDeckGenerator(
         include_pronunciation=deck.include_pronunciation,

@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.dictionary import DictionaryDeckGenerator
-from utils.file_parser import handle_file, extract_words
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
