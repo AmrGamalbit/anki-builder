@@ -10,14 +10,15 @@
           What does AnkiBuilder Include?
         </div>
         <div class="bg-accent rounded-2xl flex-center p-5 text-neutral">
-          Free flashcard decks with contextual sentences, translations, and natural pronunciation.
-          25+ languages available.
+          AnkiBuilder generates Anki decks from multiple sources — paste text, CSV, web articles, or
+          YouTube. It adds pronunciations and pictograms, and supports both definition and
+          translation modes.
         </div>
       </div>
       <div
-        class="bg-surface rounded-2xl flex-center text-4xl font-medium text-neutral h-80 md:h-50 lg:h-76"
+        class="bg-surface rounded-2xl flex-center text-center text-4xl font-medium text-neutral h-80 md:h-50 lg:h-76"
       >
-        Ich Bin Amr
+        We hope you have a wonderful experience!
       </div>
     </div>
   </section>
