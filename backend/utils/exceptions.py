@@ -5,6 +5,7 @@ from groq import APIConnectionError, RateLimitError, APIStatusError
 from gtts.tts import gTTSError
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from newspaper.article import ArticleException
 
 
 def register_handlers(app: FastAPI):
@@ -33,6 +34,13 @@ def register_handlers(app: FastAPI):
     @app.exception_handler(gTTSError)
     def gtts_handler(request, exc):
         return JSONResponse(status_code=502, content={"detail": str(exc)})
+
+    @app.exception_handler(ArticleException)
+    def article_handler(request, exc):
+        return JSONResponse(
+            status_code=422,
+            content={"detail": f"Failed to extract article: {str(exc)}"},
+        )
 
     # Exception handler for enforcing rate limits on API routes.
     # Limits each user (or IP) to 60 requests per minute

@@ -3,6 +3,7 @@ from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.ai import AIDeckGenerator
 from services.youtube import get_transcript
+from services.web import extract_article
 from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
 
@@ -18,7 +19,11 @@ async def generate(request: GenerateRequest):
         terms = await get_unusual_words(
             content, deck.source_language, deck.provider, source.options
         )
-
+    elif source.options.type == "web":
+        content = extract_article(source.content)
+        terms = await get_unusual_words(
+            content, deck.source_language, deck.provider, source.options
+        )
     else:
         terms = clean_content(source.content, source.options)
     user_instructions = build_anki_prompt(

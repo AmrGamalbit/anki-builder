@@ -3,6 +3,7 @@ from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.dictionary import DictionaryDeckGenerator
 from services.youtube import get_transcript
+from services.web import extract_article
 from utils.vocabulary import clean_content, get_unusual_words
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
@@ -19,11 +20,13 @@ async def generate(request: GenerateRequest):
     if source.options.type == "youtube":
         content = get_transcript(source.content)
         terms = await get_unusual_words(content, "en", deck.provider, source.options)
+    elif source.options.type == "web":
+        content = extract_article(source.content)
+        terms = await get_unusual_words(content, "en", deck.provider, source.options)
     else:
         terms = clean_content(source.content, source.options)
 
     payload = {"words": terms}
-    print(payload)
     dictionary_response = await dispatch("dictionary", deck.provider, payload)
     generator = DictionaryDeckGenerator(
         include_pronunciation=deck.include_pronunciation,
