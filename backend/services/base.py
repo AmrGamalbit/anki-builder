@@ -9,36 +9,38 @@ from services.pictogram import PictogramService
 from utils.styles import build_css
 from models.requests import StyleSettings
 
-DEFAULT_STYLES = {}
+MODEL_FIELDS = [
+    {"name": "Term"},
+    {"name": "Result"},
+    {"name": "Pronunciation"},
+    {"name": "Picture"},
+]
 
-MODEL = genanki.Model(
-    model_id=1234567890,
-    name="AnkiBuilderModel",
-    fields=[
-        {"name": "Term"},
-        {"name": "Result"},
-        {"name": "Pronunciation"},
-        {"name": "Picture"},
-    ],
-    templates=[
-        {
-            "name": "Card 1",
-            "qfmt": "{{Term}}",
-            "afmt": '<span class="highlight">{{FrontSide}}</span><hr id="answer">{{Result}}<br>{{Picture}}<br>{{Pronunciation}}',
-        },
-    ],
-)
+MODEL_TEMPLATES = [
+    {
+        "name": "Card 1",
+        "qfmt": "{{Term}}",
+        "afmt": '<span class="highlight">{{FrontSide}}</span><hr id="answer">{{Result}}<br>{{Picture}}<br>{{Pronunciation}}',
+    },
+]
 
 
 class BaseDeckGenerator(ABC):
     def __init__(
         self,
+        style: StyleSettings,
         include_pronunciation: bool = False,
         include_pictogram: bool = False,
         target_language: str = "en",
         mode: str = "definition",
-        style: StyleSettings = DEFAULT_STYLES,
     ):
+        self.model = genanki.Model(
+            model_id=1234567890,
+            name="AnkiBuilderModel",
+            fields=MODEL_FIELDS,
+            templates=MODEL_TEMPLATES,
+            css=build_css(style.model_dump()),
+        )
         self.deck = None
         self.deck_name: str = "My Deck"
         self.temp_dir = tempfile.TemporaryDirectory()
@@ -47,8 +49,6 @@ class BaseDeckGenerator(ABC):
         self.include_pronunciation: bool = include_pronunciation
         self.target_language = target_language
         self.mode = mode
-        style_dict = style.model_dump()
-        MODEL.css = build_css(style_dict)
 
     def create_note(
         self,
@@ -60,7 +60,7 @@ class BaseDeckGenerator(ABC):
         lookup = term if self.mode == "definition" else back
         sound = f"[sound:{lookup}.mp3]" if has_pronunciation else ""
         image = f"<img src='{lookup}.png'>" if has_pictogram else ""
-        return genanki.Note(model=MODEL, fields=[front, back, sound, image])
+        return genanki.Note(model=self.model, fields=[front, back, sound, image])
 
     def create_deck(self, notes: list, deck_name: str) -> genanki.Deck:
         deck = genanki.Deck(deck_id=random.randrange(1 << 30, 1 << 31), name=deck_name)
