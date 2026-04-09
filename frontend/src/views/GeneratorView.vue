@@ -29,7 +29,7 @@ const steps = [
 const payload = ref({
   source: {
     content: '',
-    options: undefined,
+    options: {},
   },
   deck: {
     include_pronunciation: false,
@@ -101,12 +101,13 @@ async function generate() {
   console.log(r);
   if (!response.ok) {
     alertIntent.value = 'danger';
-    alertMessage.value = 'Something went wrong';
+    alertMessage.value = r.detail;
   } else {
     alertMessage.value = 'Deck was generated successfully';
   }
   showAlert.value = true;
   showModal.value = false;
+  currentStep.value = 0;
 }
 </script>
 

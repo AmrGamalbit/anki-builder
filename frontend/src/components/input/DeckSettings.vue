@@ -18,8 +18,8 @@ const options = ref({
     label: 'Include Pronunciation',
     type: 'boolean',
   },
-  include_pictures: {
-    label: 'Include Pictures',
+  include_pictogram: {
+    label: 'Include Pictograms',
     type: 'boolean',
   },
   source: {
