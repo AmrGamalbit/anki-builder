@@ -3,7 +3,8 @@ from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.ai import AIDeckGenerator
 from services.youtube import get_transcript
-from utils.prompt_builders import build_user_instructions
+from utils.prompt_builders import build_anki_prompt
+from utils.vocabulary import clean_content, get_unusual_words
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -14,21 +15,16 @@ async def generate(request: GenerateRequest):
 
     if source.options.type == "youtube":
         content = get_transcript(source.content)
-        content_type = "transcript"
+        terms = await get_unusual_words(
+            content, deck.source_language, deck.provider, source.options
+        )
 
     else:
-        content = source.content
-        content_type = "terms"
-    payload = {
-        "user_instructions": build_user_instructions(
-            content,
-            deck.source_language,
-            deck.mode,
-            content_type,
-            source.options,
-            deck.target_language,
-        )
-    }
+        terms = clean_content(source.content, source.options)
+    user_instructions = build_anki_prompt(
+        terms, deck.source_language, deck.mode, source.options, deck.target_language
+    )
+    payload = {"user_instructions": user_instructions}
     ai_response = await dispatch("ai", deck.provider, payload)
     generator = AIDeckGenerator(
         include_pronunciation=deck.include_pronunciation,

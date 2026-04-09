@@ -64,9 +64,31 @@ class GroqProvider(BaseProvider):
         return chat_completion.choices[0].message.content
 
     def normalize(self, raw):
-        print(raw)
         definition_data = AIResponse.model_validate_json(raw)
         meta = {"model": MODEL}
         return UnifiedResponse(
             source="ai", provider="groq", data=definition_data.results, meta=meta
         )
+
+    async def extract_terms(self, payload):
+        chat_completion = self.client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_INSTRUCTIONS,
+                },
+                {
+                    "role": "user",
+                    "content": payload.get("user_instructions"),
+                },
+            ],
+            model=MODEL,
+            response_format={
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "Extractng_voacb",
+                    "schema": AIResponse.model_json_schema(),
+                },
+            },
+        )
+        return chat_completion.choices[0].message.content

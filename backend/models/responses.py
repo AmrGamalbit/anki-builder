@@ -24,6 +24,10 @@ class DictionaryResponse(BaseModel):
     results: list[DictionaryEntry]
 
 
+class ExtractedTerms(BaseModel):
+    terms: list[str]
+
+
 class AIResponseData(BaseModel):
     term: str
     result: str
@@ -31,7 +35,7 @@ class AIResponseData(BaseModel):
 
 
 class AIResponse(BaseModel):
-    results: list[AIResponseData]
+    results: list[AIResponseData] | ExtractedTerms
 
 
 class UnifiedResponse(BaseModel):
