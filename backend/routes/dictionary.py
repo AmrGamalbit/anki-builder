@@ -1,10 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.dictionary import DictionaryDeckGenerator
 from services.youtube import get_transcript
 from services.web import extract_article
 from utils.vocabulary import clean_content, get_unusual_words
+from utils.file_parser import handle_file, extract_words
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
@@ -15,7 +16,7 @@ MODE_INSTRUCTIONS = {
 
 
 @router.post("/lookup")
-async def generate(request: GenerateRequest):
+async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
     deck, source, style = request.deck, request.source, request.style
     if source.options.type == "youtube":
         content = get_transcript(source.content)
@@ -24,6 +25,7 @@ async def generate(request: GenerateRequest):
         content = extract_article(source.content)
         terms = await get_unusual_words(content, "en", deck.provider, source.options)
     else:
+        print(source.options)
         terms = clean_content(source.content, source.options)
 
     payload = {"words": terms}
@@ -35,4 +37,6 @@ async def generate(request: GenerateRequest):
         use_dictionary_audio=deck.use_dictionary_audio,
         style=style,
     )
-    return await generator.export_deck(dictionary_response.data, source.deck_name)
+    return await generator.export_deck(
+        dictionary_response.data, source.deck_name, background_tasks
+    )

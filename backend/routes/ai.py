@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.ai import AIDeckGenerator
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/ai", tags=["ai"])
 
 
 @router.post("/generate")
-async def generate(request: GenerateRequest):
+async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
     deck, source, style = request.deck, request.source, request.style
 
     if source.options.type == "youtube":
@@ -39,4 +39,6 @@ async def generate(request: GenerateRequest):
         style=style,
     )
 
-    return await generator.export_deck(ai_response.data, source.deck_name)
+    return await generator.export_deck(
+        ai_response.data, source.deck_name, background_tasks
+    )

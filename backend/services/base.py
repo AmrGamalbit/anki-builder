@@ -8,6 +8,9 @@ from services.pronunciation import PronunciationService
 from services.pictogram import PictogramService
 from utils.styles import build_css
 from models.requests import StyleSettings
+import os
+from fastapi.responses import FileResponse
+from fastapi import BackgroundTasks
 
 MODEL_FIELDS = [
     {"name": "Term"},
@@ -106,7 +109,7 @@ class BaseDeckGenerator(ABC):
     def get_lockup_term(self, entry):
         return entry.term if self.mode == "definition" else entry.result
 
-    async def export_deck(self, data, deck_name):
+    async def export_deck(self, data, deck_name, background_tasks: BackgroundTasks):
         notes = []
         entries, pronunciation_urls = self.parse_content(data)
         terms = [self.get_lockup_term(entry) for entry in data]
@@ -128,7 +131,11 @@ class BaseDeckGenerator(ABC):
 
         package = genanki.Package(deck)
         package.media_files = media_files
-
-        package.write_to_file(f"{deck_name}.apkg")
-        self.temp_dir.cleanup()
-        return "Deck was created! No worries"
+        deck_path = os.path.join(self.media_folder, f"{deck_name}.apkg")
+        package.write_to_file(deck_path)
+        background_tasks.add_task(self.temp_dir.cleanup)
+        return FileResponse(
+            path=deck_path,
+            filename=f"{deck_name}.apkg",
+            media_type="application/octet-stream",
+        )

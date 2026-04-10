@@ -91,18 +91,26 @@ async function generate() {
   const endpoint = getEndpoint(payload.value.deck.source);
   if (payload.value.source.options.type == 'file') {
     await extractWordsFromFile();
+    payload.value.source.options.delimiter = ',';
   }
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload.value),
   });
-  const r = await response.json();
-  console.log(r);
   if (!response.ok) {
+    const r = await response.json();
     alertIntent.value = 'danger';
     alertMessage.value = r.detail;
   } else {
+    // Handle file download
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${payload.value.source.deck_name}.apkg`;
+    a.click();
+    URL.revokeObjectURL(url);
     alertMessage.value = 'Deck was generated successfully';
   }
   showAlert.value = true;
