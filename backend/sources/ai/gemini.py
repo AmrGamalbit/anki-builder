@@ -37,7 +37,7 @@ MODEL = "gemini-2.5-flash"
 
 class GeminiProvider(BaseProvider):
     def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("api"))
+        self.client = genai.Client(api_key=os.getenv("GEMINI_APIKEY"))
 
     async def fetch(self, payload):
         response = self.client.models.generate_content(

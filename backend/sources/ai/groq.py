@@ -40,7 +40,7 @@ The user will specify a mode for each request. You must strictly follow the beha
 class GroqProvider(BaseProvider):
     def __init__(self):
         self.client = Groq(
-            api_key=os.getenv("API_KEY"),
+            api_key=os.getenv("GROQ_APIKEY"),
         )
 
     async def fetch(self, payload):
