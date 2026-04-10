@@ -8,6 +8,7 @@ AnkiBuilder is a web app that helps you create Anki decks effortlessly. Provide 
 - **Multiple AI providers**: Supports Groq and Gemini, plus a free dictionary API
 - **Pronunciation support**: Add audio via Google Text-to-Speech or dictionary providers
 - **Card styling**: Customize the appearance of your cards with a user-friendly style editor
+- **Modern UI**: Responsive design with built-in dark mode support
 
 ## Tech Stack
 - **Frontend**: Vue
