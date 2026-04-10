@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
+    "preview": "npm run build-only && wrangler dev",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "deploy": "npm run build-only && wrangler deploy"
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
@@ -21,6 +22,7 @@
     "vue-router": "^5.0.1"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.31.2",
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.10.9",
     "@vitejs/plugin-vue": "^6.0.3",
@@ -30,7 +32,8 @@
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-vue-devtools": "^8.0.5",
-    "vue-tsc": "^3.2.4"
+    "vue-tsc": "^3.2.4",
+    "wrangler": "^4.81.1"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
