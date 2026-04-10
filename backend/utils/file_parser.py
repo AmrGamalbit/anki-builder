@@ -17,7 +17,7 @@ async def parse_csv(file: UploadFile, delimiter: str, has_header: bool):
         raise ValueError("Invalid CSV file")
 
 
-async def parse_excel(file: UploadFile, has_header: bool):
+async def parse_excel(file: UploadFile, has_header: bool, delimiter=None):
     try:
         content = await file.read()
         header = 0 if has_header else None
@@ -35,6 +35,7 @@ FILE_HANDLERS = {"csv": parse_csv, "xlsx": parse_excel}
 
 
 async def get_file_handler(file: UploadFile):
+    print(file)
     filename = file.filename
     file_type = filename.split(".")[-1]
     if file_type not in FILE_HANDLERS:

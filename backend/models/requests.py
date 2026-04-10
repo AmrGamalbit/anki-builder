@@ -7,6 +7,9 @@ class FileOptions(BaseModel):
     has_header: bool = False
     word_column: int = 0
     delimiter: str = ","
+    strip_punctuation: bool = True
+    lowercase: bool = True
+    base_form: bool = False
 
 
 class TextOptions(BaseModel):

@@ -8,6 +8,8 @@ model.value.options = {
   delimiter: ',',
   word_column: 1,
   has_header: false,
+  strip_punctuation: true,
+  lowercase: true,
   base_form: false,
 };
 const options = {
@@ -22,6 +24,8 @@ const options = {
   },
   word_column: { label: 'Word Column', type: 'range', props: { min: 1, max: 10, step: 1 } },
   has_header: { label: 'Has Header', type: 'boolean' },
+  strip_punctuation: { label: 'Strip Punctuation', type: 'boolean' },
+  lowercase: { label: 'All Lowercase', type: 'boolean' },
   base_form: { label: 'Base Form Only', type: 'boolean' },
 };
 </script>
