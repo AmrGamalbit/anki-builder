@@ -35,6 +35,7 @@ class BaseDeckGenerator(ABC):
         include_pronunciation: bool = False,
         include_pictogram: bool = False,
         target_language: str = "en",
+        source_language: str = "en",
         mode: str = "definition",
     ):
         self.model = genanki.Model(
@@ -51,6 +52,7 @@ class BaseDeckGenerator(ABC):
         self.include_pictogram: bool = include_pictogram
         self.include_pronunciation: bool = include_pronunciation
         self.target_language = target_language
+        self.source_language = source_language
         self.mode = mode
 
     def create_note(
@@ -86,7 +88,14 @@ class BaseDeckGenerator(ABC):
             await self.pictogram_service.close_session()
 
         if self.include_pronunciation:
-            self.pronunciation_service = PronunciationService(lang=self.target_language)
+            if self.mode == "definition":
+                self.pronunciation_service = PronunciationService(
+                    lang=self.source_language
+                )
+            else:
+                self.pronunciation_service = PronunciationService(
+                    lang=self.target_language
+                )
             pronunciations = await self.get_pronunciations(terms, pronunciation_urls)
             if pronunciations:
                 available_pronunciations = pronunciations.keys()

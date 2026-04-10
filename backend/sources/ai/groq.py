@@ -31,6 +31,9 @@ The user will specify a mode for each request. You must strictly follow the beha
 - Keep definitions and translations natural, concise, and accurate.
 - Always use the most common meaning unless otherwise instructed.
 - If a word is unknown or ambiguous, make your best reasonable attempt.
+- Always return a JSON object with a "results" key containing the array.
+  Never return a raw array.
+  Example: {"results": [...]}
 """
 
 

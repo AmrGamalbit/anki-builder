@@ -25,7 +25,6 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
         content = extract_article(source.content)
         terms = await get_unusual_words(content, "en", deck.provider, source.options)
     else:
-        print(source.options)
         terms = clean_content(source.content, source.options)
 
     payload = {"words": terms}
