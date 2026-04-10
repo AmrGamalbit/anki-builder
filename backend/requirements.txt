@@ -1,0 +1,12 @@
+aiohttp==3.13.3
+fastapi==0.135.3
+genanki==0.13.1
+gTTS==2.5.4
+newspaper3k==0.2.8
+nltk==3.9.4
+pandas==3.0.2
+protobuf==7.34.1
+pydantic==2.12.5
+python-dotenv==1.2.2
+slowapi==0.1.9
+youtube_transcript_api==1.2.4
