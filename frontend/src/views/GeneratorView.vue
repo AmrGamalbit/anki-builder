@@ -116,6 +116,9 @@ async function generate() {
   showAlert.value = true;
   showModal.value = false;
   currentStep.value = 0;
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 3000);
 }
 </script>
 
