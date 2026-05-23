@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
-import BaseDropdownPicker from './BaseDropdownPicker.vue';
+import BaseDropdownPicker from './DropdownPicker.vue';
 
 interface Option {
   label: string;

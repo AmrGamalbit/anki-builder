@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Toggle from './BaseToggle.vue';
-import ButtonGroup from './BaseButtonGroup.vue';
-import Dropdown from './BaseDropdown.vue';
-import ColorPicker from './BaseColorPicker.vue';
-import Range from './BaseRange.vue';
+import Toggle from './Toggle.vue';
+import ButtonGroup from './ButtonGroup.vue';
+import Dropdown from './Dropdown.vue';
+import ColorPicker from './ColorPicker.vue';
+import Range from './Range.vue';
 
 interface OptionItem {
   label: string;

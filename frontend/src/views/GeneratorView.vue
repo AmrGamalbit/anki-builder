@@ -5,8 +5,8 @@ import DeckSettings from '@/components/generator/DeckSettings.vue';
 import SourceInput from '@/components/generator/SourceInput.vue';
 import DeckStyleEditor from '@/components/generator/DeckStyleEditor.vue';
 import { WrenchIcon } from '@heroicons/vue/16/solid';
-import Alert from '@/components/ui/BaseAlert.vue';
-import Modal from '@/components/ui/BaseModal.vue';
+import Alert from '@/components/ui/Alert.vue';
+import Modal from '@/components/ui/Modal.vue';
 import { useApi } from '@/composables/useApi';
 import '@/assets/global.css';
 

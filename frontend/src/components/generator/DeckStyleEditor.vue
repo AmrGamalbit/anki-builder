@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import OptionRow from '../ui/OptionRow.vue';
+import OptionRow from '../ui/OptionField.vue';
 
 const cardStyles = defineModel();
 
