@@ -1,11 +1,8 @@
 <script setup lang="ts">
-interface Option {
-  label: string;
-  value: string;
-}
+import type { OptionItem } from '@/types/option';
 
 const props = defineProps<{
-  options: Option[];
+  options: OptionItem[];
 }>();
 const selectedOption = defineModel<string>();
 </script>

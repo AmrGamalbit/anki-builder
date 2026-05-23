@@ -2,14 +2,10 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
 import BaseDropdownPicker from './DropdownPicker.vue';
-
-interface Option {
-  label: string;
-  value: string;
-}
+import type { OptionItem } from '@/types/option';
 
 const props = defineProps<{
-  options: Option[];
+  options: OptionItem[];
 }>();
 
 const breakpoints = useBreakpoints(breakpointsTailwind);
