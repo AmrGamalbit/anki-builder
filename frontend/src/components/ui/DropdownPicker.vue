@@ -1,10 +1,11 @@
 <script setup lang="ts">
-defineProps({ options: Array });
+import type { OptionItem } from '@/types/option';
 
+defineProps<{ options: OptionItem[] }>();
 const selectedOption = defineModel('selectedOption');
 const isDropDownVisible = defineModel('isDropDownVisible');
 
-const toggleOptionSelect = (option) => {
+const handleOptionClick = (option: OptionItem) => {
   selectedOption.value = option.value;
   isDropDownVisible.value = false;
 };
@@ -17,7 +18,7 @@ const toggleOptionSelect = (option) => {
       v-for="(option, index) in options"
       :key="index"
       class="block px-4 py-2 text-sm text-gray-700 select-none focus:bg-gray-100 focus:text-gray-900 focus:outline-hidden"
-      @click="toggleOptionSelect(option)"
+      @click="handleOptionClick(option)"
     >
       {{ option.label }}
     </div>

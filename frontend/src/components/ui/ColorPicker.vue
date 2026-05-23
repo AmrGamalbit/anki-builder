@@ -11,4 +11,3 @@ const pickedColor = defineModel<string>();
     v-model="pickedColor"
   />
 </template>
-0

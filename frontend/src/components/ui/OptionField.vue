@@ -4,18 +4,7 @@ import ButtonGroup from './ButtonGroup.vue';
 import Dropdown from './Dropdown.vue';
 import ColorPicker from './ColorPicker.vue';
 import Range from './Range.vue';
-
-interface OptionItem {
-  label: string;
-  value: string;
-}
-
-interface Option {
-  label: string;
-  type: 'boolean' | 'select' | 'choice' | 'color' | 'range';
-  items?: OptionItem[];
-  props?: {};
-}
+import type { Option } from '@/types/option';
 
 const components = {
   boolean: Toggle,

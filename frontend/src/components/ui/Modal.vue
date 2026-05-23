@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps({ isOpen: false });
+defineProps<{ isOpen: boolean }>();
 </script>
 
 <template>

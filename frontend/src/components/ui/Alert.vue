@@ -10,17 +10,16 @@ import { cva } from 'class-variance-authority';
 import { computed } from 'vue';
 
 const isVisible = defineModel();
-const props = defineProps({
-  intent: {
-    type: String,
-    default: 'info',
-    validator: (value) => {
-      return ['info', 'success', 'warning', 'danger'].includes(value);
-    },
+const props = withDefaults(
+  defineProps<{
+    intent: 'info' | 'success' | 'warning' | 'danger';
+    title: String;
+    content: String;
+  }>(),
+  {
+    intent: 'info',
   },
-  title: String,
-  content: String,
-});
+);
 
 const iconComponents = {
   info: InformationCircleIcon,
