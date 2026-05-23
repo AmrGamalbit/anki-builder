@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DropDown from '@/components/ui/BaseDropdown.vue';
+import DropDown from '@/components/ui/Dropdown.vue';
 
 const sourceLanguage = defineModel('sourceLanguage');
 const targetLanguage = defineModel('targetLanguage');

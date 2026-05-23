@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect } from 'vue';
-import OptionRow from '../ui/OptionRow.vue';
+import OptionRow from '../ui/OptionField.vue';
 import LanguagePairSelector from './deck/LanguagePairSelector.vue';
 
 const providers = {

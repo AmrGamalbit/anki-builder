@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDark } from '@vueuse/core';
-import OptionRow from '@/components/ui/OptionRow.vue';
+import OptionRow from '@/components/ui/OptionField.vue';
 // import Alert from '@/components/ui/BaseAlert.vue';
 // import DeckStyleEditor from '@/components/generator/DeckStyleEditor.vue';
 // import { computed, onMounted, ref } from 'vue';

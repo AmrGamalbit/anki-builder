@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import OptionRow from '@/components/ui/OptionRow.vue';
+import OptionRow from '@/components/ui/OptionField.vue';
 
 const props = defineProps({
   sourceType: String,
