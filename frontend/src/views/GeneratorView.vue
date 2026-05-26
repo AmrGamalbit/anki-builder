@@ -5,25 +5,13 @@ import GeneratorStepper from '@/components/generator/GeneratorStepper.vue';
 import Alert from '@/components/ui/Alert.vue';
 import Modal from '@/components/ui/Modal.vue';
 import { useApi } from '@/composables/useApi';
-import SetupStep from '@/components/generator/steps/SetupStep.vue';
-import WordsStep from '@/components/generator/steps/WordsStep.vue';
-import ContentStep from '@/components/generator/steps/ContentStep.vue';
-import AppearanceStep from '@/components/generator/steps/AppearanceStep.vue';
-import ReviewStep from '@/components/generator/steps/ReviewStep.vue';
+
 import '@/assets/global.css';
 
-const currentStep = ref<number>(0);
 const alertIntent = ref<string>('success');
 const showModal = ref<boolean>(false);
 const showAlert = ref<boolean>(false);
 const alertMessage = ref<string>('');
-const previousDisabled = computed(() => {
-  if (currentStep.value == 0) {
-    return true;
-  }
-  return false;
-});
-const steps = [SetupStep, WordsStep, ContentStep, AppearanceStep, ReviewStep];
 
 const payload = ref({
   source: {
@@ -54,21 +42,6 @@ const payload = ref({
 });
 
 const { getEndpoint } = useApi();
-
-const text = computed(() => {
-  if (currentStep.value < 4) {
-    return 'Next';
-  }
-  return 'Generate';
-});
-
-function onNext() {
-  if (currentStep.value < 4) {
-    currentStep.value++;
-  } else {
-    generate();
-  }
-}
 
 async function extractWordsFromFile() {
   const formData = new FormData();
@@ -122,24 +95,7 @@ async function generate() {
 </script>
 
 <template>
-  <section class="p-5 md:p-20 flex flex-col min-h-screen justify-between">
-    <component :is="steps[currentStep]" v-model="payload[steps[currentStep]]" />
-    <div>
-      <div class="flex justify-between mb-5">
-        <button
-          class="bg-primary text-neutral rounded p-2 cursor-pointer disabled:bg-gray-300 disabled:text-gray-900"
-          @click="currentStep--"
-          :disabled="previousDisabled"
-        >
-          Previous
-        </button>
-        <button class="bg-primary text-neutral rounded p-2 cursor-pointer" @click="onNext">
-          {{ text }}
-        </button>
-      </div>
-      <GeneratorStepper class="mt-auto" v-model="currentStep" />
-    </div>
-  </section>
+  <GeneratorStepper @complete="console.log('best')" />
   <Modal :isOpen="showModal">
     <WrenchIcon class="w-6 h-6 m-2" />
     <h2 class="text-xl font-semibold">Hold Tight!</h2>
