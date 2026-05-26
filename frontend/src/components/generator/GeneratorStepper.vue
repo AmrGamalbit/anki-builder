@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const currentStep = defineModel();
+const currentStep = defineModel({ default: 0 });
 </script>
 
 <template>

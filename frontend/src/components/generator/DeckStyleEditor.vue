@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import OptionRow from '../ui/OptionField.vue';
+import type { StyleOptions } from '@/types/option';
+import type { SchemaField } from '@/types/schema';
+import OptionField from '../ui/OptionField.vue';
 
-const cardStyles = defineModel();
-
-const options = {
-  font_family: {
+const styleSchema: Record<string, SchemaField> = {
+  fontFamily: {
     label: 'Font family',
-    type: 'choice',
+    type: 'choice' as const,
     items: [
       { label: 'System Default', value: 'system-ui, sans-serif' },
       { label: 'Inter', value: `'Inter', sans-serif` },
@@ -16,23 +16,41 @@ const options = {
       { label: 'JetBrains Mono', value: `'JetBrains Mono', monospace` },
     ],
   },
-  font_size: { label: 'Font size', type: 'range', props: { min: 14, max: 40, step: 1 } },
-  line_height: { label: 'Line height', type: 'range', props: { min: 1, max: 2, step: 0.1 } },
-  padding: { label: 'Padding', type: 'range', props: { min: 5, max: 30, step: 1 } },
-  text_align: {
+  fontSize: { label: 'Font size', type: 'range' as const, props: { min: 14, max: 40, step: 1 } },
+  lineHeight: {
+    label: 'Line height',
+    type: 'range' as const,
+    props: { min: 1, max: 2, step: 0.1 },
+  },
+  padding: { label: 'Padding', type: 'range' as const, props: { min: 5, max: 30, step: 1 } },
+  textAlign: {
     label: 'Text algin',
-    type: 'select',
+    type: 'select' as const,
     items: [
       { label: 'Left', value: 'left' },
       { label: 'Center', value: 'center' },
       { label: 'Right', value: 'right' },
     ],
   },
-  accent_color: { label: 'Accent color', type: 'color' },
-  background_color: { label: 'Card background', type: 'color' },
-  color: { label: 'Text color', type: 'color' },
-  night_mode: { label: 'Night mode', type: 'boolean' },
+  accentColor: { label: 'Accent color', type: 'color' as const },
+  backgroundColor: { label: 'Card background', type: 'color' as const },
+  color: { label: 'Text color', type: 'color' as const },
+  nightMode: { label: 'Night mode', type: 'boolean' as const },
 };
+
+const styleOptions = defineModel<StyleOptions>({
+  default: {
+    fontFamily: 'system-ui, sans-serif',
+    fontSize: 16,
+    lineHeight: 1.5,
+    padding: 16,
+    textAlign: 'left',
+    accentColor: '#5B8DEF',
+    backgroundColor: '#FFFFFF',
+    color: '#1A1A1A',
+    nightMode: false,
+  },
+});
 </script>
 
 <template>
@@ -40,11 +58,11 @@ const options = {
     <h2 class="text-4xl text-neutral font-medium">Style</h2>
     <hr class="m-5" />
     <div class="flex flex-col gap-4">
-      <OptionRow
-        v-for="(option, key) in options"
+      <OptionField
+        v-for="(option, key) in styleSchema"
         :key="key"
         :option="option"
-        v-model="cardStyles[key]"
+        v-model="styleOptions[key]"
       />
     </div>
   </section>

@@ -6,9 +6,9 @@ import TextInput from './sources/BaseTextInput.vue';
 import UrlInput from './sources/BaseUrlInput.vue';
 const options = ['Paste Text', 'CSV File', 'Web Article', 'Youtube'];
 const selectedSource = ref<number>(0);
-const sourceValues = defineModel();
+const soruceOptions = defineModel();
 watch(selectedSource, () => {
-  sourceValues.value.content = '';
+  soruceOptions.value.content = '';
 });
 </script>
 
@@ -29,19 +29,9 @@ watch(selectedSource, () => {
         {{ option }}
       </li>
     </ul>
-    <TextInput v-if="selectedSource == 0" v-model="sourceValues" />
-    <FileInput v-else-if="selectedSource == 1" v-model="sourceValues" />
-    <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="sourceValues" />
-    <UrlInput v-else :source-type="'youtube'" v-model="sourceValues" />
-    <div class="flex justify-between items-center px-3">
-      <h2 class="text-gray-900 dark:text-gray-100">Deck Name</h2>
-      <div class="w-48 max-w-sm min-w-[200px]">
-        <input
-          class="inline-flex h-9 w-48 bg-white placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-          placeholder="Type here..."
-          v-model="sourceValues.deck_name"
-        />
-      </div>
-    </div>
+    <TextInput v-if="selectedSource == 0" v-model="soruceOptions" />
+    <FileInput v-else-if="selectedSource == 1" v-model="soruceOptions" />
+    <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="soruceOptions" />
+    <UrlInput v-else :source-type="'youtube'" v-model="soruceOptions" />
   </section>
 </template>

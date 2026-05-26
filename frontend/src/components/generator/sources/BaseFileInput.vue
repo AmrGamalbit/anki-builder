@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import '@/assets/global.css';
 import OptionRow from '@/components/ui/OptionField.vue';
+import type { FileOptions } from '@/types/option';
+import type { SchemaField } from '@/types/schema';
 
-const model = defineModel();
-model.value.options = {
-  type: 'file',
-  delimiter: ',',
-  word_column: 1,
-  has_header: false,
-  strip_punctuation: true,
-  lowercase: true,
-  base_form: false,
-};
-const options = {
+const content = defineModel('content');
+const fileOptions = defineModel<FileOptions>('options', {
+  default: {
+    type: 'file',
+    delimiter: ',',
+    word_column: 1,
+    has_header: false,
+    strip_punctuation: true,
+    lowercase: true,
+    base_form: false,
+  },
+});
+const fileOptionsSchema: Record<string, SchemaField> = {
   delimiter: {
     label: 'Delimiter',
     type: 'select',
@@ -53,7 +57,7 @@ const options = {
               class="hidden"
               @change="
                 (e) => {
-                  model.content = e.target.files[0];
+                  content = (e.target as HTMLInputElement).files?.[0];
                 }
               "
             />
@@ -68,10 +72,10 @@ const options = {
     </div>
     <div class="flex flex-col gap-2 p-3">
       <OptionRow
-        v-for="(option, key) in options"
+        v-for="(option, key) in fileOptionsSchema"
         :option="option"
         :key="key"
-        v-model="model.options[key]"
+        v-model="fileOptions[key as keyof typeof fileOptions]"
       />
     </div>
   </section>

@@ -15,7 +15,7 @@ const components = {
 };
 
 defineProps<{ option: Option }>();
-const optionValue = defineModel();
+const values = defineModel();
 </script>
 
 <template>
@@ -24,7 +24,7 @@ const optionValue = defineModel();
     <component
       :is="components[option.type]"
       v-bind="option.items ? { options: option.items } : option.props"
-      v-model="optionValue"
+      v-model="values"
     />
   </div>
 </template>
