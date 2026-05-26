@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StyleOptions } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
-import OptionField from '../ui/OptionField.vue';
+import OptionField from '@/components/ui/OptionField.vue';
 
 const styleSchema: Record<string, SchemaField> = {
   fontFamily: {
@@ -55,7 +55,7 @@ const styleOptions = defineModel<StyleOptions>({
 
 <template>
   <section>
-    <h2 class="text-4xl text-neutral font-medium">Style</h2>
+    <h2 class="text-4xl text-neutral font-medium">Appearance</h2>
     <hr class="m-5" />
     <div class="flex flex-col gap-4">
       <OptionField

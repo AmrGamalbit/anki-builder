@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue';
-import OptionField from '../ui/OptionField.vue';
-import LanguagePairSelector from './deck/LanguagePairSelector.vue';
+import { computed } from 'vue';
+import OptionField from '@/components/ui/OptionField.vue';
+import LanguagePairSelector from '@/components/generator/deck/LanguagePairSelector.vue';
 import type { OptionItem, DeckOptions } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
 
@@ -73,7 +73,7 @@ const visibleDeckSchema = computed(() =>
 
 <template>
   <section>
-    <h2 class="text-4xl text-neutral font-medium">Deck</h2>
+    <h2 class="text-4xl text-neutral font-medium">Content</h2>
     <hr class="m-5" />
     <div class="flex flex-col gap-5">
       <LanguagePairSelector

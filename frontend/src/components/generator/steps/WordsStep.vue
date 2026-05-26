@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-import FileInput from './sources/BaseFileInput.vue';
-import TextInput from './sources/BaseTextInput.vue';
-import UrlInput from './sources/BaseUrlInput.vue';
+import FileInput from './words/FileInput.vue';
+import TextInput from './words/TextInput.vue';
+import UrlInput from './words/UrlInput.vue';
 const options = ['Paste Text', 'CSV File', 'Web Article', 'Youtube'];
 const selectedSource = ref<number>(0);
-const soruceOptions = defineModel();
+const wordsOptions = defineModel();
 watch(selectedSource, () => {
-  soruceOptions.value.content = '';
+  wordsOptions.value.content = '';
 });
 </script>
 
@@ -29,9 +29,9 @@ watch(selectedSource, () => {
         {{ option }}
       </li>
     </ul>
-    <TextInput v-if="selectedSource == 0" v-model="soruceOptions" />
-    <FileInput v-else-if="selectedSource == 1" v-model="soruceOptions" />
-    <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="soruceOptions" />
-    <UrlInput v-else :source-type="'youtube'" v-model="soruceOptions" />
+    <TextInput v-if="selectedSource == 0" v-model="wordsOptions" />
+    <FileInput v-else-if="selectedSource == 1" v-model="wordsOptions" />
+    <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="wordsOptions" />
+    <UrlInput v-else :source-type="'youtube'" v-model="wordsOptions" />
   </section>
 </template>

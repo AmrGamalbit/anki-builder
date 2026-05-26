@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import GeneratorStepper from '@/components/generator/GeneratorStepper.vue';
-import DeckSettings from '@/components/generator/DeckSettings.vue';
-import SourceInput from '@/components/generator/SourceInput.vue';
-import DeckStyleEditor from '@/components/generator/DeckStyleEditor.vue';
 import { WrenchIcon } from '@heroicons/vue/16/solid';
+import GeneratorStepper from '@/components/generator/GeneratorStepper.vue';
 import Alert from '@/components/ui/Alert.vue';
 import Modal from '@/components/ui/Modal.vue';
 import { useApi } from '@/composables/useApi';
+import SetupStep from '@/components/generator/steps/SetupStep.vue';
+import WordsStep from '@/components/generator/steps/WordsStep.vue';
+import ContentStep from '@/components/generator/steps/ContentStep.vue';
+import AppearanceStep from '@/components/generator/steps/AppearanceStep.vue';
+import ReviewStep from '@/components/generator/steps/ReviewStep.vue';
 import '@/assets/global.css';
 
 const currentStep = ref<number>(0);
@@ -21,11 +23,8 @@ const previousDisabled = computed(() => {
   }
   return false;
 });
-const steps = [
-  { label: 'source', component: SourceInput },
-  { label: 'deck', component: DeckSettings },
-  { label: 'style', component: DeckStyleEditor },
-];
+const steps = [SetupStep, WordsStep, ContentStep, AppearanceStep, ReviewStep];
+
 const payload = ref({
   source: {
     content: '',
@@ -57,14 +56,14 @@ const payload = ref({
 const { getEndpoint } = useApi();
 
 const text = computed(() => {
-  if (currentStep.value < 2) {
+  if (currentStep.value < 4) {
     return 'Next';
   }
   return 'Generate';
 });
 
 function onNext() {
-  if (currentStep.value < 2) {
+  if (currentStep.value < 4) {
     currentStep.value++;
   } else {
     generate();
@@ -124,7 +123,7 @@ async function generate() {
 
 <template>
   <section class="p-5 md:p-20 flex flex-col min-h-screen justify-between">
-    <component :is="steps[currentStep].component" v-model="payload[steps[currentStep].label]" />
+    <component :is="steps[currentStep]" v-model="payload[steps[currentStep]]" />
     <div>
       <div class="flex justify-between mb-5">
         <button
