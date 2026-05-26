@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import DropDown from '@/components/ui/Dropdown.vue';
 
-const sourceLanguage = defineModel('sourceLanguage');
-const targetLanguage = defineModel('targetLanguage');
+const sourceLanguage = defineModel<string>('sourceLanguage');
+const targetLanguage = defineModel<string>('targetLanguage');
 const displayNames = new Intl.DisplayNames(['en'], { type: 'language' });
 const languageCodes = [
   'en',
@@ -37,7 +37,7 @@ const languageCodes = [
   'uk',
 ];
 const languages = languageCodes.map((code) => {
-  return { label: displayNames.of(code), value: code };
+  return { label: displayNames.of(code) ?? code, value: code };
 });
 </script>
 

@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import OptionRow from '@/components/ui/OptionField.vue';
+import type { SchemaField } from '@/types/schema';
 
 const props = defineProps({
   sourceType: String,
 });
-const model = defineModel();
-model.value.options = {
-  type: props.sourceType,
-  vocabulary_level: 'b1',
-  max_cards: 20,
-  include_idioms: true,
-};
+const content = defineModel('content');
 const placeholder = computed(() => {
   if (props.sourceType == 'web') {
     return 'https://';
@@ -19,7 +14,15 @@ const placeholder = computed(() => {
     return 'https://www.youtube.com/watch?v=...';
   }
 });
-const options = {
+const urlOptions = defineModel('options', {
+  default: {
+    type: 'youtube',
+    vocabulary_level: 'b1',
+    max_cards: 20,
+    include_idioms: true,
+  },
+});
+const urlOptionsSchema: Record<string, SchemaField> = {
   vocabulary_level: {
     label: 'Vocabulary Level',
     type: 'select',
@@ -50,15 +53,15 @@ const options = {
       <input
         type="url"
         :placeholder="placeholder"
-        v-model="model.content"
+        v-model="content"
         class="bg-white dark:text-gray-900 w-full h-10 rounded-md rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2 text-gray-900 placeholder:text-gray-400"
       />
       <div class="flex flex-col gap-2 p-3">
         <OptionRow
-          v-for="(option, key) in options"
+          v-for="(option, key) in urlOptionsSchema"
           :option="option"
           :key="key"
-          v-model="model.options[key]"
+          v-model="urlOptions[key as keyof typeof urlOptions]"
         />
       </div>
     </div>
