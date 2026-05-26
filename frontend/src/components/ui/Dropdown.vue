@@ -37,9 +37,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="inline-block cursor-pointer">
+  <div class="inline-block cursor-pointer h-5">
     <div
-      class="inline-flex w-18 md:w-48 justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
+      class="inline-flex w-18 md:w-48 justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
       @click.stop="changeDropDownVisibility"
     >
       <div>

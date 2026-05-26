@@ -70,7 +70,7 @@ const fileOptionsSchema: Record<string, SchemaField> = {
         </div>
       </div>
     </div>
-    <div class="flex flex-col gap-2 p-3">
+    <div class="flex flex-col gap-4 p-3">
       <OptionRow
         v-for="(option, key) in fileOptionsSchema"
         :option="option"

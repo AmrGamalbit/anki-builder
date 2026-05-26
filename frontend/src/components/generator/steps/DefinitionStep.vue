@@ -80,12 +80,14 @@ const visibleDeckSchema = computed(() =>
         v-model:sourceLanguage="deckOptions['source_language']"
         v-model:targetLanguage="deckOptions['target_language']"
       />
-      <OptionField
-        v-for="(option, key) in visibleDeckSchema"
-        :key="key"
-        :option="option"
-        v-model="deckOptions[key as keyof typeof deckOptions]"
-      />
+      <div class="flex flex-col gap-4">
+        <OptionField
+          v-for="(option, key) in visibleDeckSchema"
+          :key="key"
+          :option="option"
+          v-model="deckOptions[key as keyof typeof deckOptions]"
+        />
+      </div>
     </div>
   </section>
 </template>

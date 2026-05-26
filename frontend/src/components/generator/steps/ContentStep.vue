@@ -6,9 +6,16 @@ import TextInput from './words/TextInput.vue';
 import UrlInput from './words/UrlInput.vue';
 const options = ['Paste Text', 'CSV File', 'Web Article', 'Youtube'];
 const selectedSource = ref<number>(0);
-const wordsOptions = defineModel();
+const inputOptions = defineModel();
+const content = ref();
+const inputComponents = [
+  { component: TextInput },
+  { component: FileInput },
+  { component: UrlInput, props: { urlType: 'web' } },
+  { component: UrlInput, props: { urlType: 'youtube' } },
+];
 watch(selectedSource, () => {
-  wordsOptions.value.content = '';
+  content.value = '';
 });
 </script>
 
@@ -29,9 +36,11 @@ watch(selectedSource, () => {
         {{ option }}
       </li>
     </ul>
-    <TextInput v-if="selectedSource == 0" v-model="wordsOptions" />
-    <FileInput v-else-if="selectedSource == 1" v-model="wordsOptions" />
-    <UrlInput v-else-if="selectedSource == 2" :source-type="'web'" v-model="wordsOptions" />
-    <UrlInput v-else :source-type="'youtube'" v-model="wordsOptions" />
+    <component
+      :is="inputComponents[selectedSource]?.component"
+      v-bind="inputComponents[selectedSource]?.props"
+      v-model:options="inputOptions"
+      v-model:content="content"
+    />
   </section>
 </template>

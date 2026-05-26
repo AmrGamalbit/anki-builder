@@ -4,15 +4,11 @@ import OptionRow from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
 
 const props = defineProps({
-  sourceType: String,
+  urlType: String,
 });
 const content = defineModel('content');
 const placeholder = computed(() => {
-  if (props.sourceType == 'web') {
-    return 'https://';
-  } else {
-    return 'https://www.youtube.com/watch?v=...';
-  }
+  return props.urlType == 'web' ? 'https://' : 'https://www.youtube.com/watch?v=...';
 });
 const urlOptions = defineModel('options', {
   default: {
@@ -54,9 +50,9 @@ const urlOptionsSchema: Record<string, SchemaField> = {
         type="url"
         :placeholder="placeholder"
         v-model="content"
-        class="bg-white dark:text-gray-900 w-full h-10 rounded-md rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2 text-gray-900 placeholder:text-gray-400"
+        class="bg-white dark:text-gray-900 w-full h-10 rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2 text-gray-900 placeholder:text-gray-400"
       />
-      <div class="flex flex-col gap-2 p-3">
+      <div class="flex flex-col gap-4 p-3">
         <OptionRow
           v-for="(option, key) in urlOptionsSchema"
           :option="option"

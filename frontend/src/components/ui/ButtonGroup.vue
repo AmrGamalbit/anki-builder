@@ -8,7 +8,7 @@ const selectedOption = defineModel<string>();
 </script>
 
 <template>
-  <div class="inline-flex h-9 w-48 sm:w-auto md:w-full items-baseline justify-end bg-surface p-1">
+  <div class="inline-flex h-5 w-48 sm:w-auto md:w-full items-center justify-end bg-surface p-1">
     <button
       type="button"
       v-for="option in props.options"
