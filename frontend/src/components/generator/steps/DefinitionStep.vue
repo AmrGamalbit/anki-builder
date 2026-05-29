@@ -2,9 +2,11 @@
 import { computed } from 'vue';
 import OptionField from '@/components/ui/OptionField.vue';
 import LanguagePairSelector from '@/components/generator/deck/LanguagePairSelector.vue';
-import type { OptionItem, DeckOptions } from '@/types/option';
+import type { OptionItem } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
+import { useGeneratorStore } from '@/stores/generator';
 
+const generatorStore = useGeneratorStore();
 type ProviderKey = 'dictionary' | 'ai';
 const providers: Record<ProviderKey, OptionItem[]> = {
   dictionary: [{ label: 'Free Dictionary API', value: 'free_dictionary_api' }],
@@ -14,22 +16,13 @@ const providers: Record<ProviderKey, OptionItem[]> = {
   ],
 };
 
-const deckOptions = defineModel<DeckOptions>({
-  default: {
-    include_pronunciation: false,
-    include_pictogram: false,
-    source: 'ai',
-    provider: 'groq',
-  },
-});
-
-const deckSchema = computed<Record<string, SchemaField>>(() => {
+const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
   return {
-    include_pronunciation: {
+    includePronunciation: {
       label: 'Include Pronunciation',
       type: 'boolean',
     },
-    include_pictogram: {
+    includePictogram: {
       label: 'Include Pictograms',
       type: 'boolean',
     },
@@ -44,7 +37,7 @@ const deckSchema = computed<Record<string, SchemaField>>(() => {
     provider: {
       label: 'Provider',
       type: 'select',
-      items: providers[deckOptions.value.source as ProviderKey],
+      items: providers[generatorStore.definitionOptions.source as ProviderKey],
     },
     mode: {
       label: 'Mode',
@@ -53,20 +46,23 @@ const deckSchema = computed<Record<string, SchemaField>>(() => {
         { label: 'Definition', value: 'definition' },
         { label: 'Translation', value: 'translation' },
       ],
-      shouldShow: deckOptions.value.source == 'ai',
+      shouldShow: generatorStore.definitionOptions.source == 'ai',
     },
-    use_dictionary_audio: {
+    useDictionaryAudio: {
       label: 'Use Dictionary Audio',
       type: 'boolean',
       shouldShow:
-        deckOptions.value.include_pronunciation == true && deckOptions.value.source == 'dictionary',
+        generatorStore.definitionOptions.includePronunciation == true &&
+        generatorStore.definitionOptions.source == 'dictionary',
     },
   };
 });
-
+const definitionOptions = generatorStore.definitionOptions;
 const visibleDeckSchema = computed(() =>
   Object.fromEntries(
-    Object.entries(deckSchema.value).filter(([_, option]) => option?.shouldShow !== false),
+    Object.entries(definitionOptionsSchema.value).filter(
+      ([_, option]) => option?.shouldShow !== false,
+    ),
   ),
 );
 </script>
@@ -77,15 +73,15 @@ const visibleDeckSchema = computed(() =>
     <hr class="m-5" />
     <div class="flex flex-col gap-5">
       <LanguagePairSelector
-        v-model:sourceLanguage="deckOptions['source_language']"
-        v-model:targetLanguage="deckOptions['target_language']"
+        v-model:sourceLanguage="definitionOptions['sourceLanguage']"
+        v-model:targetLanguage="definitionOptions['targetLanguage']"
       />
       <div class="flex flex-col gap-4">
         <OptionField
           v-for="(option, key) in visibleDeckSchema"
           :key="key"
           :option="option"
-          v-model="deckOptions[key as keyof typeof deckOptions]"
+          v-model="definitionOptions[key as keyof typeof definitionOptions]"
         />
       </div>
     </div>

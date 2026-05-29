@@ -1,19 +1,10 @@
 <script setup lang="ts">
 import OptionField from '@/components/ui/OptionField.vue';
-import type { TextOptions } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
+import { useGeneratorStore } from '@/stores/generator';
 
+const generatorStore = useGeneratorStore();
 const content = defineModel<string>('content');
-const textOptions = defineModel<TextOptions>('options', {
-  default: {
-    type: 'text',
-    delimiter: ',',
-    strip_punctuation: true,
-    lowercase: true,
-    base_form: false,
-  },
-});
-
 const textOptionsSchema: Record<string, SchemaField> = {
   delimiter: {
     label: 'Delimiter',
@@ -24,10 +15,11 @@ const textOptionsSchema: Record<string, SchemaField> = {
       { label: 'Space', value: ' ' },
     ],
   },
-  strip_punctuation: { label: 'Strip Punctuation', type: 'boolean' },
+  stripPunctuation: { label: 'Strip Punctuation', type: 'boolean' },
   lowercase: { label: 'All Lowercase', type: 'boolean' },
-  base_form: { label: 'Base Form Only', type: 'boolean' },
+  baseForm: { label: 'Base Form Only', type: 'boolean' },
 };
+const textOptions = generatorStore.contentOptions.text;
 </script>
 
 <template>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { StyleOptions } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
 import OptionField from '@/components/ui/OptionField.vue';
+import { useGeneratorStore } from '@/stores/generator';
 
-const styleSchema: Record<string, SchemaField> = {
+const generatorStore = useGeneratorStore();
+const appearanceOptionsSchema: Record<string, SchemaField> = {
   fontFamily: {
     label: 'Font family',
     type: 'choice' as const,
@@ -37,20 +38,7 @@ const styleSchema: Record<string, SchemaField> = {
   color: { label: 'Text color', type: 'color' as const },
   nightMode: { label: 'Night mode', type: 'boolean' as const },
 };
-
-const styleOptions = defineModel<StyleOptions>({
-  default: {
-    fontFamily: 'system-ui, sans-serif',
-    fontSize: 16,
-    lineHeight: 1.5,
-    padding: 16,
-    textAlign: 'left',
-    accentColor: '#5B8DEF',
-    backgroundColor: '#FFFFFF',
-    color: '#1A1A1A',
-    nightMode: false,
-  },
-});
+const appearanceOptions = generatorStore.appearanceOptions;
 </script>
 
 <template>
@@ -59,10 +47,10 @@ const styleOptions = defineModel<StyleOptions>({
     <hr class="m-5" />
     <div class="flex flex-col gap-4">
       <OptionField
-        v-for="(option, key) in styleSchema"
+        v-for="(option, key) in appearanceOptionsSchema"
         :key="key"
         :option="option"
-        v-model="styleOptions[key]"
+        v-model="appearanceOptions[key as keyof typeof appearanceOptions]"
       />
     </div>
   </section>

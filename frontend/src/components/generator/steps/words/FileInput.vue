@@ -1,21 +1,11 @@
 <script setup lang="ts">
 import '@/assets/global.css';
 import OptionRow from '@/components/ui/OptionField.vue';
-import type { FileOptions } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
+import { useGeneratorStore } from '@/stores/generator';
 
+const generatorStore = useGeneratorStore();
 const content = defineModel('content');
-const fileOptions = defineModel<FileOptions>('options', {
-  default: {
-    type: 'file',
-    delimiter: ',',
-    word_column: 1,
-    has_header: false,
-    strip_punctuation: true,
-    lowercase: true,
-    base_form: false,
-  },
-});
 const fileOptionsSchema: Record<string, SchemaField> = {
   delimiter: {
     label: 'Delimiter',
@@ -26,12 +16,13 @@ const fileOptionsSchema: Record<string, SchemaField> = {
       { label: 'Space', value: ' ' },
     ],
   },
-  word_column: { label: 'Word Column', type: 'range', props: { min: 1, max: 10, step: 1 } },
-  has_header: { label: 'Has Header', type: 'boolean' },
-  strip_punctuation: { label: 'Strip Punctuation', type: 'boolean' },
+  wordColumn: { label: 'Word Column', type: 'range', props: { min: 1, max: 10, step: 1 } },
+  hasHeader: { label: 'Has Header', type: 'boolean' },
+  stripPunctuation: { label: 'Strip Punctuation', type: 'boolean' },
   lowercase: { label: 'All Lowercase', type: 'boolean' },
-  base_form: { label: 'Base Form Only', type: 'boolean' },
+  baseForm: { label: 'Base Form Only', type: 'boolean' },
 };
+const fileOptions = generatorStore.contentOptions.file;
 </script>
 
 <template>

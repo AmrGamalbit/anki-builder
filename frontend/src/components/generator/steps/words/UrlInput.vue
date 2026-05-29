@@ -2,21 +2,15 @@
 import { computed } from 'vue';
 import OptionRow from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
+import { useGeneratorStore } from '@/stores/generator';
 
+const generatorStore = useGeneratorStore();
 const props = defineProps({
   urlType: String,
 });
 const content = defineModel('content');
 const placeholder = computed(() => {
   return props.urlType == 'web' ? 'https://' : 'https://www.youtube.com/watch?v=...';
-});
-const urlOptions = defineModel('options', {
-  default: {
-    type: 'youtube',
-    vocabulary_level: 'b1',
-    max_cards: 20,
-    include_idioms: true,
-  },
 });
 const urlOptionsSchema: Record<string, SchemaField> = {
   vocabulary_level: {
@@ -31,16 +25,17 @@ const urlOptionsSchema: Record<string, SchemaField> = {
       { label: 'C2', value: 'C2' },
     ],
   },
-  max_cards: {
+  maxCards: {
     label: 'Max Cards',
     type: 'range',
     props: { min: 1, max: 40, step: 1 },
   },
-  include_idioms: {
+  includeIdioms: {
     label: 'Include idioms',
     type: 'boolean',
   },
 };
+const urlOptions = generatorStore.contentOptions.url;
 </script>
 
 <template>
