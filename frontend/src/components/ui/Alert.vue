@@ -14,7 +14,7 @@ const props = withDefaults(
   defineProps<{
     intent: 'info' | 'success' | 'warning' | 'danger';
     title: String;
-    content: String;
+    content?: String;
   }>(),
   {
     intent: 'info',

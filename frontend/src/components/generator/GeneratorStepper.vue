@@ -9,11 +9,11 @@ const emit = defineEmits(['complete']);
 const currentStep = ref(0);
 const steps = [ContentStep, DefinitionStep, AppearanceStep, ReviewStep];
 const buttonText = computed(() => {
-  return currentStep.value < steps.length ? 'Next' : 'Generate';
+  return currentStep.value < steps.length - 1 ? 'Next' : 'Generate';
 });
 
 function onNext() {
-  currentStep.value < steps.length ? currentStep.value++ : emit('complete');
+  currentStep.value < steps.length - 1 ? currentStep.value++ : emit('complete');
 }
 </script>
 
