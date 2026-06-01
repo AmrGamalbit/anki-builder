@@ -28,7 +28,7 @@ export const useGeneratorStore = defineStore('generator', () => {
       includeIdioms: true,
     },
   });
-  const definitionOptions = ref<DefinitionOptions>({
+  const definitionOptions = ref({
     includePronunciation: false,
     includePictogram: false,
     useDictionaryAudio: false,

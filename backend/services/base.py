@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 from services.pronunciation import PronunciationService
 from services.pictogram import PictogramService
 from utils.styles import build_css
-from models.requests import StyleSettings
+from models.requests import AppearanceOptions
 import os
 from fastapi.responses import FileResponse
 from fastapi import BackgroundTasks
@@ -31,7 +31,7 @@ MODEL_TEMPLATES = [
 class BaseDeckGenerator(ABC):
     def __init__(
         self,
-        style: StyleSettings,
+        style: AppearanceOptions,
         include_pronunciation: bool = False,
         include_pictogram: bool = False,
         target_language: str = "en",

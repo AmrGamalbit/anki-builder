@@ -4,13 +4,14 @@ export async function generateDeck() {
   const generatorStore = useGeneratorStore();
   const endpoint =
     generatorStore.definitionOptions.source == 'ai' ? '/ai/generate' : '/dictionary/lookup';
+  console.log(endpoint);
   const { contentOptions, ...rest } = generatorStore.$state;
   const payload = {
     ...rest,
     contentOptions: contentOptions[generatorStore.contentType as keyof typeof contentOptions],
   };
-  console.log(payload);
-  const res = await fetch(endpoint, {
+  console.log(JSON.stringify(payload));
+  const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
