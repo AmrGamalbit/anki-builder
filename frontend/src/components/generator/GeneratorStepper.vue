@@ -43,17 +43,18 @@ function onNext() {
             :style="{ width: `${(currentStep / (steps.length - 1)) * 100}%` }"
           ></div>
           <div
-            v-for="step in steps.length"
-            class="relative z-10 grid w-10 h-10 font-bold text-gray-900 transition-all duration-300 bg-gray-300 rounded-full place-items-center"
+            v-for="(step, index) in steps"
+            @click="currentStep = index"
+            class="relative z-10 grid w-10 h-10 font-bold text-gray-900 transition-all duration-300 bg-gray-300 rounded-full place-items-center cursor-pointer"
             :class="
-              step - 1 < currentStep
+              index < currentStep
                 ? 'bg-gray-900 text-white'
-                : step - 1 === currentStep
+                : index === currentStep
                   ? 'bg-gray-700 text-white'
                   : 'bg-gray-300 text-gray-900'
             "
           >
-            {{ step }}
+            {{ index + 1 }}
           </div>
         </div>
       </div>
