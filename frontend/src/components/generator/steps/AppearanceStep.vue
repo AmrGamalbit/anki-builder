@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { SchemaField } from '@/types/schema';
 import OptionField from '@/components/ui/OptionField.vue';
-import PreviewCard from '@/components/ui/PreviewCard.vue';
 import { useGeneratorStore } from '@/stores/generator';
+import Card from '@/components/ui/Card.vue';
 
 const generatorStore = useGeneratorStore();
 const appearanceOptionsSchema = {
@@ -54,6 +54,7 @@ const appearanceOptionsSchema = {
   },
 };
 const appearanceOptions = generatorStore.appearanceOptions;
+const mockupCard = { front: 'Hello', back: 'A greeting used in america' };
 </script>
 
 <template>
@@ -78,7 +79,7 @@ const appearanceOptions = generatorStore.appearanceOptions;
 
       <div class="sticky top-4 self-start flex flex-col gap-4 flex-1 mb-4 md:mb-0">
         <p class="text-sm font-bold text-primary">Preview</p>
-        <PreviewCard />
+        <Card :card="mockupCard" />
       </div>
     </div>
   </section>
