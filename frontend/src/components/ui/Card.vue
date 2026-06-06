@@ -19,15 +19,27 @@ const flipCard = () => {
 
 <template>
   <div
-    class="aspect-3/2 flex flex-col justify-between relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5 shadow-[0_0_0_1px_rgba(0,0,0,0.02),0_0_4px_1px_rgba(0,0,0,0.08),8px_10px_20px_-5px_rgba(0,0,0,0.08),3px_4px_6px_-2px_rgba(0,0,0,0.04)] hover:shadow-2xl"
+    class="aspect-3/2 flex flex-col justify-between relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
     :style="
       {
         fontSize: `${appearanceOptions.fontSize}px`,
         fontFamily: appearanceOptions.fontFamily,
         textAlign: appearanceOptions.textAlign,
         lineHeight: appearanceOptions.lineHeight,
-        backgroundColor: appearanceOptions.backgroundColor,
+        backgroundImage: `linear-gradient(135deg, 
+  color-mix(in srgb, ${appearanceOptions.backgroundColor}, white 16%), 
+  ${appearanceOptions.backgroundColor}, 
+  color-mix(in srgb, ${appearanceOptions.backgroundColor}, black 12%)
+)`,
         color: appearanceOptions.color,
+        border: '1px solid',
+        borderColor: `color-mix(in srgb, ${appearanceOptions.backgroundColor}, black 25%)`,
+        boxShadow: `
+  0 0 0 1px color-mix(in srgb, color-mix(in srgb, ${appearanceOptions.backgroundColor}, black 20%), transparent 80%),
+  0 2px 8px 1px color-mix(in srgb, color-mix(in srgb, ${appearanceOptions.backgroundColor}, black 25%), transparent 70%),
+  10px 16px 32px -4px color-mix(in srgb, color-mix(in srgb, ${appearanceOptions.backgroundColor}, black 35%), transparent 60%),
+  4px 6px 12px -2px color-mix(in srgb, color-mix(in srgb, ${appearanceOptions.backgroundColor}, black 25%), transparent 75%)
+`,
       } as CSSProperties
     "
   >
