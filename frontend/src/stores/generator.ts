@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { DefinitionOptions, AppearanceOptions } from '@/types/option';
 
 export const useGeneratorStore = defineStore('generator', () => {
@@ -44,7 +44,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     lineHeight: 1.4,
     padding: 20,
     textAlign: 'center',
-    accentColor: 'blue',
+    accentColor: '#6b00c2',
     backgroundColor: '#ffffff',
     color: '#1a1a1a',
     nightMode: true,
@@ -52,6 +52,18 @@ export const useGeneratorStore = defineStore('generator', () => {
   const deckName = ref(
     `${definitionOptions.value.sourceLanguage} - ${definitionOptions.value.targetLanguage}`,
   );
-
-  return { content, contentType, contentOptions, definitionOptions, appearanceOptions, deckName };
+  const cards = ref([]);
+  const isGenerating = ref(false);
+  const isExporting = ref(false);
+  return {
+    content,
+    contentType,
+    contentOptions,
+    definitionOptions,
+    appearanceOptions,
+    isGenerating,
+    isExporting,
+    deckName,
+    cards,
+  };
 });

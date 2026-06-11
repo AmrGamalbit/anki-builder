@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useGeneratorStore } from '@/stores/generator';
+import { ref } from 'vue';
+import CardCarousel from '@/components/ui/CardCarousel.vue';
 
 const generatorStore = useGeneratorStore();
+const index = ref(0);
 </script>
 
 <template>
@@ -17,6 +20,11 @@ const generatorStore = useGeneratorStore();
             placeholder="Type here..."
             v-model="generatorStore.deckName"
           />
+        </div>
+      </div>
+      <div class="flex">
+        <div class="snap-center shrink-0 w-full max-w-[450px] mx-auto" @click="index++">
+          <CardCarousel :cards="generatorStore.cards" />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useGeneratorStore } from '@/stores/generator';
-import { ArrowsRightLeftIcon } from '@heroicons/vue/16/solid';
+import { ArrowsRightLeftIcon, ArrowPathIcon } from '@heroicons/vue/16/solid';
 import { ref } from 'vue';
 import type { CSSProperties } from 'vue';
 
@@ -11,7 +11,7 @@ interface Flashcard {
 const generatorStore = useGeneratorStore();
 const appearanceOptions = generatorStore.appearanceOptions;
 const currentSide = ref('front');
-const props = defineProps<{ card: Flashcard }>();
+const props = defineProps<{ card: Flashcard | null }>();
 const flipCard = () => {
   currentSide.value == 'front' ? (currentSide.value = 'back') : (currentSide.value = 'front');
 };
@@ -19,7 +19,7 @@ const flipCard = () => {
 
 <template>
   <div
-    class="aspect-3/2 flex flex-col justify-between relative overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
+    class="aspect-3/2 flex flex-col justify-between overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
     :style="
       {
         fontSize: `${appearanceOptions.fontSize}px`,
@@ -53,17 +53,23 @@ const flipCard = () => {
           color: currentSide == 'back' ? appearanceOptions.accentColor : '',
         }"
       >
-        {{ props.card.front }}
+        <p v-if="props.card?.front">
+          {{ props.card?.front }}
+        </p>
+        <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto" v-else />
       </p>
       <div v-if="currentSide == 'back'" class="flex-1">
         <hr class="text-white mix-blend-difference" />
-        <p class="p-2">{{ props.card.back }}</p>
+        <p class="p-2" v-if="props.card?.back">
+          {{ props.card?.back }}
+        </p>
+        <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto m-2" v-else />
       </div>
     </div>
     <div class="p-5 mx-auto mix-blend-difference">
       <ArrowsRightLeftIcon
         class="w-7 h-7 block cursor-pointer text-black bg-white rounded-4xl p-0.5"
-        @click="flipCard"
+        @click.stop="flipCard"
       />
     </div>
   </div>

@@ -4,16 +4,43 @@ import ContentStep from '@/components/generator/steps/ContentStep.vue';
 import DefinitionStep from './steps/DefinitionStep.vue';
 import AppearanceStep from '@/components/generator/steps/AppearanceStep.vue';
 import ReviewStep from '@/components/generator/steps/ReviewStep.vue';
+import { useGeneratorStore } from '@/stores/generator.ts';
 
-const emit = defineEmits(['complete']);
-const currentStep = ref(0);
+const emit = defineEmits(['generate-requested', 'export-requested']);
+const generatorStore = useGeneratorStore();
 const steps = [ContentStep, DefinitionStep, AppearanceStep, ReviewStep];
+const currentStep = ref(0);
 const buttonText = computed(() => {
-  return currentStep.value < steps.length - 1 ? 'Next' : 'Generate';
+  switch (currentStep.value) {
+    case 2:
+      return 'Generate';
+    case 3:
+      return 'Export';
+    default:
+      return 'Next';
+  }
 });
-
+const canProceed = computed(() => {
+  switch (currentStep.value) {
+    case 2:
+      return generatorStore.content;
+    case 3:
+      return generatorStore.cards.length > 0;
+    default:
+      return true;
+  }
+});
 function onNext() {
-  currentStep.value < steps.length - 1 ? currentStep.value++ : emit('complete');
+  if (!canProceed.value) return;
+  switch (currentStep.value) {
+    case 2:
+      emit('generate-requested');
+      break;
+    case 3:
+      emit('export-requested');
+      break;
+  }
+  currentStep.value++;
 }
 </script>
 
@@ -24,13 +51,17 @@ function onNext() {
       <div>
         <div class="flex justify-between mb-5">
           <button
-            class="bg-primary text-neutral rounded p-2 cursor-pointer disabled:bg-gray-300 disabled:text-gray-900"
+            class="bg-primary text-gray-200 rounded p-2 cursor-pointer disabled:bg-gray-300 disabled:text-gray-900 disabled:cursor-not-allowed"
             @click="currentStep--"
             :disabled="currentStep == 0"
           >
             Previous
           </button>
-          <button class="bg-primary text-neutral rounded p-2 cursor-pointer" @click="onNext">
+          <button
+            class="bg-primary text-gray-200 rounded p-2 cursor-pointer disabled:bg-gray-300 disabled:text-gray-900 disabled:cursor-not-allowed"
+            @click="onNext"
+            :disabled="!canProceed"
+          >
             {{ buttonText }}
           </button>
         </div>

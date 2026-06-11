@@ -14,14 +14,11 @@ const inputComponents = [
   { component: UrlInput, type: 'web' },
   { component: UrlInput, type: 'youtube' },
 ];
-watch(
-  selectedInputIndex,
-  (newVal) => {
-    generatorStore.contentType = inputComponents[newVal]?.type;
-    generatorStore.content = '';
-  },
-  { immediate: true },
-);
+generatorStore.contentType = inputComponents[selectedInputIndex.value]?.type;
+watch(selectedInputIndex, (newVal) => {
+  generatorStore.contentType = inputComponents[newVal]?.type;
+  generatorStore.content = '';
+});
 </script>
 
 <template>

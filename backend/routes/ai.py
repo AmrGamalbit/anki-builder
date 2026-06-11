@@ -1,6 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks
 from core.dispatcher import dispatch
-from models.requests import GenerateRequest
+from models.requests import GenerateRequest, ExportRequest
 from services.ai import AIDeckGenerator
 from services.youtube import get_transcript
 from services.web import extract_article
@@ -46,14 +46,19 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
     )
     payload = {"user_instructions": user_instructions}
     ai_response = await dispatch("ai", provider, payload)
+    return ai_response
+
+
+@router.post("/export")
+async def export(request: ExportRequest, background_tasks: BackgroundTasks):
+    definition_options = request.definition_options
     generator = AIDeckGenerator(
         include_pronunciation=definition_options.include_pronunciation,
         include_pictogram=definition_options.include_pictogram,
-        target_language=target_language,
-        mode=mode,
+        target_language=definition_options.target_language,
+        mode=definition_options.mode,
         style=request.appearance_options,
     )
-
     return await generator.export_deck(
-        ai_response.data, request.deck_name, background_tasks
+        request.data, request.deck_name, background_tasks
     )

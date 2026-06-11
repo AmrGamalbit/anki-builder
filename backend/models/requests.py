@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Discriminator, model_validator, ConfigDict
 from pydantic.alias_generators import to_camel
 from typing import Literal, Annotated, Any
+from .responses import AIResponseData
 
 
 class BaseSchema(BaseModel):
@@ -70,7 +71,6 @@ class AppearanceOptions(BaseSchema):
 class GenerateRequest(BaseSchema):
     content: str
     content_type: str
-    deck_name: str
     content_options: Annotated[
         FileOptions | TextOptions | UrlOptions, Discriminator("type")
     ] = None
@@ -87,3 +87,12 @@ class GenerateRequest(BaseSchema):
         if isinstance(content_options, dict):
             content_options["type"] = content_type
         return data
+
+
+class ExportRequest(BaseSchema):
+    data: list[AIResponseData]
+    appearance_options: AppearanceOptions
+    definition_options: Annotated[
+        AIRequest | DictionaryRequest, Discriminator("source")
+    ]
+    deck_name: str
