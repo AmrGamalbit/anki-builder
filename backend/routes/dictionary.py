@@ -1,10 +1,11 @@
 from fastapi import APIRouter, BackgroundTasks
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
-from services.dictionary import DictionaryDeckGenerator
+from models.responses import GenerateResponse
 from services.youtube import get_transcript
 from services.web import extract_article
 from utils.vocabulary import clean_content, get_unusual_words
+from utils.normalizers import normalize_dictionary_entries
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
@@ -26,13 +27,7 @@ async def lookup(request: GenerateRequest, background_tasks: BackgroundTasks):
 
     payload = {"words": terms}
     dictionary_response = await dispatch("dictionary", provider, payload)
-    generator = DictionaryDeckGenerator(
-        include_pronunciation=request.definition_options.include_pronunciation,
-        include_pictogram=request.definition_options.include_pictogram,
-        target_language=request.definition_options.target_language,
-        use_dictionary_audio=request.definition_options.use_dictionary_audio,
-        style=request.appearance_options,
+    cards, pronunciations = normalize_dictionary_entries(
+        dictionary_response.data, request.definition_options.use_dictionary_audio
     )
-    return await generator.export_deck(
-        dictionary_response.data, request.deck_name, background_tasks
-    )
+    return GenerateResponse(cards=cards, pronunciations=pronunciations)
