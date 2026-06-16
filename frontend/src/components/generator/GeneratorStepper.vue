@@ -38,7 +38,7 @@ function onNext() {
       break;
     case 3:
       emit('export-requested');
-      break;
+      return;
   }
   currentStep.value++;
 }
