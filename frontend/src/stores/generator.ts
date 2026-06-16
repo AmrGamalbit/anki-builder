@@ -53,6 +53,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     `${definitionOptions.value.sourceLanguage} - ${definitionOptions.value.targetLanguage}`,
   );
   const cards = ref([]);
+  const pronunciationUrls = ref([]);
   const isGenerating = ref(false);
   const isExporting = ref(false);
   return {
@@ -61,6 +62,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     contentOptions,
     definitionOptions,
     appearanceOptions,
+    pronunciationUrls,
     isGenerating,
     isExporting,
     deckName,

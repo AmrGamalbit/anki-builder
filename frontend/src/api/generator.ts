@@ -16,11 +16,13 @@ export async function generateDeck() {
     body: JSON.stringify(payload),
   });
   const r = await res.json();
-  generatorStore.cards = r.data.map((card) => ({
+  generatorStore.cards = r.cards.map((card) => ({
     id: crypto.randomUUID(),
-    front: card.term,
-    back: `${card.result}\n${card.example}`,
+    term: card.term,
+    front: card.front,
+    back: card.back,
   }));
+  generatorStore.pronunciationUrls = r.pronunciations;
   generatorStore.isGenerating = false;
 }
 
@@ -32,13 +34,15 @@ export async function triggerDownload() {
     appearanceOptions: generatorStore.appearanceOptions,
     definitionOptions: generatorStore.definitionOptions,
     deckName: generatorStore.deckName,
+    pronunciationUrls: generatorStore.pronunciationUrls,
     data: generatorStore.cards.map((card) => ({
-      term: card.front,
-      result: card.back.split('\n')[0],
-      example: card.back.split('\n')[1],
+      term: card.term,
+      front: card.front,
+      back: card.back,
     })),
   };
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/ai/export`, {
+  console.log(payload);
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/deck/export`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
