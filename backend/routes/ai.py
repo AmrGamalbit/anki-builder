@@ -1,11 +1,11 @@
 from fastapi import APIRouter, BackgroundTasks
 from core.dispatcher import dispatch
-from models.requests import GenerateRequest, ExportRequest
-from services.ai import AIDeckGenerator
+from models.requests import GenerateRequest
 from services.youtube import get_transcript
 from services.web import extract_article
 from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
+from models.responses import CardData, GenerateResponse
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -46,19 +46,8 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
     )
     payload = {"user_instructions": user_instructions}
     ai_response = await dispatch("ai", provider, payload)
-    return ai_response
-
-
-@router.post("/export")
-async def export(request: ExportRequest, background_tasks: BackgroundTasks):
-    definition_options = request.definition_options
-    generator = AIDeckGenerator(
-        include_pronunciation=definition_options.include_pronunciation,
-        include_pictogram=definition_options.include_pictogram,
-        target_language=definition_options.target_language,
-        mode=definition_options.mode,
-        style=request.appearance_options,
-    )
-    return await generator.export_deck(
-        request.data, request.deck_name, background_tasks
-    )
+    cards = [
+        CardData(term=card.term, front=card.term, back=card.result)
+        for card in ai_response.data
+    ]
+    return GenerateResponse(cards=cards)
