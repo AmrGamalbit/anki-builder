@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Discriminator, model_validator, ConfigDict
 from pydantic.alias_generators import to_camel
 from typing import Literal, Annotated, Any
-from .responses import AIResponseData
+from .responses import CardData
 
 
 class BaseSchema(BaseModel):
@@ -38,6 +38,7 @@ class UrlOptions(BaseSchema):
 
 
 class BaseDeckRequest(BaseSchema):
+    source_language: str
     target_language: str
     include_pronunciation: bool = False
     include_pictogram: bool = False
@@ -90,7 +91,8 @@ class GenerateRequest(BaseSchema):
 
 
 class ExportRequest(BaseSchema):
-    data: list[AIResponseData]
+    data: list[CardData]
+    pronunciation_urls: dict[str, str] = {}
     appearance_options: AppearanceOptions
     definition_options: Annotated[
         AIRequest | DictionaryRequest, Discriminator("source")
