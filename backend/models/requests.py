@@ -37,20 +37,20 @@ class UrlOptions(BaseSchema):
     include_idioms: bool
 
 
-class BaseDeckRequest(BaseSchema):
+class DefinitionOptions(BaseSchema):
     source_language: str
     target_language: str
     include_pronunciation: bool = False
     include_pictogram: bool = False
 
 
-class DictionaryRequest(BaseDeckRequest):
+class DictionaryOptions(DefinitionOptions):
     source: Literal["dictionary"]
     use_dictionary_audio: bool = False
     provider: Literal["free_dictionary_api"]
 
 
-class AIRequest(BaseDeckRequest):
+class AIOptions(DefinitionOptions):
     source: Literal["ai"]
     mode: Literal["definition", "translation"]
     source_language: str
@@ -77,7 +77,7 @@ class GenerateRequest(BaseSchema):
     ] = None
     appearance_options: AppearanceOptions
     definition_options: Annotated[
-        AIRequest | DictionaryRequest, Discriminator("source")
+        AIOptions | DictionaryOptions, Discriminator("source")
     ]
 
     @model_validator(mode="before")
@@ -95,6 +95,6 @@ class ExportRequest(BaseSchema):
     pronunciation_urls: dict[str, str] = {}
     appearance_options: AppearanceOptions
     definition_options: Annotated[
-        AIRequest | DictionaryRequest, Discriminator("source")
+        AIOptions | DictionaryOptions, Discriminator("source")
     ]
     deck_name: str
