@@ -1,4 +1,5 @@
 import { useGeneratorStore } from '@/stores/generator';
+import type { CardData } from '@/types/card';
 
 export async function generateDeck() {
   const generatorStore = useGeneratorStore();
@@ -16,7 +17,7 @@ export async function generateDeck() {
     body: JSON.stringify(payload),
   });
   const r = await res.json();
-  generatorStore.cards = r.cards.map((card) => ({
+  generatorStore.cards = r.cards.map((card: CardData) => ({
     id: crypto.randomUUID(),
     term: card.term,
     front: card.front,
@@ -35,13 +36,12 @@ export async function triggerDownload() {
     definitionOptions: generatorStore.definitionOptions,
     deckName: generatorStore.deckName,
     pronunciationUrls: generatorStore.pronunciationUrls,
-    data: generatorStore.cards.map((card) => ({
+    data: generatorStore.cards.map((card: CardData) => ({
       term: card.term,
       front: card.front,
       back: card.back,
     })),
   };
-  console.log(payload);
   const res = await fetch(`${import.meta.env.VITE_API_URL}/deck/export`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

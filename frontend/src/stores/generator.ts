@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import type { DefinitionOptions, AppearanceOptions } from '@/types/option';
+import type { CardData } from '@/types/card';
 
 export const useGeneratorStore = defineStore('generator', () => {
   const content = ref();
@@ -28,7 +29,7 @@ export const useGeneratorStore = defineStore('generator', () => {
       includeIdioms: true,
     },
   });
-  const definitionOptions = ref({
+  const definitionOptions = ref<DefinitionOptions>({
     includePronunciation: false,
     includePictogram: false,
     useDictionaryAudio: false,
@@ -49,13 +50,13 @@ export const useGeneratorStore = defineStore('generator', () => {
     color: '#1a1a1a',
     nightMode: true,
   });
-  const deckName = ref(
+  const deckName = ref<string>(
     `${definitionOptions.value.sourceLanguage} - ${definitionOptions.value.targetLanguage}`,
   );
-  const cards = ref([]);
-  const pronunciationUrls = ref([]);
-  const isGenerating = ref(false);
-  const isExporting = ref(false);
+  const cards = ref<CardData[]>([]);
+  const pronunciationUrls = ref<string[]>([]);
+  const isGenerating = ref<boolean>(false);
+  const isExporting = ref<boolean>(false);
   return {
     content,
     contentType,
