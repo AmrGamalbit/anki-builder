@@ -1,5 +1,5 @@
 from fastapi import APIRouter, BackgroundTasks
-from services.base import DeckGenerator
+from services.generator import DeckGenerator
 from models.requests import ExportRequest
 
 router = APIRouter(prefix="/deck", tags=["deck"])
