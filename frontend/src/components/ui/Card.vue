@@ -3,6 +3,7 @@ import { useGeneratorStore } from '@/stores/generator';
 import { ArrowsRightLeftIcon, ArrowPathIcon } from '@heroicons/vue/16/solid';
 import { ref } from 'vue';
 import type { CSSProperties } from 'vue';
+import { PencilSquareIcon } from '@heroicons/vue/16/solid';
 
 interface Flashcard {
   front: string;
@@ -14,6 +15,10 @@ const currentSide = ref('front');
 const props = defineProps<{ card: Flashcard | null }>();
 const flipCard = () => {
   currentSide.value == 'front' ? (currentSide.value = 'back') : (currentSide.value = 'front');
+};
+const handlePencilClick = (event: MouseEvent) => {
+  const textEl = (event.currentTarget as HTMLElement).previousElementSibling;
+  (textEl as HTMLElement)?.focus();
 };
 </script>
 
@@ -47,22 +52,42 @@ const flipCard = () => {
       currentSide
     }}</span>
     <div class="flex flex-col">
-      <p
+      <div
         :style="{
           padding: `${appearanceOptions.padding}px`,
           color: currentSide == 'back' ? appearanceOptions.accentColor : '',
         }"
       >
-        <p v-if="props.card?.front">
-          {{ props.card?.front }}
-        </p>
+        <div class="group relative" v-if="props.card?.front">
+          <p
+            class="cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
+            contenteditable="true"
+            @click.stop
+          >
+            {{ props.card?.front }}
+          </p>
+          <PencilSquareIcon
+            class="w-6 h-6 absolute top-0 right-0 mx-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
+            @click="handlePencilClick"
+          />
+        </div>
         <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto" v-else />
-      </p>
+      </div>
       <div v-if="currentSide == 'back'" class="flex-1">
         <hr class="text-white mix-blend-difference" />
-        <p class="p-2" v-if="props.card?.back">
-          {{ props.card?.back }}
-        </p>
+        <div class="group relative" v-if="props.card?.back">
+          <p
+            class="p-2 cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
+            contenteditable="true"
+            @click.stop
+          >
+            {{ props.card?.back }}
+          </p>
+          <PencilSquareIcon
+            class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
+            @click="handlePencilClick"
+          />
+        </div>
         <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto m-2" v-else />
       </div>
     </div>
