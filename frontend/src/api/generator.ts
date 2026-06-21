@@ -1,16 +1,28 @@
 import { useGeneratorStore } from '@/stores/generator';
 import type { CardData } from '@/types/card';
 
+let lastGenerationPayload: string | null = null;
+
 export async function generateDeck() {
   const generatorStore = useGeneratorStore();
+  const generationPayload = {
+    content: generatorStore.content,
+    contentType: generatorStore.contentType,
+    contentOptions:
+      generatorStore.contentOptions[
+        generatorStore.contentType as keyof typeof generatorStore.contentOptions
+      ],
+    definitionOptions: generatorStore.definitionOptions,
+  };
+  if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
   generatorStore.isGenerating = true;
   const endpoint =
     generatorStore.definitionOptions.source == 'ai' ? '/ai/generate' : '/dictionary/lookup';
-  const { contentOptions, ...rest } = generatorStore.$state;
   const payload = {
-    ...rest,
-    contentOptions: contentOptions[generatorStore.contentType as keyof typeof contentOptions],
+    ...generationPayload,
+    appearance_options: generatorStore.appearanceOptions,
   };
+  console.log(payload);
   const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -24,6 +36,7 @@ export async function generateDeck() {
     back: card.back,
   }));
   generatorStore.pronunciationUrls = r.pronunciations;
+  lastGenerationPayload = JSON.stringify(generationPayload);
   generatorStore.isGenerating = false;
 }
 
