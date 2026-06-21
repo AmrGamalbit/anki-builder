@@ -70,7 +70,7 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
           </p>
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 mx-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
-            @click="handlePencilClick"
+            @click.stop="handlePencilClick"
           />
         </div>
         <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto" v-else />
@@ -88,7 +88,7 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
           </p>
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
-            @click="handlePencilClick"
+            @click.stop="handlePencilClick"
           />
         </div>
         <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto m-2" v-else />
