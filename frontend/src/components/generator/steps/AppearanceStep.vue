@@ -54,7 +54,12 @@ const appearanceOptionsSchema = {
   },
 };
 const appearanceOptions = generatorStore.appearanceOptions;
-const mockupCard = { front: 'Hello', back: 'Used when meeting or greeting someone' };
+const mockupCard = {
+  id: 1,
+  term: 'hello',
+  front: 'Hello',
+  back: 'Used when meeting or greeting someone',
+};
 </script>
 
 <template>

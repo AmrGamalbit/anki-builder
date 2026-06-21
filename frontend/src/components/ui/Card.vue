@@ -4,15 +4,12 @@ import { ArrowsRightLeftIcon, ArrowPathIcon } from '@heroicons/vue/16/solid';
 import { ref } from 'vue';
 import type { CSSProperties } from 'vue';
 import { PencilSquareIcon } from '@heroicons/vue/16/solid';
+import type { CardData } from '@/types/card';
 
-interface Flashcard {
-  front: string;
-  back: string | null;
-}
+const card = defineModel<CardData | null>('card');
 const generatorStore = useGeneratorStore();
 const appearanceOptions = generatorStore.appearanceOptions;
 const currentSide = ref('front');
-const props = defineProps<{ card: Flashcard | null }>();
 const flipCard = () => {
   currentSide.value == 'front' ? (currentSide.value = 'back') : (currentSide.value = 'front');
 };
@@ -20,6 +17,10 @@ const handlePencilClick = (event: MouseEvent) => {
   const textEl = (event.currentTarget as HTMLElement).previousElementSibling;
   (textEl as HTMLElement)?.focus();
 };
+function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
+  if (!card.value) return;
+  card.value = { ...card.value, [field]: (event.target as HTMLElement).innerText };
+}
 </script>
 
 <template>
@@ -58,13 +59,14 @@ const handlePencilClick = (event: MouseEvent) => {
           color: currentSide == 'back' ? appearanceOptions.accentColor : '',
         }"
       >
-        <div class="group relative" v-if="props.card?.front">
+        <div class="group relative" v-if="card?.front">
           <p
             class="cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
             contenteditable="true"
+            @blur="handleCardUpdate($event, 'front')"
             @click.stop
           >
-            {{ props.card?.front }}
+            {{ card?.front }}
           </p>
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 mx-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
@@ -75,13 +77,14 @@ const handlePencilClick = (event: MouseEvent) => {
       </div>
       <div v-if="currentSide == 'back'" class="flex-1">
         <hr class="text-white mix-blend-difference" />
-        <div class="group relative" v-if="props.card?.back">
+        <div class="group relative" v-if="card?.back">
           <p
             class="p-2 cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
             contenteditable="true"
+            @blur="handleCardUpdate($event, 'back')"
             @click.stop
           >
-            {{ props.card?.back }}
+            {{ card?.back }}
           </p>
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"

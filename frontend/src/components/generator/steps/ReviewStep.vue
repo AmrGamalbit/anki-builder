@@ -24,7 +24,7 @@ const index = ref(0);
       </div>
       <div class="flex">
         <div class="snap-center shrink-0 w-full max-w-[450px] mx-auto" @click="index++">
-          <CardCarousel :cards="generatorStore.cards" />
+          <CardCarousel />
         </div>
       </div>
     </div>

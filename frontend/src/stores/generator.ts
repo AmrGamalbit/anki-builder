@@ -57,6 +57,9 @@ export const useGeneratorStore = defineStore('generator', () => {
   const pronunciationUrls = ref<string[]>([]);
   const isGenerating = ref<boolean>(false);
   const isExporting = ref<boolean>(false);
+  function updateCard(index: number, updatedCard: CardData) {
+    cards.value[index] = updatedCard;
+  }
   return {
     content,
     contentType,
@@ -66,6 +69,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     pronunciationUrls,
     isGenerating,
     isExporting,
+    updateCard,
     deckName,
     cards,
   };
