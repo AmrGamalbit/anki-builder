@@ -19,6 +19,13 @@ const mappedSelectedOption = computed(() => {
   return props.options.find((o) => o.value == selectedOption.value)?.label || placeholder;
 });
 
+const longestLabel = computed(() => {
+  return props.options.reduce(
+    (longest, option) => (option.label.length > longest.length ? option.label : longest),
+    '',
+  );
+});
+
 const changeDropDownVisibility = () => {
   isDropDownVisible.value = !isDropDownVisible.value;
 };
@@ -39,10 +46,11 @@ onBeforeUnmount(() => {
 <template>
   <div class="inline-block cursor-pointer h-5">
     <div
-      class="inline-flex w-18 md:w-48 justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
+      class="relative inline-flex w-max justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
       @click.stop="changeDropDownVisibility"
     >
-      <div>
+      <span class="invisible">{{ longestLabel }}</span>
+      <div class="whitespace-nowrap absolute">
         {{ mappedSelectedOption }}
       </div>
     </div>

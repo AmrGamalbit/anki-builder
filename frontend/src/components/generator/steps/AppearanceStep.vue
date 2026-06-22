@@ -82,7 +82,7 @@ const mockupCard = {
         </div>
       </div>
 
-      <div class="sticky top-4 self-start flex flex-col gap-4 flex-1 mb-4 md:mb-0">
+      <div class="sticky top-4 flex flex-col gap-4 flex-1 mb-4 md:mb-0">
         <p class="text-sm font-bold text-primary">Preview</p>
         <Card :card="mockupCard" />
       </div>

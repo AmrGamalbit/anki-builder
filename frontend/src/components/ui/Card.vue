@@ -25,7 +25,7 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
 
 <template>
   <div
-    class="aspect-3/2 flex flex-col justify-between overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
+    class="aspect-3/2 w-full flex flex-col justify-between overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
     :style="
       {
         fontSize: `${appearanceOptions.fontSize}px`,
