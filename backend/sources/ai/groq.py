@@ -2,12 +2,12 @@ import os
 
 from dotenv import load_dotenv
 from groq import Groq
-from models.responses import AIResponseData, UnifiedResponse, AIResponse
+from models.responses import UnifiedResponse, AIResponse
 from sources.base import BaseProvider
 
 load_dotenv()
 
-MODEL = "moonshotai/kimi-k2-instruct-0905"
+MODEL = "openai/gpt-oss-20b"
 SYSTEM_INSTRUCTIONS = """
 You are an expert linguist with deep knowledge of languages, grammar, cultural context, and natural usage.
 

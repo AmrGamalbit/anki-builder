@@ -4,9 +4,10 @@ import aiohttp
 
 
 class PictogramService:
-    def __init__(self):
+    def __init__(self, media_folder):
         self.BASE_URL = "https://api.arasaac.org/api/pictograms/en/search/{term}"
         self.session = aiohttp.ClientSession()
+        self.media_folder = media_folder
 
     async def get_url(self, term: str) -> str:
         term_url = self.BASE_URL.format(term=term)
@@ -26,10 +27,8 @@ class PictogramService:
             print(f"Request to {term} timed out")
             return None
 
-    async def fetch_pictogram(
-        self, pictogram_url: str, media_folder: str, term: str
-    ) -> dict:
-        pictogram_path = os.path.join(media_folder, f"{term}.png")
+    async def fetch(self, pictogram_url: str, term: str) -> dict:
+        pictogram_path = os.path.join(self.media_folder, f"{term}.png")
         if not pictogram_url:
             return {term: None}
 
@@ -49,13 +48,10 @@ class PictogramService:
             print(f"Request to {term} timed out")
             return {term: None}
 
-    async def fetch_many(self, terms: [str], media_folder: str) -> dict:
+    async def fetch_many(self, terms: [str]) -> dict:
         urls = await asyncio.gather(*[self.get_url(term) for term in terms])
         results = await asyncio.gather(
-            *[
-                self.fetch_pictogram(url, media_folder, term)
-                for term, url in zip(terms, urls)
-            ]
+            *[self.fetch(url, term) for term, url in zip(terms, urls)]
         )
         return {k: v for d in results for k, v in d.items() if v is not None}
 

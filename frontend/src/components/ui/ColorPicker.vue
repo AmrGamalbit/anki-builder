@@ -5,7 +5,7 @@ const pickedColor = defineModel<string>();
 <template>
   <input
     type="color"
-    class="p-1 h-10 w-14 block bg-layer border border-layer-line cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+    class="w-10 h-4 rounded cursor-pointer ring-1 ring-gray-500 ring-offset-0 bg-transparent [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded [&::-webkit-color-swatch]:border-0"
     id="hs-color-input"
     title="Choose your color"
     v-model="pickedColor"

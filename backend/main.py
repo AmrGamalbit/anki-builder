@@ -4,6 +4,7 @@ from routes.ai import router as ai_router
 from routes.dictionary import router as dictionary_router
 from routes.file import router as file_router
 from routes.styles import router as styles_router
+from routes.export import router as export_router
 from slowapi import Limiter
 from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
@@ -18,6 +19,7 @@ app.include_router(ai_router)
 app.include_router(dictionary_router)
 app.include_router(file_router)
 app.include_router(styles_router)
+app.include_router(export_router)
 register_handlers(app)
 
 origins = ["http://localhost:5173"]

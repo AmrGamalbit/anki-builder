@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Any, Union
+from typing import Union
 
 
 class Definition(BaseModel):
@@ -20,10 +20,6 @@ class DictionaryEntry(BaseModel):
     meanings: list[Meaning]
 
 
-class DictionaryResponse(BaseModel):
-    results: list[DictionaryEntry]
-
-
 class ExtractedTerms(BaseModel):
     terms: list[str]
 
@@ -36,6 +32,17 @@ class AIResponseData(BaseModel):
 
 class AIResponse(BaseModel):
     results: list[AIResponseData] | ExtractedTerms
+
+
+class CardData(BaseModel):
+    term: str
+    front: str
+    back: str
+
+
+class GenerateResponse(BaseModel):
+    cards: list[CardData]
+    pronunciations: dict[str, str] = {}
 
 
 class UnifiedResponse(BaseModel):

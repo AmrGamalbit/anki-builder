@@ -1,44 +1,53 @@
 from fastapi import APIRouter, BackgroundTasks
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
-from services.ai import AIDeckGenerator
 from services.youtube import get_transcript
 from services.web import extract_article
 from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
+from models.responses import CardData, GenerateResponse
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
 @router.post("/generate")
 async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
-    deck, source, style = request.deck, request.source, request.style
+    content = request.content
+    content_type = request.content_type
+    content_options = request.content_options
+    definition_options = request.definition_options
+    provider = definition_options.provider
+    source_language = definition_options.source_language
+    target_language = definition_options.target_language
+    mode = definition_options.mode
 
-    if source.options.type == "youtube":
-        content = get_transcript(source.content)
+    if content_type == "youtube":
+        content = get_transcript(content)
         terms = await get_unusual_words(
-            content, deck.source_language, deck.provider, source.options
+            content,
+            source_language,
+            provider,
+            content_options,
         )
-    elif source.options.type == "web":
-        content = extract_article(source.content)
+    elif content_type == "web":
+        content = extract_article(content)
         terms = await get_unusual_words(
-            content, deck.source_language, deck.provider, source.options
+            content, source_language, provider, content_options
         )
     else:
-        terms = clean_content(source.content, source.options)
+        terms = clean_content(content, content_options)
+
     user_instructions = build_anki_prompt(
-        terms, deck.source_language, deck.mode, source.options, deck.target_language
+        terms,
+        source_language,
+        mode,
+        content_options,
+        target_language,
     )
     payload = {"user_instructions": user_instructions}
-    ai_response = await dispatch("ai", deck.provider, payload)
-    generator = AIDeckGenerator(
-        include_pronunciation=deck.include_pronunciation,
-        include_pictogram=deck.include_pictogram,
-        target_language=deck.target_language,
-        mode=deck.mode,
-        style=style,
-    )
-
-    return await generator.export_deck(
-        ai_response.data, source.deck_name, background_tasks
-    )
+    ai_response = await dispatch("ai", provider, payload)
+    cards = [
+        CardData(term=card.term, front=card.term, back=card.result)
+        for card in ai_response.data
+    ]
+    return GenerateResponse(cards=cards)

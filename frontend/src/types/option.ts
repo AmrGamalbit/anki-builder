@@ -30,19 +30,18 @@ export interface FileOptions {
   base_form: boolean;
 }
 
-export interface DeckOptions {
-  include_pronunciation: boolean;
-  include_pictogram: boolean;
-  use_dictionary_audio: boolean;
+export interface DefinitionOptions {
+  includePronunciation: boolean;
+  includePictogram: boolean;
+  useDictionaryAudio: boolean;
   source: string;
   provider: string;
   mode: string;
-  source_language: string;
-  target_language: string;
-  deck_name: string;
+  sourceLanguage: string;
+  targetLanguage: string;
 }
 
-export interface StyleOptions {
+export interface AppearanceOptions {
   fontFamily: string;
   fontSize: number;
   lineHeight: number;
