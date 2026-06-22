@@ -12,7 +12,8 @@ function navigateCarousel(direction: 1 | -1) {
   if (generatorStore.cards.length <= 1 || isAnimating.value) return;
   isAnimating.value = true;
   setTimeout(() => {
-    currentIndex.value = (currentIndex.value + direction) % generatorStore.cards.length;
+    currentIndex.value =
+      (currentIndex.value + direction + generatorStore.cards.length) % generatorStore.cards.length;
     isAnimating.value = false;
   }, 400);
 }
@@ -61,16 +62,16 @@ function handleCardUpdate(updatedCard: CardData | null | undefined) {
         @click="navigateCarousel(-1)"
       />
       <div
-        class="flex items-center justify-center bg-gray-100 rounded-lg px-4 h-10 gap-1 text-sm font-medium"
+        class="flex items-center justify-center bg-gray-100 rounded-lg px-4 h-10 text-sm font-medium"
       >
         <input
           type="number"
           min="1"
           :max="generatorStore.cards.length"
-          class="w-7 border-none text-right focus:outline-none bg-transparent"
+          class="w-12 border-none text-center focus:outline-none bg-transparent"
           v-model="displayIndex"
         />
-        <span class="text-gray-400">/</span>
+        <span class="text-gray-400 mr-1">/</span>
         <p class="text-gray-600">{{ generatorStore.cards.length }}</p>
       </div>
       <ArrowRightIcon
