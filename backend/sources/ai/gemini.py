@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+_cached_models = None
 SYSTEM_INSTRUCTIONS = """
 You are an expert linguist with deep knowledge of languages, grammar, cultural context, and natural usage.
 
@@ -32,16 +33,14 @@ The user will specify a mode for each request. You must strictly follow the beha
 - If a word is unknown or ambiguous, make your best reasonable attempt.
 """
 
-MODEL = "gemini-2.5-flash"
-
 
 class GeminiProvider(BaseProvider):
     def __init__(self):
         self.client = genai.Client(api_key=os.getenv("GEMINI_APIKEY"))
 
-    async def fetch(self, payload):
+    async def fetch(self, payload, model):
         response = self.client.models.generate_content(
-            model=MODEL,
+            model=model,
             contents=payload.get("user_instructions"),
             config=GenerateContentConfig(
                 system_instruction=SYSTEM_INSTRUCTIONS,
@@ -51,9 +50,24 @@ class GeminiProvider(BaseProvider):
         )
         return response.text
 
-    def normalize(self, raw):
+    def normalize(self, raw, model):
         definition_data = AIResponse.model_validate_json(raw)
-        meta = {"model": MODEL}
+        meta = {"model": model}
         return UnifiedResponse(
             source="ai", provider="gemini", data=definition_data.results, meta=meta
         )
+
+    def get_available_models(self):
+        global _cached_models
+        if _cached_models is None:
+            _cached_models = [
+                {"label": model.display_name, "value": model.name.split("/")[1]}
+                for model in self.client.models.list()._page
+                if "generateContent" in (model.supported_actions or [])
+                and model.input_token_limit > 4096
+                and not any(
+                    word in model.name.lower()
+                    for word in ["image", "video", "audio", "veo", "imagen"]
+                )
+            ]
+        return _cached_models

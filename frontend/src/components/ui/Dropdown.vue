@@ -49,8 +49,8 @@ onBeforeUnmount(() => {
       class="relative inline-flex w-max justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50"
       @click.stop="changeDropDownVisibility"
     >
-      <span class="invisible">{{ longestLabel }}</span>
-      <div class="whitespace-nowrap absolute">
+      <span class="invisible" v-if="longestLabel">{{ longestLabel }}</span>
+      <div class="whitespace-nowrap absolute" :class="longestLabel ? 'absolute' : 'relative'">
         {{ mappedSelectedOption }}
       </div>
     </div>

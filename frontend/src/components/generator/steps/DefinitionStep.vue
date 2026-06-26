@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import OptionField from '@/components/ui/OptionField.vue';
 import LanguagePairSelector from '@/components/generator/deck/LanguagePairSelector.vue';
 import type { OptionItem } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
 import { useGeneratorStore } from '@/stores/generator';
+import { ref, watch } from 'vue';
+import { fetchModels } from '@/api/models';
 
 const generatorStore = useGeneratorStore();
+const availableModels = ref<Record<string, OptionItem[]>>({});
+
 type ProviderKey = 'dictionary' | 'ai';
 const providers: Record<ProviderKey, OptionItem[]> = {
   dictionary: [{ label: 'Free Dictionary API', value: 'free_dictionary_api' }],
@@ -15,6 +19,13 @@ const providers: Record<ProviderKey, OptionItem[]> = {
     { label: 'Groq', value: 'groq' },
   ],
 };
+
+async function loadModels() {
+  for (const provider of providers.ai) {
+    availableModels.value[provider.value] = await fetchModels(provider.value);
+  }
+}
+onMounted(() => loadModels());
 
 const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
   return {
@@ -46,6 +57,12 @@ const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
         { label: 'Definition', value: 'definition' },
         { label: 'Translation', value: 'translation' },
       ],
+      shouldShow: generatorStore.definitionOptions.source == 'ai',
+    },
+    model: {
+      label: 'Model',
+      type: 'choice',
+      items: availableModels.value[generatorStore.definitionOptions.provider] ?? [],
       shouldShow: generatorStore.definitionOptions.source == 'ai',
     },
     useDictionaryAudio: {

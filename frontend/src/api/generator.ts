@@ -22,7 +22,6 @@ export async function generateDeck() {
     ...generationPayload,
     appearance_options: generatorStore.appearanceOptions,
   };
-  console.log(payload);
   const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

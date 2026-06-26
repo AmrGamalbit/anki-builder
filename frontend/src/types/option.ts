@@ -37,6 +37,7 @@ export interface DefinitionOptions {
   source: string;
   provider: string;
   mode: string;
+  model: string;
   sourceLanguage: string;
   targetLanguage: string;
 }

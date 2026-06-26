@@ -53,6 +53,7 @@ class DictionaryOptions(DefinitionOptions):
 class AIOptions(DefinitionOptions):
     source: Literal["ai"]
     mode: Literal["definition", "translation"]
+    model: str
     source_language: str
     provider: Literal["gemini", "groq"]
 

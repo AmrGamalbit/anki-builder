@@ -36,6 +36,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     source: 'dictionary',
     provider: 'free_dictionary_api',
     mode: 'definition',
+    model: '',
     sourceLanguage: 'en',
     targetLanguage: 'en',
   });

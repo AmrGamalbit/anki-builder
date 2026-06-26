@@ -7,7 +7,7 @@ from sources.base import BaseProvider
 
 load_dotenv()
 
-MODEL = "openai/gpt-oss-20b"
+_cached_models = None
 SYSTEM_INSTRUCTIONS = """
 You are an expert linguist with deep knowledge of languages, grammar, cultural context, and natural usage.
 
@@ -26,14 +26,20 @@ The user will specify a mode for each request. You must strictly follow the beha
 - Include one short, real-life example sentence in **English**.
 
 ## Rules
-- You must ALWAYS respond with a strict JSON array. One object per word.
+You must respond with a JSON object matching this exact structure:
+{
+  "results": [
+    {
+      "term": "the word",
+      "result": "definition or translation",
+      "example": "example sentence"
+    }
+  ]
+}
+
 - Return ONLY valid JSON. No preamble, no commentary, no markdown code blocks.
-- Keep definitions and translations natural, concise, and accurate.
-- Always use the most common meaning unless otherwise instructed.
-- If a word is unknown or ambiguous, make your best reasonable attempt.
-- Always return a JSON object with a "results" key containing the array.
-  Never return a raw array.
-  Example: {"results": [...]}
+- Every object in results must have exactly these three fields: term, result, example.
+- Never return a raw array, always wrap in a results key.
 """
 
 
@@ -43,55 +49,69 @@ class GroqProvider(BaseProvider):
             api_key=os.getenv("GROQ_APIKEY"),
         )
 
-    async def fetch(self, payload):
-        chat_completion = self.client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": SYSTEM_INSTRUCTIONS,
+    async def fetch(self, payload, model):
+        try:
+            chat_completion = self.client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": SYSTEM_INSTRUCTIONS,
+                    },
+                    {
+                        "role": "user",
+                        "content": payload.get("user_instructions"),
+                    },
+                ],
+                model=model,
+                response_format={
+                    "type": "json_schema",
+                    "json_schema": {
+                        "name": "Learning_Vocab",
+                        "schema": AIResponse.model_json_schema(),
+                    },
                 },
-                {
-                    "role": "user",
-                    "content": payload.get("user_instructions"),
-                },
-            ],
-            model=MODEL,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "Learning_Vocab",
-                    "schema": AIResponse.model_json_schema(),
-                },
-            },
-        )
-        return chat_completion.choices[0].message.content
+            )
+            return chat_completion.choices[0].message.content
 
-    def normalize(self, raw):
+        except Exception as e:
+            try:
+                chat_completion = self.client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": SYSTEM_INSTRUCTIONS,
+                        },
+                        {
+                            "role": "user",
+                            "content": payload.get("user_instructions"),
+                        },
+                    ],
+                    model=model,
+                )
+                return chat_completion.choices[0].message.content
+            except:
+                print("there is error")
+
+    def normalize(self, raw, model):
+        start = raw.index("{")
+        end = raw.rindex("}")
+        raw = raw[start : end + 1]
         definition_data = AIResponse.model_validate_json(raw)
-        meta = {"model": MODEL}
+        meta = {"model": model}
         return UnifiedResponse(
             source="ai", provider="groq", data=definition_data.results, meta=meta
         )
 
-    async def extract_terms(self, payload):
-        chat_completion = self.client.chat.completions.create(
-            messages=[
-                {
-                    "role": "system",
-                    "content": SYSTEM_INSTRUCTIONS,
-                },
-                {
-                    "role": "user",
-                    "content": payload.get("user_instructions"),
-                },
-            ],
-            model=MODEL,
-            response_format={
-                "type": "json_schema",
-                "json_schema": {
-                    "name": "Extractng_voacb",
-                    "schema": AIResponse.model_json_schema(),
-                },
-            },
-        )
-        return chat_completion.choices[0].message.content
+    def get_available_models(self):
+        global _cached_models
+        if _cached_models is None:
+            _cached_models = [
+                {"label": model.id, "value": model.id}
+                for model in self.client.models.list().data
+                if "text" in model.input_modalities
+                and "text" in model.output_modalities
+                and model.context_window > 4096
+                and "json_mode" in (model.supported_features or [])
+            ]
+
+        return _cached_models

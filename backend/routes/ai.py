@@ -6,6 +6,7 @@ from services.web import extract_article
 from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
 from models.responses import CardData, GenerateResponse
+from core.registry import get_provider
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -20,6 +21,7 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
     source_language = definition_options.source_language
     target_language = definition_options.target_language
     mode = definition_options.mode
+    model = definition_options.model
 
     if content_type == "youtube":
         content = get_transcript(content)
@@ -45,9 +47,16 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
         target_language,
     )
     payload = {"user_instructions": user_instructions}
-    ai_response = await dispatch("ai", provider, payload)
+    ai_response = await dispatch("ai", provider, model, payload)
     cards = [
         CardData(term=card.term, front=card.term, back=card.result)
         for card in ai_response.data
     ]
     return GenerateResponse(cards=cards)
+
+
+@router.get("/models/{provider}")
+def get_available_models(provider: str):
+    ProviderClass = get_provider("ai", provider)
+    instance = ProviderClass()
+    return instance.get_available_models()
