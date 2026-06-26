@@ -25,7 +25,7 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
 
 <template>
   <div
-    class="aspect-3/2 w-full flex flex-col justify-between overflow-hidden rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
+    class="aspect-3/2 w-full h-full flex flex-col justify-between rounded-xl transition-all duration-300 ease-out hover:-translate-y-1.5 hover:translate-x-0.5"
     :style="
       {
         fontSize: `${appearanceOptions.fontSize}px`,
@@ -52,7 +52,7 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
     <span class="absolute ms-auto text-xs px-5 py-3 mix-blend-difference text-white">{{
       currentSide
     }}</span>
-    <div class="flex flex-col">
+    <div class="flex flex-col overflow-hidden">
       <div
         :style="{
           padding: `${appearanceOptions.padding}px`,
@@ -75,7 +75,7 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
         </div>
         <ArrowPathIcon class="w-6 h-6 animate-spin mx-auto" v-else />
       </div>
-      <div v-if="currentSide == 'back'" class="flex-1">
+      <div v-if="currentSide == 'back'" class="flex-1 overflow-y-auto scrollbar-thin">
         <hr class="text-white mix-blend-difference" />
         <div class="group relative" v-if="card?.back">
           <p
