@@ -44,9 +44,9 @@ You must respond with a JSON object matching this exact structure:
 
 
 class GroqProvider(BaseProvider):
-    def __init__(self):
+    def __init__(self, api_key: str):
         self.client = Groq(
-            api_key=os.getenv("GROQ_APIKEY"),
+            api_key=api_key,
         )
 
     async def fetch(self, payload, model):
@@ -89,8 +89,8 @@ class GroqProvider(BaseProvider):
                     model=model,
                 )
                 return chat_completion.choices[0].message.content
-            except:
-                print("there is error")
+            except Exception as e:
+                print(f"First attempt failed: {e}")
 
     def normalize(self, raw, model):
         start = raw.index("{")

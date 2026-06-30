@@ -2,7 +2,6 @@ from sources.base import BaseProvider
 from google import genai
 from google.genai.types import GenerateContentConfig
 from models.responses import AIResponseData, UnifiedResponse, AIResponse
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -35,8 +34,8 @@ The user will specify a mode for each request. You must strictly follow the beha
 
 
 class GeminiProvider(BaseProvider):
-    def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_APIKEY"))
+    def __init__(self, api_key: str):
+        self.client = genai.Client(api_key=api_key)
 
     async def fetch(self, payload, model):
         response = self.client.models.generate_content(

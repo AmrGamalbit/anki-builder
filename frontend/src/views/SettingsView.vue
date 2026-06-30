@@ -1,78 +1,12 @@
 <script setup lang="ts">
-import { useDark } from '@vueuse/core';
-import OptionRow from '@/components/ui/OptionField.vue';
-// import Alert from '@/components/ui/BaseAlert.vue';
-// import DeckStyleEditor from '@/components/generator/DeckStyleEditor.vue';
-// import { computed, onMounted, ref } from 'vue';
-// import { onBeforeRouteLeave } from 'vue-router';
-
-// const baseUrl = import.meta.env.VITE_API_URL;
-// const savedCardStyles = ref(null);
-
-// async function getDefaultStyles() {
-//   const response = await fetch(`${baseUrl}/styles`, {
-//     method: 'GET',
-//   });
-//   return await response.json();
-// }
-
-// const cardStyles = ref({
-//   font_family: `'Segoe UI', sans-serif`,
-//   font_size: 16,
-//   line_height: 1.4,
-//   padding: 20,
-//   text_align: 'center',
-//   accent_color: 'blue',
-//   background_color: '#ffffff',
-//   color: '#1a1a1a',
-//   night_mode: true,
-// });
-const isDark = useDark();
-// const showSuccess = ref(false);
-
-// onMounted(async () => {
-//   savedCardStyles.value = await getDefaultStyles();
-//   cardStyles.value = await getDefaultStyles();
-//   cardStyles.value['night_mode'] = true;
-// });
-
-// const haveUnsavedChanges = computed(() => {
-//   if (JSON.stringify(cardStyles.value) !== JSON.stringify(savedCardStyles.value)) {
-//     return true;
-//   }
-//   return false;
-// });
-
-// async function saveSettings() {
-//   const response = await fetch(`${baseUrl}/styles`, {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(cardStyles.value),
-//   });
-//   if (response.status == 200) {
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
-
-// onBeforeRouteLeave(async () => {
-//   if (haveUnsavedChanges.value) {
-//     showSuccess.value = await saveSettings();
-//   }
-// });
+import AppearanceSection from '@/components/settings/AppearanceSection.vue';
+import ApiKeysSection from '@/components/settings/ApiKeysSection.vue';
 </script>
 
 <template>
   <section class="font-koho p-10 md:p-16 bg-surface text-neutral">
-    <h2 class="text-4xl text-neutral mb-10 font-medium">UI</h2>
-    <OptionRow
-      :option="{
-        label: 'Dark Mode',
-        type: 'boolean',
-      }"
-      v-model="isDark"
-    />
+    <AppearanceSection />
     <hr class="m-5" />
+    <ApiKeysSection />
   </section>
 </template>

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks, Depends
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.youtube import get_transcript
@@ -7,12 +7,17 @@ from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
 from models.responses import CardData, GenerateResponse
 from core.registry import get_provider
+from dependencies import get_api_keys
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
 
 @router.post("/generate")
-async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
+async def generate(
+    request: GenerateRequest,
+    background_tasks: BackgroundTasks,
+    api_keys=Depends(get_api_keys),
+):
     content = request.content
     content_type = request.content_type
     content_options = request.content_options
@@ -22,6 +27,7 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
     target_language = definition_options.target_language
     mode = definition_options.mode
     model = definition_options.model
+    api_key = api_keys.get(provider)
 
     if content_type == "youtube":
         content = get_transcript(content)
@@ -47,7 +53,9 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
         target_language,
     )
     payload = {"user_instructions": user_instructions}
-    ai_response = await dispatch("ai", provider, model, payload)
+    ai_response = await dispatch(
+        source="ai", provider=provider, model=model, api_key=api_key, payload=payload
+    )
     cards = [
         CardData(term=card.term, front=card.term, back=card.result)
         for card in ai_response.data
@@ -56,7 +64,7 @@ async def generate(request: GenerateRequest, background_tasks: BackgroundTasks):
 
 
 @router.get("/models/{provider}")
-def get_available_models(provider: str):
+def get_available_models(provider: str, api_keys=Depends(get_api_keys)):
     ProviderClass = get_provider("ai", provider)
-    instance = ProviderClass()
+    instance = ProviderClass(api_key=api_keys.get(provider))
     return instance.get_available_models()

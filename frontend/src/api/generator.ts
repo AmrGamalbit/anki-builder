@@ -26,6 +26,7 @@ export async function generateDeck() {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
+    credentials: 'include',
   });
   const r = await res.json();
   generatorStore.cards = r.cards.map((card: CardData) => ({

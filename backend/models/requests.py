@@ -99,3 +99,8 @@ class ExportRequest(BaseSchema):
         AIOptions | DictionaryOptions, Discriminator("source")
     ]
     deck_name: str
+
+
+class ApiKeysRequest(BaseSchema):
+    groq: str | None = None
+    gemini: str | None = None
