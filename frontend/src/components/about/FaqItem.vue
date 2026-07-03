@@ -6,8 +6,11 @@ const props = defineProps<{ question: string; answer: string }>();
 const isOpen = ref(false);
 </script>
 <template>
-  <div class="flex flex-col items-start border-b border-gray-200 py-4 gap-2">
-    <button class="flex items-center justify-between text-left gap-4" @click="isOpen = !isOpen">
+  <div class="flex flex-col items-start border-b border-gray-200 py-4 gap-2 w-full">
+    <button
+      class="flex items-center justify-between text-left gap-4 cursor-pointer"
+      @click="isOpen = !isOpen"
+    >
       <span class="text-sm font-medium">{{ props.question }}</span>
       <ChevronDownIcon
         class="h-4 w-4 text-gray-400 shrink-0"

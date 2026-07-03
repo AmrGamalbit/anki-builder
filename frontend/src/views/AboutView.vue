@@ -1,20 +1,62 @@
+<script setup lang="ts">
+import FaqItem from '@/components/about/FaqItem.vue';
+import HowItWorks from '@/components/about/HowItWorks.vue';
+
+const faqs = [
+  {
+    question: 'What is AnkiBuilder?',
+    answer:
+      'AnkiBuilder is a web app that turns your content into ready-to-use Anki flashcard decks. Add a text, article, word list, or image — and it generates cards with definitions, examples, and pronunciations automatically.',
+  },
+  {
+    question: 'How does it work?',
+    answer:
+      'Add your content, choose a source (AI or dictionary), review and edit the generated cards, then export a ready-to-use .apkg file directly into Anki.',
+  },
+  {
+    question: 'Do I need an account?',
+    answer:
+      'No — AnkiBuilder requires no registration. Your API keys are stored locally in your browser.',
+  },
+  {
+    question: 'Is it free?',
+    answer:
+      "The app itself is free. If you use the AI source, you'll need your own API key from Groq or Gemini — both have generous free tiers.",
+  },
+  {
+    question: 'What is Anki?',
+    answer:
+      'Anki is a free flashcard app that uses spaced repetition to help you remember things long-term. Download it at ankiweb.net.',
+  },
+  {
+    question: 'Why do I need my own API key?',
+    answer:
+      'To keep the app free and respect your privacy — your requests go directly from your browser to the AI provider using your own key, so nothing is stored on our servers.',
+  },
+];
+</script>
 <template>
-  <section class="font-koho p-10 md:p-16 bg-surface text-neutral flex-center flex-col">
+  <section class="font-koho p-10 md:p-16 bg-surface text-neutral flex-col">
     <h2 class="text-4xl mb-10 font-medium">About</h2>
-    <p class="text-lg">
-      AnkiBuilder started as a personal itch I needed to scratch. As someone learning English, I
-      found myself spending more time building flashcards than actually studying them. Every new
-      word meant opening a dictionary, copying a definition, finding an example sentence, and then
-      wrestling with Anki's card editor to make something that didn't look terrible. It was
-      exhausting, and it was getting in the way of actually learning. So I built AnkiBuilder — a
-      tool that does all of that for you. The idea is simple: you focus on the content you want to
-      learn from, whether that's a YouTube video, a web article, a text you pasted, or a CSV file,
-      and AnkiBuilder takes care of the rest. It automatically extracts the difficult words and
-      idioms, looks them up, and generates beautiful, ready-to-use Anki decks complete with
-      definitions, examples, pronunciations, and pictograms. This is a project made with love, built
-      in spare time, and driven by a genuine desire to make language learning less painful. It's not
-      a startup, it's not a business — it's just a tool I wished existed, so I made it. If it helps
-      you learn faster and enjoy the process more, then it's done its job. Happy learning. 🎓
-    </p>
+    <div class="border-l-2 border-primary pl-4">
+      <h5 class="text-xs uppercase text-gray-600 font-bold tracking-widest mb-2">
+        The Story Behind It
+      </h5>
+      <p class="text-gray-700">
+        As someone learning English, I found myself spending more time creating flashcards than
+        actually studying them. So I put my programming skills to use and built AnkiBuilder — a tool
+        that automates the tedious process of making accurate, well-designed flashcards so you can
+        focus on what actually matters: learning.
+      </p>
+    </div>
+    <HowItWorks class="mt-5" />
+    <div class="flex flex-col items-start">
+      <FaqItem
+        v-for="(faq, index) in faqs"
+        :question="faq.question"
+        :answer="faq.answer"
+        :key="index"
+      />
+    </div>
   </section>
 </template>
