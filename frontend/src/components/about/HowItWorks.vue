@@ -8,25 +8,25 @@ import {
 
 const steps = [
   {
-    id: 1,
+    id: 0,
     icon: DocumentTextIcon,
     title: 'Add your content',
     desc: 'Paste text, upload a file, add a URL, or drop an image.',
   },
   {
-    id: 2,
+    id: 1,
     icon: SparklesIcon,
     title: 'Generate your cards',
     desc: 'AI or dictionary sources extract vocabulary and build definitions automatically.',
   },
   {
-    id: 3,
+    id: 2,
     icon: PencilSquareIcon,
     title: 'Review and edit',
     desc: "Browse your cards, tweak definitions, and remove anything you don't need.",
   },
   {
-    id: 4,
+    id: 3,
     icon: ArrowDownTrayIcon,
     title: 'Export to Anki',
     desc: 'Download a ready-to-use .apkg file and import it straight into Anki.',
@@ -54,11 +54,14 @@ const steps = [
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+  transform: translateY(12px);
 }
 </style>
