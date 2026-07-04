@@ -36,9 +36,9 @@ const faqs = [
 ];
 </script>
 <template>
-  <section class="font-koho p-10 md:p-16 bg-surface text-neutral flex-col">
+  <div class="font-koho p-10 md:p-16 bg-surface text-neutral flex flex-col">
     <h2 class="text-4xl mb-10 font-medium">About</h2>
-    <div class="border-l-2 border-primary pl-4">
+    <section class="border-l-2 border-primary pl-4">
       <h5 class="text-xs uppercase text-gray-600 font-bold tracking-widest mb-2">
         The Story Behind It
       </h5>
@@ -48,15 +48,19 @@ const faqs = [
         that automates the tedious process of making accurate, well-designed flashcards so you can
         focus on what actually matters: learning.
       </p>
-    </div>
-    <HowItWorks class="mt-5" />
-    <div class="flex flex-col items-start">
+    </section>
+    <section class="flex flex-col items-start gap-5 mt-5 pl-4">
+      <h5 class="text-xs uppercase text-gray-600 font-bold tracking-widest mb-2">How It Works</h5>
+      <HowItWorks />
+    </section>
+    <section class="flex flex-col items-start mt-5 pl-4">
+      <h5 class="text-xs uppercase text-gray-600 font-bold tracking-widest mb-2">Faqs</h5>
       <FaqItem
         v-for="(faq, index) in faqs"
+        :key="index"
         :question="faq.question"
         :answer="faq.answer"
-        :key="index"
       />
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
