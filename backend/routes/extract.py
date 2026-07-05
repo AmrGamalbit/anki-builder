@@ -2,11 +2,11 @@ from fastapi import APIRouter, UploadFile, Form, File
 from typing import Annotated
 from utils.file_parser import handle_file, extract_words
 
-router = APIRouter(prefix="/file", tags=["file"])
+router = APIRouter(prefix="/extract", tags=["file"])
 
 
-@router.post("/extract")
-async def generate(
+@router.post("/file")
+async def extract_from_file(
     file: Annotated[UploadFile, File()],
     type: Annotated[str, Form()],
     word_column: Annotated[int, Form()],
