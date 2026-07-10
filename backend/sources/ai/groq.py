@@ -50,10 +50,10 @@ You must respond with a JSON object matching this exact structure:
 
 class GroqProvider(BaseProvider):
     def __init__(self, api_key: str, model: str | None = None):
+        super().__init__(api_key, model)
         self.client = Groq(
             api_key=api_key,
         )
-        self.model = model
 
     async def fetch(self, payload):
         try:
