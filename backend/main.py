@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from routes.ai import router as ai_router
 from routes.dictionary import router as dictionary_router
-from routes.file import router as file_router
+from routes.extract import router as file_router
 from routes.styles import router as styles_router
 from routes.export import router as export_router
 from routes.auth import router as auth_router
