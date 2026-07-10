@@ -40,7 +40,7 @@ class FreeDictionaryProvider(BaseProvider):
                         data.append(
                             DefinitionResponse(
                                 term=entry.get("word"),
-                                definition=definition.get("text"),
+                                definition=definition.get("definition"),
                                 synonyms=definition.get("synonyms"),
                                 antonyms=definition.get("antonyms"),
                                 example=definition.get("example"),
@@ -48,7 +48,6 @@ class FreeDictionaryProvider(BaseProvider):
                                 audio_url=audio_url,
                             )
                         )
-
         meta = {"total": len(raw)}
         return GenerateResponse(
             source="dictionary", provider="free", data=data, meta=meta
