@@ -5,13 +5,14 @@ from models.responses import GenerateResponse
 from services.youtube import get_transcript
 from services.web import extract_article
 from utils.vocabulary import clean_content, get_unusual_words
-from utils.normalizers import normalize_dictionary_entries
 
 router = APIRouter(prefix="/dictionary", tags=["dictionary"])
 
 
 @router.post("/lookup")
-async def lookup(request: GenerateRequest, background_tasks: BackgroundTasks):
+async def lookup(
+    request: GenerateRequest, background_tasks: BackgroundTasks
+) -> GenerateResponse:
     content = request.content
     content_type = request.content_type
     content_options = request.content_options
@@ -26,8 +27,9 @@ async def lookup(request: GenerateRequest, background_tasks: BackgroundTasks):
         terms = clean_content(content, content_options)
 
     payload = {"words": terms}
-    dictionary_response = await dispatch("dictionary", provider, payload)
-    cards, pronunciations = normalize_dictionary_entries(
-        dictionary_response.data, request.definition_options.use_dictionary_audio
+    dictionary_response = await dispatch(
+        "dictionary",
+        provider,
+        payload,
     )
-    return GenerateResponse(cards=cards, pronunciations=pronunciations)
+    return dictionary_response
