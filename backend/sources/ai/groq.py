@@ -1,8 +1,6 @@
-import os
-
 from dotenv import load_dotenv
 from groq import Groq
-from models.responses import UnifiedResponse, AIResponse
+from models.responses import DefinitionsResponse, GenerateResponse
 from sources.base import BaseProvider
 
 load_dotenv()
@@ -30,26 +28,34 @@ You must respond with a JSON object matching this exact structure:
 {
   "results": [
     {
-      "term": "the word",
-      "result": "definition or translation",
-      "example": "example sentence"
+      "term": "the original word",
+      "definition": "clear definition or translation",
+      "synonyms": ["synonym1", "synonym2"] or null,
+      "antonyms": ["antonym1"] or null,
+      "example": "one example sentence" or null,
+      "part_of_speech": "noun/verb/adjective/adverb/etc",
+      "audio_url": null,
+      "pictogram_url": null
     }
   ]
 }
 
 - Return ONLY valid JSON. No preamble, no commentary, no markdown code blocks.
-- Every object in results must have exactly these three fields: term, result, example.
+- `audio_url` and `pictogram_url` must always be null — do not generate URLs.
+- `synonyms` and `antonyms` should be null if none are relevant.
+- Every object in results must have all fields listed above.
 - Never return a raw array, always wrap in a results key.
 """
 
 
 class GroqProvider(BaseProvider):
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, model: str | None = None):
         self.client = Groq(
             api_key=api_key,
         )
+        self.model = model
 
-    async def fetch(self, payload, model):
+    async def fetch(self, payload):
         try:
             chat_completion = self.client.chat.completions.create(
                 messages=[
@@ -62,12 +68,12 @@ class GroqProvider(BaseProvider):
                         "content": payload.get("user_instructions"),
                     },
                 ],
-                model=model,
+                model=self.model,
                 response_format={
                     "type": "json_schema",
                     "json_schema": {
                         "name": "Learning_Vocab",
-                        "schema": AIResponse.model_json_schema(),
+                        "schema": DefinitionsResponse.model_json_schema(),
                     },
                 },
             )
@@ -86,20 +92,20 @@ class GroqProvider(BaseProvider):
                             "content": payload.get("user_instructions"),
                         },
                     ],
-                    model=model,
+                    model=self.model,
                 )
                 return chat_completion.choices[0].message.content
             except Exception as e:
                 print(f"First attempt failed: {e}")
 
-    def normalize(self, raw, model):
+    def normalize(self, raw):
         start = raw.index("{")
         end = raw.rindex("}")
         raw = raw[start : end + 1]
-        definition_data = AIResponse.model_validate_json(raw)
-        meta = {"model": model}
-        return UnifiedResponse(
-            source="ai", provider="groq", data=definition_data.results, meta=meta
+        data = DefinitionsResponse.model_validate_json(raw)
+        meta = {"model": self.model}
+        return GenerateResponse(
+            source="ai", provider="groq", data=data.results, meta=meta
         )
 
     def get_available_models(self):
@@ -113,5 +119,4 @@ class GroqProvider(BaseProvider):
                 and model.context_window > 4096
                 and "json_mode" in (model.supported_features or [])
             ]
-
         return _cached_models

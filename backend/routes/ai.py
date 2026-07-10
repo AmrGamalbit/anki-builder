@@ -17,7 +17,7 @@ async def generate(
     request: GenerateRequest,
     background_tasks: BackgroundTasks,
     api_keys=Depends(get_api_keys),
-):
+) -> GenerateResponse:
     content = request.content
     content_type = request.content_type
     content_options = request.content_options
@@ -56,11 +56,7 @@ async def generate(
     ai_response = await dispatch(
         source="ai", provider=provider, model=model, api_key=api_key, payload=payload
     )
-    cards = [
-        CardData(term=card.term, front=card.term, back=card.result)
-        for card in ai_response.data
-    ]
-    return GenerateResponse(cards=cards)
+    return ai_response
 
 
 @router.get("/models/{provider}")

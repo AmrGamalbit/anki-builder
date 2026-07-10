@@ -1,52 +1,38 @@
 from pydantic import BaseModel
-from typing import Union
 
 
-class Definition(BaseModel):
-    text: str
+class DefinitionResponse(BaseModel):
+    term: str
+    definition: str
     synonyms: list[str] | None = None
     antonyms: list[str] | None = None
     example: str | None = None
-
-
-class Meaning(BaseModel):
     part_of_speech: str
-    definitions: list[Definition]
+    audio_url: str | None = None
+    pictogram_url: str | None = None
 
 
-class DictionaryEntry(BaseModel):
+class DefinitionsResponse(BaseModel):
+    results: list[DefinitionResponse]
+
+
+class ExtractedTerm(BaseModel):
     term: str
-    pronunciation: str | None = None
-    meanings: list[Meaning]
+    cefr_level: str
+    context_sentence: str
+    context_clue: str
 
 
-class ExtractedTerms(BaseModel):
-    terms: list[str]
-
-
-class AIResponseData(BaseModel):
-    term: str
-    result: str
-    example: str
-
-
-class AIResponse(BaseModel):
-    results: list[AIResponseData] | ExtractedTerms
-
-
-class CardData(BaseModel):
-    term: str
-    front: str
-    back: str
+class ExtractionResponse(BaseModel):
+    terms: list[ExtractedTerm]
 
 
 class GenerateResponse(BaseModel):
-    cards: list[CardData]
-    pronunciations: dict[str, str] = {}
-
-
-class UnifiedResponse(BaseModel):
     source: str
     provider: str
-    data: list[Union[DictionaryEntry, AIResponseData]]
+    data: list[DefinitionResponse]
     meta: dict
+
+
+class CardData(BaseModel):
+    front: str

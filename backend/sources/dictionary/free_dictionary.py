@@ -1,5 +1,5 @@
 from sources.base import BaseProvider
-from models.responses import UnifiedResponse, Definition, Meaning, DictionaryEntry
+from models.responses import GenerateResponse, DefinitionResponse
 import asyncio
 import aiohttp
 
@@ -28,38 +28,28 @@ class FreeDictionaryProvider(BaseProvider):
         return responses
 
     def normalize(self, raw):
-        entries = []
+        data = []
         for response in raw:
             for entry in response:
-                term = entry.get("word")
-                pronunciation = next(
+                audio_url = next(
                     (p.get("audio") for p in entry.get("phonetics") if p.get("audio")),
                     None,
                 )
-                meanings = []
                 for meaning in entry.get("meanings"):
-                    definitions = []
                     for definition in meaning.get("definitions")[:2]:
-                        definitions.append(
-                            Definition(
-                                text=definition.get("definition"),
+                        data.append(
+                            DefinitionResponse(
+                                term=entry.get("word"),
+                                definition=definition.get("text"),
                                 synonyms=definition.get("synonyms"),
                                 antonyms=definition.get("antonyms"),
                                 example=definition.get("example"),
+                                part_of_speech=meaning.get("partOfSpeech"),
+                                audio_url=audio_url,
                             )
                         )
-                    meanings.append(
-                        Meaning(
-                            part_of_speech=meaning.get("partOfSpeech"),
-                            definitions=definitions,
-                        )
-                    )
-                entries.append(
-                    DictionaryEntry(
-                        term=term, pronunciation=pronunciation, meanings=meanings
-                    )
-                )
+
         meta = {"total": len(raw)}
-        return UnifiedResponse(
-            source="dictionary", provider="free", data=entries, meta=meta
+        return GenerateResponse(
+            source="dictionary", provider="free", data=data, meta=meta
         )
