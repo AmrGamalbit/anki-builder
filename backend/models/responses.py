@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from .base import BaseSchema
 
 
-class DefinitionResponse(BaseModel):
+class DefinitionResponse(BaseSchema):
     term: str
     definition: str
     synonyms: list[str] | None = None
@@ -12,27 +12,27 @@ class DefinitionResponse(BaseModel):
     pictogram_url: str | None = None
 
 
-class DefinitionsResponse(BaseModel):
+class DefinitionsResponse(BaseSchema):
     results: list[DefinitionResponse]
 
 
-class ExtractedTerm(BaseModel):
+class ExtractedTerm(BaseSchema):
     term: str
     cefr_level: str
     context_sentence: str
     context_clue: str
 
 
-class ExtractionResponse(BaseModel):
+class ExtractionResponse(BaseSchema):
     terms: list[ExtractedTerm]
 
 
-class GenerateResponse(BaseModel):
+class GenerateResponse(BaseSchema):
     source: str
     provider: str
     data: list[DefinitionResponse]
     meta: dict
 
 
-class CardData(BaseModel):
+class CardData(BaseSchema):
     front: str

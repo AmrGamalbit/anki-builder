@@ -1,15 +1,7 @@
-from pydantic import BaseModel, Discriminator, model_validator, ConfigDict
-from pydantic.alias_generators import to_camel
+from pydantic import Discriminator, model_validator
 from typing import Literal, Annotated, Any
-from .responses import CardData
-
-
-class BaseSchema(BaseModel):
-    model_config = ConfigDict(
-        alias_generator=to_camel,
-        populate_by_name=True,
-        from_attributes=True,
-    )
+from .responses import DefinitionResponse
+from .base import BaseSchema
 
 
 class FileOptions(BaseSchema):
@@ -47,7 +39,7 @@ class DefinitionOptions(BaseSchema):
 class DictionaryOptions(DefinitionOptions):
     source: Literal["dictionary"]
     use_dictionary_audio: bool = False
-    provider: Literal["free_dictionary_api"]
+    provider: Literal["free_dictionary_api", "wordnik"]
 
 
 class AIOptions(DefinitionOptions):
@@ -92,7 +84,7 @@ class GenerateRequest(BaseSchema):
 
 
 class ExportRequest(BaseSchema):
-    data: list[CardData]
+    data: list[DefinitionResponse]
     pronunciation_urls: dict[str, str] = {}
     appearance_options: AppearanceOptions
     definition_options: Annotated[
