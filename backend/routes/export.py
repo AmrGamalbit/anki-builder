@@ -12,7 +12,7 @@ async def export(request: ExportRequest, background_tasks: BackgroundTasks):
         appearance_options=request.appearance_options,
     )
     return await generator.export_deck(
-        cards=request.data,
+        entries=request.data,
         deck_name=request.deck_name,
         pronunciation_urls=request.pronunciation_urls,
         background_tasks=background_tasks,

@@ -9,8 +9,12 @@ from services.pronunciation import PronunciationService
 from services.pictogram import PictogramService
 
 MODEL_FIELDS = [
-    {"name": "Front"},
-    {"name": "Back"},
+    {"name": "Term"},
+    {"name": "PartOfSpeech"},
+    {"name": "Definition"},
+    {"name": "Example"},
+    {"name": "Synonyms"},
+    {"name": "Antonyms"},
     {"name": "Pronunciation"},
     {"name": "Picture"},
 ]
@@ -18,8 +22,8 @@ MODEL_FIELDS = [
 MODEL_TEMPLATES = [
     {
         "name": "Card 1",
-        "qfmt": "{{Front}}",
-        "afmt": '{{FrontSide}}<hr id="answer">{{Back}}<br>{{Picture}}<br>{{Pronunciation}}',
+        "qfmt": "{{Term}}<br><small>{{PartOfSpeech}}</small><br><em>{{Example}}</em>",
+        "afmt": "<span class='highlight'>{{FrontSide}}</span><hr id='answer'>{{Definition}}<br>{{#Synonyms}}<small>🔄 {{Synonyms}}</small>{{/Synonyms}} {{#Antonyms}}<small>🔃 {{Antonyms}}</small>{{/Antonyms}}<br>{{Picture}}<br>{{Pronunciation}}",
     },
 ]
 
@@ -78,11 +82,21 @@ class DeckGenerator:
         media_files = pronunciation_files + pictogram_files
         return media_files, available_pronunciations, available_pictograms
 
-    def create_note(self, card, has_pronunciation, has_pictogram) -> genanki.Note:
-        sound = f"[sound:{card.term}.mp3]" if has_pronunciation else ""
-        image = f"<img src='{card.term}.png'>" if has_pictogram else ""
+    def create_note(self, entry, has_pronunciation, has_pictogram) -> genanki.Note:
+        sound = f"[sound:{entry.term}.mp3]" if has_pronunciation else ""
+        picture = f"<img src='{entry.term}.png'>" if has_pictogram else ""
         return genanki.Note(
-            model=self.model, fields=[card.front, card.back, sound, image]
+            model=self.model,
+            fields=[
+                entry.term,
+                entry.part_of_speech or "",
+                entry.definition,
+                entry.example or "",
+                ", ".join(entry.synonyms) if entry.synonyms else "",
+                ", ".join(entry.antonyms) if entry.antonyms else "",
+                sound,
+                picture,
+            ],
         )
 
     def create_deck(self, notes: list, deck_name: str) -> genanki.Deck:
@@ -93,23 +107,25 @@ class DeckGenerator:
 
     async def export_deck(
         self,
-        cards,
+        entries,
         pronunciation_urls: list[str],
         deck_name: str,
         background_tasks: BackgroundTasks,
     ):
+        audio_urls = [entry.audio_url for entry in entries]
+        terms = [entry.term for entry in entries]
         (
             media_files,
             available_pronunciations,
             available_pictograms,
-        ) = await self.prepare_media([card.term for card in cards], pronunciation_urls)
+        ) = await self.prepare_media(terms, audio_urls)
         notes = [
             self.create_note(
-                card,
-                card.term in available_pronunciations,
-                card.term in available_pictograms,
+                entry,
+                entry.term in available_pronunciations,
+                entry.term in available_pictograms,
             )
-            for card in cards
+            for entry in entries
         ]
         deck = self.create_deck(notes, deck_name)
         package = genanki.Package(deck)

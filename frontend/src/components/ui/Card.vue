@@ -59,14 +59,14 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
           color: currentSide == 'back' ? appearanceOptions.accentColor : '',
         }"
       >
-        <div class="group relative" v-if="card?.front">
+        <div class="group relative" v-if="card?.term">
           <p
             class="cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
             contenteditable="true"
             @blur="handleCardUpdate($event, 'front')"
             @click.stop
           >
-            {{ card?.front }}
+            {{ card?.term }}
           </p>
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 mx-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
@@ -77,14 +77,14 @@ function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
       </div>
       <div v-if="currentSide == 'back'" class="flex-1 overflow-y-auto scrollbar-thin">
         <hr class="text-white mix-blend-difference" />
-        <div class="group relative" v-if="card?.back">
+        <div class="group relative" v-if="card?.definition">
           <p
             class="p-2 cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
             contenteditable="true"
             @blur="handleCardUpdate($event, 'back')"
             @click.stop
           >
-            {{ card?.back }}
+            {{ card?.definition }}
           </p>
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"

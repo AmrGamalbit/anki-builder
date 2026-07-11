@@ -5,7 +5,7 @@ from services.youtube import get_transcript
 from services.web import extract_article
 from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
-from models.responses import CardData, GenerateResponse
+from models.responses import GenerateResponse
 from core.registry import get_provider
 from dependencies import get_api_keys
 
