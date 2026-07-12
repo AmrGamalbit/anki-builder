@@ -4,6 +4,7 @@ export async function syncApiKeys() {
   const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/apikeys`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify(savedKeys),
   });
   const r = await res.json();

@@ -13,7 +13,10 @@ const availableModels = ref<Record<string, OptionItem[]>>({});
 
 type ProviderKey = 'dictionary' | 'ai';
 const providers: Record<ProviderKey, OptionItem[]> = {
-  dictionary: [{ label: 'Free Dictionary API', value: 'free_dictionary_api' }],
+  dictionary: [
+    { label: 'Free Dictionary API', value: 'free_dictionary_api' },
+    { label: 'Wordnik', value: 'wordnik' },
+  ],
   ai: [
     { label: 'Gemini', value: 'gemini' },
     { label: 'Groq', value: 'groq' },

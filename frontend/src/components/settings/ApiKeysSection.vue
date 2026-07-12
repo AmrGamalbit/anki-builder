@@ -4,6 +4,7 @@ import ApiKeyInput from '../ui/ApiKeyInput.vue';
 const providers = [
   { label: 'Groq', key: 'groq' },
   { label: 'Gemini', key: 'gemini' },
+  { label: 'Wordnik', key: 'wordnik' },
 ];
 </script>
 

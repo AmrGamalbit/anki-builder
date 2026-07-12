@@ -96,3 +96,4 @@ class ExportRequest(BaseSchema):
 class ApiKeysRequest(BaseSchema):
     groq: str | None = None
     gemini: str | None = None
+    wordnik: str | None = None
