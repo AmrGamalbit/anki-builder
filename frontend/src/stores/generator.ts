@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { DefinitionOptions, AppearanceOptions } from '@/types/option';
+import type { DefinitionOptions, AppearanceOptions, ContentOptions } from '@/types/option';
 import type { CardData } from '@/types/card';
 
 export const useGeneratorStore = defineStore('generator', () => {
   const content = ref();
   const contentType = ref();
-  const contentOptions = ref({
+  const contentOptions = ref<ContentOptions>({
     file: {
       type: 'file',
       delimiter: ',',
@@ -24,7 +24,7 @@ export const useGeneratorStore = defineStore('generator', () => {
       baseForm: false,
     },
     url: {
-      vocabulary_level: 'b1',
+      vocabularyLevel: 'b1',
       maxCards: 20,
       includeIdioms: true,
     },

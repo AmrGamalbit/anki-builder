@@ -15,19 +15,31 @@ export interface Option {
 export interface TextOptions {
   type: string;
   delimiter: string;
-  strip_punctuation: boolean;
+  stripPunctuation: boolean;
   lowercase: boolean;
-  base_form: boolean;
+  baseForm: boolean;
 }
 
 export interface FileOptions {
   type: string;
   delimiter: string;
-  word_column: number;
-  has_header: boolean;
-  strip_punctuation: boolean;
+  wordColumn: number;
+  hasHeader: boolean;
+  stripPunctuation: boolean;
   lowercase: boolean;
-  base_form: boolean;
+  baseForm: boolean;
+}
+
+export interface UrlOptions {
+  vocabularyLevel: string;
+  maxCards: number;
+  includeIdioms: boolean;
+}
+
+export interface ContentOptions {
+  file: FileOptions;
+  text: TextOptions;
+  url: UrlOptions;
 }
 
 export interface DefinitionOptions {
