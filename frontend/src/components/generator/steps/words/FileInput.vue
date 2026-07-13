@@ -6,6 +6,7 @@ import { useGeneratorStore } from '@/stores/generator';
 import FilePicker from '@/components/ui/FilePicker.vue';
 import { ref, watch } from 'vue';
 import { extractWordsFromFile } from '@/api/file';
+import Modal from '@/components/ui/Modal.vue';
 
 const generatorStore = useGeneratorStore();
 const content = defineModel<File | null>('content');
@@ -44,7 +45,23 @@ watch([content, () => generatorStore.contentOptions.file], async ([newContent, n
     >
       Preview
     </button>
-    <p v-if="showPreview">{{ generatorStore.content }}</p>
+    <Modal v-model="showPreview">
+      <table class="table-auto w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 uppercase text-sm tracking-wide rounded-2xl">
+          <tr>
+            <th class="px-4 py-3 text-left font-medium">Index</th>
+            <th class="px-4 py-3 text-left font-medium">Word</th>
+          </tr>
+        </thead>
+        <tr
+          v-for="(word, index) in generatorStore.content.split(',')"
+          class="border-t border-gray-100 even:bg-gray-50 hover:bg-gray-100 transition-colors"
+        >
+          <td class="px-4 py-3 text-gray-700">{{ index }}</td>
+          <td class="px-4 py-3 text-gray-700">{{ word }}</td>
+        </tr>
+      </table>
+    </Modal>
     <div class="flex flex-col gap-4 p-3">
       <OptionRow
         v-for="(option, key) in fileOptionsSchema"
