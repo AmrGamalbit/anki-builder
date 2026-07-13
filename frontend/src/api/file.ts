@@ -1,17 +1,20 @@
-import { useGeneratorStore } from '@/stores/generator';
+import type { FileOptions } from '@/types/option';
 
-const generatorStore = useGeneratorStore();
-export async function extractWordsFromFile() {
+export async function extractWordsFromFile(
+  content: File,
+  contentOptions: FileOptions,
+): Promise<string> {
   const formData = new FormData();
-  formData.append('file', generatorStore.content);
-  const entries = Object.entries(generatorStore.contentOptions.file);
+  formData.append('file', content);
+  const entries = Object.entries(contentOptions);
   for (const [key, value] of entries.slice(0, -1)) {
     formData.append(key, String(value));
   }
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/file/extract`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/extract/file`, {
     method: 'POST',
     body: formData,
   });
   const r = await response.json();
-  generatorStore.content = r;
+  console.log(r);
+  return r;
 }
