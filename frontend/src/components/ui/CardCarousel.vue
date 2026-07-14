@@ -4,10 +4,12 @@ import { ref, computed } from 'vue';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/vue/16/solid';
 import { useGeneratorStore } from '@/stores/generator';
 import type { CardData } from '@/types/card';
+import Modal from './Modal.vue';
 
 const generatorStore = useGeneratorStore();
 const currentIndex = ref(0);
 const isAnimating = ref(false);
+const showModal = ref(false);
 function navigateCarousel(direction: 1 | -1) {
   if (generatorStore.cards.length <= 1 || isAnimating.value) return;
   isAnimating.value = true;
@@ -41,6 +43,7 @@ function handleCardUpdate(updatedCard: CardData | null | undefined) {
     <div class="relative aspect-3/2">
       <Card
         v-for="(card, index) in visibleCards"
+        @maximize="showModal = true"
         @click="navigateCarousel(1)"
         :key="card?.id ?? index"
         :card="card"
@@ -80,4 +83,20 @@ function handleCardUpdate(updatedCard: CardData | null | undefined) {
       />
     </div>
   </div>
+  <Teleport to="body">
+    <Transition name="modal">
+      <div
+        v-if="showModal"
+        class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-20"
+        @click.self="showModal = false"
+      >
+        <div class="w-full h-full">
+          <Card
+            :card="generatorStore.cards[currentIndex]"
+            class="hover:translate-y-0! hover:translate-x-0!"
+          />
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
