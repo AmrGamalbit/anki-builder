@@ -3,7 +3,7 @@ import { useGeneratorStore } from '@/stores/generator';
 import { ArrowsRightLeftIcon } from '@heroicons/vue/16/solid';
 import { ref, computed } from 'vue';
 import type { CSSProperties } from 'vue';
-import { PencilSquareIcon } from '@heroicons/vue/16/solid';
+import { PencilSquareIcon, PlayCircleIcon } from '@heroicons/vue/16/solid';
 import type { CardData } from '@/types/card';
 import CardSkeleton from './CardSkeleton.vue';
 
@@ -11,6 +11,7 @@ const card = defineModel<CardData | null>('card');
 const generatorStore = useGeneratorStore();
 const appearanceOptions = generatorStore.appearanceOptions;
 const currentSide = ref('front');
+const audioRef = ref<HTMLAudioElement | null>(null);
 const flipCard = () => {
   currentSide.value == 'front' ? (currentSide.value = 'back') : (currentSide.value = 'front');
 };
@@ -80,19 +81,27 @@ const cardStyle = computed(
     </div>
     <div v-if="currentSide == 'back'" class="flex-1">
       <hr class="text-white mix-blend-difference" />
-      <div class="group relative overflow-y-auto scrollbar-thin" v-if="card?.definition">
-        <p
-          class="p-2 cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
-          contenteditable="true"
-          @blur="handleCardUpdate($event, 'back')"
-          @click.stop
-        >
-          {{ card?.definition }}
-        </p>
-        <PencilSquareIcon
-          class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
-          @click.stop="handlePencilClick"
-        />
+      <div v-if="card?.definition">
+        <div class="group relative overflow-y-auto scrollbar-thin">
+          <p
+            class="p-2 cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
+            contenteditable="true"
+            @blur="handleCardUpdate($event, 'back')"
+            @click.stop
+          >
+            {{ card?.definition }}
+          </p>
+          <PencilSquareIcon
+            class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
+            @click.stop="handlePencilClick"
+          />
+        </div>
+        <div v-if="card?.audioUrl">
+          <audio controls :src="card?.audioUrl" class="hidden" ref="audioRef"></audio>
+          <button @click.stop="audioRef?.play()">
+            <PlayCircleIcon class="w-6 h-6" />
+          </button>
+        </div>
       </div>
       <CardSkeleton v-else :appearance-options="appearanceOptions" />
     </div>
