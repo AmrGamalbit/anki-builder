@@ -38,7 +38,7 @@ const maskedKey = computed(() => {
       "
       @focus="isFocused = true"
     />
-    <label :for="id" class="absolute -top-2.5 left-3 bg-white px-1 text-xs text-gray-800">{{
+    <label :for="id" class="absolute -top-3 left-3 px-5 text-sm text-neutral bg-accent rounded">{{
       props.label
     }}</label>
     <button

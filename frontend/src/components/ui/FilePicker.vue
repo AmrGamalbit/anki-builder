@@ -25,7 +25,7 @@ function handleChange(e: Event) {
 
 <template>
   <div
-    class="w-full py-9 rounded-lg border border-dashed transition-colors"
+    class="w-full py-9 rounded-b-sm border border-dashed transition-colors"
     :class="isDragging ? 'border-primary bg-primary/5' : 'border-gray-300 bg-white'"
     @dragover.prevent="isDragging = true"
     @dragleave.prevent="isDragging = false"

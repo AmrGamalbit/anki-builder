@@ -39,7 +39,7 @@ watch([content, () => generatorStore.contentOptions.file], async ([newContent, n
   <section>
     <FilePicker accept=".csv, .xls, .xlsx" v-model="content" />
     <button
-      class="flex items-center gap-1.5 text-sm text-primary hover:underline mt-2 cursor-pointer px-5 disabled:text-gray-600"
+      class="flex items-center gap-1.5 text-sm text-primary transition-all duration-200 hover:brightness-140 hover:scale-[1.05] hover:tracking-wider font-semibold mt-2 cursor-pointer px-5 disabled:text-disabled"
       @click="showPreview = !showPreview"
       :disabled="!content"
     >

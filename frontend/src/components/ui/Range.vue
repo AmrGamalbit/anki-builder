@@ -21,6 +21,6 @@ if (value.value === null || value.value === undefined) {
       :step="props.step"
       v-model.number="value"
     />
-    <span class="text-sm text-muted-foreground w-8 text-right">{{ value }}</span>
+    <span class="text-sm text-neutral w-8 text-right">{{ value }}</span>
   </div>
 </template>

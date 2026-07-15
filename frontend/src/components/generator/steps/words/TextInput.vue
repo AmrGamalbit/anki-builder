@@ -29,7 +29,7 @@ const textOptions = generatorStore.contentOptions.text;
       <textarea
         name="Words Input"
         id="text-input"
-        class="bg-white dark:text-gray-900 w-full h-40 rounded-bl-sm rounded-br-sm border border-gray-300 border-dashed focus:outline-none p-2"
+        class="bg-white dark:text-gray-900 w-full h-40 rounded-b-sm border border-gray-300 border-dashed focus:outline-none p-2"
         placeholder="Place your words, separated by commas"
         v-model="content"
       ></textarea>
