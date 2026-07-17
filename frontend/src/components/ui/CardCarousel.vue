@@ -1,49 +1,58 @@
 <script setup lang="ts">
 import Card from '@/components/ui/Card.vue';
 import { ref, computed } from 'vue';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/vue/16/solid';
+import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon } from '@heroicons/vue/16/solid';
 import { useGeneratorStore } from '@/stores/generator';
 import type { CardData } from '@/types/card';
-import Modal from './Modal.vue';
 
+const emit = defineEmits<{ 'all-cards-deleted': [] }>();
 const generatorStore = useGeneratorStore();
 const currentIndex = ref(0);
 const isAnimating = ref(false);
 const showModal = ref(false);
+const totalCards = computed(() => generatorStore.cards.length);
+const isDeckCleared = ref(false);
 function navigateCarousel(direction: 1 | -1) {
-  if (generatorStore.cards.length <= 1 || isAnimating.value) return;
+  if (totalCards.value <= 1 || isAnimating.value) return;
   isAnimating.value = true;
   setTimeout(() => {
-    currentIndex.value =
-      (currentIndex.value + direction + generatorStore.cards.length) % generatorStore.cards.length;
+    currentIndex.value = (currentIndex.value + direction + totalCards.value) % totalCards.value;
     isAnimating.value = false;
   }, 400);
 }
 const visibleCards = computed(() => {
-  if (generatorStore.cards.length === 0) return [null, null, null];
+  if (totalCards.value === 0) return [null, null, null];
   return [0, 1, 2].map(
-    (i) => generatorStore.cards[(currentIndex.value + i) % generatorStore.cards.length] ?? null,
+    (i) => generatorStore.cards[(currentIndex.value + i) % totalCards.value] ?? null,
   );
 });
 const displayIndex = computed({
   get: () => currentIndex.value + 1,
   set: (val) => {
     const num = Number(val);
-    currentIndex.value = Math.min(Math.max(num - 1, 0), generatorStore.cards.length - 1);
+    currentIndex.value = Math.min(Math.max(num - 1, 0), totalCards.value - 1);
   },
 });
 function handleCardUpdate(updatedCard: CardData | null | undefined) {
   if (!updatedCard) return;
   generatorStore.updateCard(currentIndex.value, updatedCard);
 }
+function handleCardDelete() {
+  const indexToDelete = currentIndex.value;
+  generatorStore.deleteCard(indexToDelete);
+  if (totalCards.value === 0) {
+    isDeckCleared.value = true;
+  }
+}
 </script>
 
 <template>
-  <div class="snap-center shrink-0 w-full max-w-[450px] mx-auto px-4">
+  <div class="snap-center shrink-0 w-full max-w-[450px] mx-auto px-4" v-if="!isDeckCleared">
     <div class="relative aspect-3/2">
       <Card
         v-for="(card, index) in visibleCards"
         @maximize="showModal = true"
+        @delete="handleCardDelete()"
         @click="navigateCarousel(1)"
         :key="card?.id ?? index"
         :card="card"
@@ -82,6 +91,23 @@ function handleCardUpdate(updatedCard: CardData | null | undefined) {
         @click="navigateCarousel(1)"
       />
     </div>
+  </div>
+  <div class="flex flex-col items-center justify-center" v-else>
+    <h3 class="text-xl font-bold text-neutral">
+      Your deck is <span class="text-accent">empty</span>
+    </h3>
+    <p class="mb-5 text-xs text-gray-500 max-w-sm leading-relaxed">
+      All cards have been removed from this batch.
+    </p>
+    <button
+      @click="$emit('all-cards-deleted')"
+      class="group cursor-pointer select-none rounded-xl bg-primary px-8 py-4 font-semibold text-surface shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-opacity-95 hover:text-primary-muted hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
+    >
+      <span class="flex items-center justify-center gap-2">
+        Ready to build something new?
+        <span class="transition-transform duration-200 group-hover:translate-x-1">→</span>
+      </span>
+    </button>
   </div>
   <Teleport to="body">
     <Transition name="modal">

@@ -46,7 +46,7 @@ function onNext() {
 
 <template>
   <section class="p-5 md:p-20 flex flex-col min-h-screen justify-between">
-    <component :is="steps[currentStep]" />
+    <component :is="steps[currentStep]" @all-cards-deleted="currentStep = 0" />
     <div class="flex flex-col justify-around">
       <div>
         <div class="flex justify-between mb-5">

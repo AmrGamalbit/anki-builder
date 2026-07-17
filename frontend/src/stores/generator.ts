@@ -61,6 +61,9 @@ export const useGeneratorStore = defineStore('generator', () => {
   function updateCard(index: number, updatedCard: CardData) {
     cards.value[index] = updatedCard;
   }
+  function deleteCard(index: number) {
+    cards.value.splice(index, 1);
+  }
   return {
     content,
     contentType,
@@ -71,6 +74,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     isGenerating,
     isExporting,
     updateCard,
+    deleteCard,
     deckName,
     cards,
   };

@@ -3,11 +3,11 @@ import { useGeneratorStore } from '@/stores/generator';
 import { ArrowsRightLeftIcon } from '@heroicons/vue/16/solid';
 import { ref, computed } from 'vue';
 import type { CSSProperties } from 'vue';
-import { PencilSquareIcon, PlayCircleIcon, WindowIcon } from '@heroicons/vue/16/solid';
+import { PencilSquareIcon, PlayCircleIcon, WindowIcon, TrashIcon } from '@heroicons/vue/16/solid';
 import type { CardData } from '@/types/card';
 import CardSkeleton from './CardSkeleton.vue';
 
-const emit = defineEmits<{ maximize: [] }>();
+const emit = defineEmits<{ maximize: []; delete: [] }>();
 const card = defineModel<CardData | null>('card');
 const generatorStore = useGeneratorStore();
 const appearanceOptions = generatorStore.appearanceOptions;
@@ -115,5 +115,11 @@ const cardStyle = computed(
         @click.stop="flipCard"
       />
     </div>
+    <button
+      class="flex items-center justify-center cursor-pointer rounded-b-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+      @click.stop="$emit('delete')"
+    >
+      <TrashIcon class="h-5 w-5" />
+    </button>
   </div>
 </template>
