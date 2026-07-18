@@ -3,7 +3,6 @@ import { useGeneratorStore } from '@/stores/generator';
 import { ref } from 'vue';
 import CardCarousel from '@/components/ui/CardCarousel.vue';
 
-const emit = defineEmits<{ 'all-cards-deleted': [] }>();
 const generatorStore = useGeneratorStore();
 const index = ref(0);
 </script>
@@ -25,7 +24,7 @@ const index = ref(0);
       </div>
       <div class="flex">
         <div class="snap-center shrink-0 w-full max-w-[450px] mx-auto" @click="index++">
-          <CardCarousel @all-cards-deleted="$emit('all-cards-deleted')" />
+          <CardCarousel />
         </div>
       </div>
     </div>

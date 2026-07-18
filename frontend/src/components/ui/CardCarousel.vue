@@ -100,7 +100,7 @@ function handleCardDelete() {
       All cards have been removed from this batch.
     </p>
     <button
-      @click="$emit('all-cards-deleted')"
+      @click="generatorStore.currentStep = 0"
       class="group cursor-pointer select-none rounded-xl bg-primary px-8 py-4 font-semibold text-surface shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-opacity-95 hover:text-primary-muted hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/50"
     >
       <span class="flex items-center justify-center gap-2">

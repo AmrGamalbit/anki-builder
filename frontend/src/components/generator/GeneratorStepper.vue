@@ -5,11 +5,12 @@ import DefinitionStep from './steps/DefinitionStep.vue';
 import AppearanceStep from '@/components/generator/steps/AppearanceStep.vue';
 import ReviewStep from '@/components/generator/steps/ReviewStep.vue';
 import { useGeneratorStore } from '@/stores/generator.ts';
+import { storeToRefs } from 'pinia';
 
 const emit = defineEmits(['generate-requested', 'export-requested']);
 const generatorStore = useGeneratorStore();
 const steps = [ContentStep, DefinitionStep, AppearanceStep, ReviewStep];
-const currentStep = ref(0);
+const { currentStep } = storeToRefs(generatorStore);
 const buttonText = computed(() => {
   switch (currentStep.value) {
     case 2:
@@ -46,7 +47,7 @@ function onNext() {
 
 <template>
   <section class="p-5 md:p-20 flex flex-col min-h-screen justify-between">
-    <component :is="steps[currentStep]" @all-cards-deleted="currentStep = 0" />
+    <component :is="steps[currentStep]" />
     <div class="flex flex-col justify-around">
       <div>
         <div class="flex justify-between mb-5">
