@@ -65,6 +65,19 @@ export const useGeneratorStore = defineStore('generator', () => {
   function deleteCard(index: number) {
     cards.value.splice(index, 1);
   }
+  function addCard() {
+    cards.value.push({
+      id: crypto.randomUUID(),
+      term: '',
+      definition: '',
+      synonyms: null,
+      antonyms: null,
+      example: null,
+      partOfSpeech: '',
+      audioUrl: null,
+      pictogramUrl: null,
+    });
+  }
   return {
     content,
     contentType,
@@ -78,6 +91,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     updateCard,
     deleteCard,
     deckName,
+    addCard,
     cards,
   };
 });

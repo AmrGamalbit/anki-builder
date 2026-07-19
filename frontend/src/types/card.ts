@@ -1,11 +1,11 @@
 export interface CardData {
-  id: number;
+  id: string;
   term: string;
   definition: string;
-  synonyms: string[];
-  antonyms: string[];
-  example: string;
-  partOfSpeech: string;
-  audioUrl: string;
-  pictogramUrl: string;
+  synonyms: string[] | null;
+  antonyms: string[] | null;
+  example: string | null;
+  partOfSpeech: string | null;
+  audioUrl: string | null;
+  pictogramUrl: string | null;
 }

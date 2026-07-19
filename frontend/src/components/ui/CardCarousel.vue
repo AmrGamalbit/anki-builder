@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Card from '@/components/ui/Card.vue';
 import { ref, computed } from 'vue';
-import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon } from '@heroicons/vue/16/solid';
+import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from '@heroicons/vue/16/solid';
 import { useGeneratorStore } from '@/stores/generator';
 import type { CardData } from '@/types/card';
 
@@ -33,16 +33,20 @@ const displayIndex = computed({
     currentIndex.value = Math.min(Math.max(num - 1, 0), totalCards.value - 1);
   },
 });
-function handleCardUpdate(updatedCard: CardData | null | undefined) {
+function handleUpdateCard(updatedCard: CardData | null | undefined) {
   if (!updatedCard) return;
   generatorStore.updateCard(currentIndex.value, updatedCard);
 }
-function handleCardDelete() {
+function handleDeleteCard() {
   const indexToDelete = currentIndex.value;
   generatorStore.deleteCard(indexToDelete);
   if (totalCards.value === 0) {
     isDeckCleared.value = true;
   }
+}
+function handleAddCard() {
+  generatorStore.addCard();
+  currentIndex.value = totalCards.value - 1;
 }
 </script>
 
@@ -52,11 +56,11 @@ function handleCardDelete() {
       <Card
         v-for="(card, index) in visibleCards"
         @maximize="showModal = true"
-        @delete="handleCardDelete()"
+        @delete="handleDeleteCard()"
         @click="navigateCarousel(1)"
         :key="card?.id ?? index"
         :card="card"
-        @update:card="handleCardUpdate($event)"
+        @update:card="handleUpdateCard($event)"
         class="absolute top-0 w-full transition-all duration-300 ease-in-out cursor-pointer"
         :style="{
           zIndex: 3 - index,
@@ -67,6 +71,16 @@ function handleCardDelete() {
           opacity: isAnimating && index === 0 ? 0 : 1,
         }"
       />
+      <div
+        class="absolute top-0 w-full h-full rounded-xl border-2 border-dashed border-gray-300 cursor-pointer hover:border-primary hover:text-primary text-gray-300 transition-colors flex items-center justify-end"
+        :style="{
+          zIndex: 0,
+          transform: `translate(${20 * 6}px, ${10 * 3}px) scale(${1 - 3 * 0.05})`,
+        }"
+        @click="handleAddCard"
+      >
+        <PlusIcon class="w-8 h-8 m-6" />
+      </div>
     </div>
     <div class="flex justify-center items-center m-10 select-none gap-2">
       <ArrowLeftIcon

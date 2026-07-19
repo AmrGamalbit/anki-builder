@@ -20,15 +20,14 @@ const handlePencilClick = (event: MouseEvent) => {
   const textEl = (event.currentTarget as HTMLElement).previousElementSibling;
   (textEl as HTMLElement)?.focus();
 };
-function handleCardUpdate(event: FocusEvent, field: 'front' | 'back') {
+function handleUpdateCard(value: string, field: 'term' | 'definition') {
   if (!card.value) return;
-  card.value = { ...card.value, [field]: (event.target as HTMLElement).innerText };
+  card.value = { ...card.value, [field]: value };
 }
 const cardStyle = computed(
   (): CSSProperties => ({
     fontSize: `${appearanceOptions.fontSize}px`,
     fontFamily: appearanceOptions.fontFamily,
-    textAlign: appearanceOptions.textAlign as CSSProperties['textAlign'],
     lineHeight: appearanceOptions.lineHeight,
     backgroundImage: `linear-gradient(135deg,
     color-mix(in srgb, ${appearanceOptions.backgroundColor}, white 16%),
@@ -66,15 +65,15 @@ const cardStyle = computed(
           color: currentSide == 'back' ? appearanceOptions.accentColor : '',
         }"
       >
-        <div class="group relative" v-if="card?.term">
-          <p
-            class="cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
-            contenteditable="true"
-            @blur="handleCardUpdate($event, 'front')"
+        <div class="group relative" v-if="card">
+          <input
+            class="w-full bg-transparent border-none outline-none cursor-text p-2 hover:ring-1 hover:ring-dashed hover:ring-gray-400 rounded transition-all placeholder:text-gray-400 placeholder:italic"
+            :style="{ textAlign: appearanceOptions.textAlign as CSSProperties['textAlign'] }"
+            placeholder="Enter term..."
+            @change="handleUpdateCard(($event.target as HTMLInputElement).value, 'term')"
+            :value="card.term"
             @click.stop
-          >
-            {{ card?.term }}
-          </p>
+          />
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 mx-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
             @click.stop="handlePencilClick"
@@ -85,16 +84,16 @@ const cardStyle = computed(
     </div>
     <div v-if="currentSide == 'back'" class="flex-1">
       <hr class="text-white mix-blend-difference" />
-      <div v-if="card?.definition">
+      <div v-if="card">
         <div class="group relative overflow-y-auto scrollbar-thin">
-          <p
-            class="p-2 cursor-text border border-transparent hover:border-dashed hover:border-gray-400 rounded transition-colors"
-            contenteditable="true"
-            @blur="handleCardUpdate($event, 'back')"
+          <textarea
+            class="w-full bg-transparent border-none outline-none cursor-text p-2 hover:ring-1 hover:ring-gray-400 rounded resize-none transition-all placeholder:text-gray-400 placeholder:italic"
+            :style="{ textAlign: appearanceOptions.textAlign as CSSProperties['textAlign'] }"
+            :value="card.definition"
+            @change="handleUpdateCard(($event.target as HTMLInputElement).value, 'definition')"
+            placeholder="Enter definition..."
             @click.stop
-          >
-            {{ card?.definition }}
-          </p>
+          />
           <PencilSquareIcon
             class="w-6 h-6 absolute top-0 right-0 m-1 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 cursor-pointer"
             @click.stop="handlePencilClick"
