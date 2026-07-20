@@ -2,7 +2,7 @@
 import type { SchemaField } from '@/types/schema';
 import OptionField from '@/components/ui/OptionField.vue';
 import { useGeneratorStore } from '@/stores/generator';
-import Card from '@/components/ui/Card.vue';
+import Card from '@/components/card/Card.vue';
 
 const generatorStore = useGeneratorStore();
 const appearanceOptionsSchema = {

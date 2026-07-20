@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Card from '@/components/ui/Card.vue';
+import Card from '../card/Card.vue';
 import { ref, computed } from 'vue';
 import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from '@heroicons/vue/16/solid';
 import { useGeneratorStore } from '@/stores/generator';
