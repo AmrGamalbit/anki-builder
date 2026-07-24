@@ -41,7 +41,7 @@
 }
 
 .scrollbar-thin {
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
   scrollbar-width: thin;
   scrollbar-color: #d1d5db transparent;
 }
