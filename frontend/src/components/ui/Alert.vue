@@ -7,7 +7,7 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/16/solid';
 import { cva } from 'class-variance-authority';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 const isVisible = defineModel();
 const props = withDefaults(
@@ -20,6 +20,13 @@ const props = withDefaults(
     intent: 'info',
   },
 );
+watch(isVisible, (newVal) => {
+  if (newVal) {
+    setTimeout(() => {
+      isVisible.value = false;
+    }, 3000);
+  }
+});
 
 const iconComponents = {
   info: InformationCircleIcon,
