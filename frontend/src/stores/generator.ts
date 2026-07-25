@@ -6,6 +6,7 @@ import type { CardData } from '@/types/card';
 export const useGeneratorStore = defineStore('generator', () => {
   const content = ref();
   const contentType = ref();
+  const duplicatesRemoved = ref();
   const contentOptions = ref<ContentOptions>({
     file: {
       type: 'file',
@@ -59,12 +60,23 @@ export const useGeneratorStore = defineStore('generator', () => {
   const isGenerating = ref<boolean>(false);
   const isExporting = ref<boolean>(false);
   const currentStep = ref<number>(0);
+
+  function processContent() {
+    const delimiter = contentOptions.value.text.delimiter;
+    const words = content.value.split(delimiter).map((w: string) => w.trim().toLowerCase());
+    const uniqueWords = [...new Set(words)];
+    content.value = uniqueWords.join(delimiter);
+    return words.length - uniqueWords.length;
+  }
+
   function updateCard(index: number, updatedCard: CardData) {
     cards.value[index] = updatedCard;
   }
+
   function deleteCard(index: number) {
     cards.value.splice(index, 1);
   }
+
   function addCard() {
     cards.value.push({
       id: crypto.randomUUID(),
@@ -78,6 +90,7 @@ export const useGeneratorStore = defineStore('generator', () => {
       pictogramUrl: null,
     });
   }
+
   return {
     content,
     contentType,
@@ -85,6 +98,7 @@ export const useGeneratorStore = defineStore('generator', () => {
     definitionOptions,
     appearanceOptions,
     pronunciationUrls,
+    processContent,
     isGenerating,
     isExporting,
     currentStep,
