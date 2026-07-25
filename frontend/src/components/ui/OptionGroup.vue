@@ -7,12 +7,27 @@ const values = defineModel<Record<string, unknown>>();
 </script>
 
 <template>
-  <div v-if="props.schema && values">
+  <TransitionGroup tag="div" name="fade" v-if="props.schema && values">
     <OptionField
       v-for="(option, key) in props.schema"
       :key="key"
       :option="option"
       v-model="values![key]"
     />
-  </div>
+  </TransitionGroup>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>
