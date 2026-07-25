@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
-import OptionField from '@/components/ui/OptionField.vue';
 import LanguagePairSelector from '@/components/generator/deck/LanguagePairSelector.vue';
 import type { OptionItem } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
 import { useGeneratorStore } from '@/stores/generator';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { fetchModels } from '@/api/models';
+import OptionGroup from '@/components/ui/OptionGroup.vue';
+import { storeToRefs } from 'pinia';
 
 const generatorStore = useGeneratorStore();
 const availableModels = ref<Record<string, OptionItem[]>>({});
@@ -32,14 +33,6 @@ onMounted(() => loadModels());
 
 const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
   return {
-    includePronunciation: {
-      label: 'Include Pronunciation',
-      type: 'boolean',
-    },
-    includePictogram: {
-      label: 'Include Pictograms',
-      type: 'boolean',
-    },
     source: {
       label: 'Source',
       type: 'select',
@@ -72,12 +65,20 @@ const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
       label: 'Use Dictionary Audio',
       type: 'boolean',
       shouldShow:
-        generatorStore.definitionOptions.includePronunciation == true &&
+        generatorStore.definitionOptions.cardFields.audio == true &&
         generatorStore.definitionOptions.source == 'dictionary',
     },
   };
 });
-const definitionOptions = generatorStore.definitionOptions;
+const cardFieldsSchema: Record<string, SchemaField> = {
+  partOfSpeech: { label: 'Part Of Speech', type: 'boolean' },
+  example: { label: 'Example', type: 'boolean' },
+  synonyms: { label: 'Synonyms', type: 'boolean' },
+  antonyms: { label: 'Antonyms', type: 'boolean' },
+  audio: { label: 'Audio', type: 'boolean' },
+  picture: { label: 'Picture', type: 'boolean' },
+};
+const { definitionOptions } = storeToRefs(generatorStore);
 const visibleDeckSchema = computed(() =>
   Object.fromEntries(
     Object.entries(definitionOptionsSchema.value).filter(
@@ -96,14 +97,18 @@ const visibleDeckSchema = computed(() =>
         v-model:sourceLanguage="definitionOptions['sourceLanguage']"
         v-model:targetLanguage="definitionOptions['targetLanguage']"
       />
-      <div class="flex flex-col gap-4">
-        <OptionField
-          v-for="(option, key) in visibleDeckSchema"
-          :key="key"
-          :option="option"
-          v-model="definitionOptions[key as keyof typeof definitionOptions]"
-        />
-      </div>
+      <OptionGroup
+        class="flex flex-col gap-4"
+        :schema="visibleDeckSchema"
+        v-model="definitionOptions"
+      />
+      <hr class="border-gray-100" />
+      <h4 class="text-sm uppercase tracking-wide text-neutral font-medium">Card Fields</h4>
+      <OptionGroup
+        class="grid grid-cols-2 gap-4 justify-between"
+        :schema="cardFieldsSchema"
+        v-model="definitionOptions.cardFields"
+      />
     </div>
   </section>
 </template>

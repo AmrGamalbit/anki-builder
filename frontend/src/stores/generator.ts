@@ -40,6 +40,14 @@ export const useGeneratorStore = defineStore('generator', () => {
     model: '',
     sourceLanguage: 'en',
     targetLanguage: 'en',
+    cardFields: {
+      partOfSpeech: false,
+      example: false,
+      synonyms: false,
+      antonyms: false,
+      audio: false,
+      picture: false,
+    },
   });
   const appearanceOptions = ref<AppearanceOptions>({
     fontFamily: 'system-ui, sans-serif',

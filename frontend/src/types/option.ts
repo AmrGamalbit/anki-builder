@@ -42,6 +42,15 @@ export interface ContentOptions {
   url: UrlOptions;
 }
 
+interface CardFields {
+  partOfSpeech: boolean;
+  example: boolean;
+  synonyms: boolean;
+  antonyms: boolean;
+  audio: boolean;
+  picture: boolean;
+}
+
 export interface DefinitionOptions {
   includePronunciation: boolean;
   includePictogram: boolean;
@@ -52,6 +61,7 @@ export interface DefinitionOptions {
   model: string;
   sourceLanguage: string;
   targetLanguage: string;
+  cardFields: CardFields;
 }
 
 export interface AppearanceOptions {
