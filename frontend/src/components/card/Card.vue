@@ -14,11 +14,6 @@ const card = defineModel<CardData | null>('card');
 const generatorStore = useGeneratorStore();
 const appearanceOptions = generatorStore.appearanceOptions;
 const currentSide = ref('front');
-
-function handleUpdateCard(value: string, field: 'term' | 'definition') {
-  if (!card.value) return;
-  card.value = { ...card.value, [field]: value };
-}
 const cardStyle = computed(
   (): CSSProperties => ({
     fontSize: `${appearanceOptions.fontSize}px`,
@@ -62,7 +57,7 @@ const cardStyle = computed(
       >
         <CardFront
           v-if="card"
-          :term="card.term"
+          v-model="card.term"
           :text-align="appearanceOptions.textAlign as CSSProperties['textAlign']"
         />
         <CardSkeleton v-else :appearance-options="appearanceOptions" />
@@ -72,7 +67,7 @@ const cardStyle = computed(
       <hr class="text-white mix-blend-difference" />
       <CardBack
         v-if="card"
-        :definition="card.definition"
+        v-model="card.definition"
         :audio-url="card.audioUrl"
         :text-align="appearanceOptions.textAlign as CSSProperties['textAlign']"
       />
