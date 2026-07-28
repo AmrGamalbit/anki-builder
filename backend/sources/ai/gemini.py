@@ -34,9 +34,9 @@ The user will specify a mode for each request. You must strictly follow the beha
 
 
 class GeminiProvider(BaseProvider):
-    def __init__(self, api_key: str, model: str | None = None):
-        super().__init__(api_key, model)
-        self.client = genai.Client(api_key=api_key)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.client = genai.Client(api_key=self.api_key)
 
     async def fetch(self, payload):
         response = self.client.models.generate_content(

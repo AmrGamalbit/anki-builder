@@ -6,7 +6,6 @@ import type { CardData } from '@/types/card';
 export const useGeneratorStore = defineStore('generator', () => {
   const content = ref();
   const contentType = ref();
-  const duplicatesRemoved = ref();
   const contentOptions = ref<ContentOptions>({
     file: {
       type: 'file',
@@ -31,8 +30,6 @@ export const useGeneratorStore = defineStore('generator', () => {
     },
   });
   const definitionOptions = ref<DefinitionOptions>({
-    includePronunciation: false,
-    includePictogram: false,
     useDictionaryAudio: false,
     source: 'dictionary',
     provider: 'free_dictionary_api',

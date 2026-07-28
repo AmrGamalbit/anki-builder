@@ -8,7 +8,7 @@ BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
 
 class FreeDictionaryProvider(BaseProvider):
     async def fetch(self, payload):
-        urls = [BASE_URL.format(word=word) for word in payload.get("words")]
+        urls = [BASE_URL.format(word=word) for word in payload.get("terms")]
         async with aiohttp.ClientSession() as session:
 
             async def fetch_one(url):
@@ -41,11 +41,19 @@ class FreeDictionaryProvider(BaseProvider):
                             DefinitionResponse(
                                 term=entry.get("word"),
                                 definition=definition.get("definition"),
-                                synonyms=definition.get("synonyms"),
-                                antonyms=definition.get("antonyms"),
-                                example=definition.get("example"),
-                                part_of_speech=meaning.get("partOfSpeech"),
-                                audio_url=audio_url,
+                                synonyms=definition.get("synonyms")
+                                if self.card_fields.synonyms
+                                else None,
+                                antonyms=definition.get("antonyms")
+                                if self.card_fields.antonyms
+                                else None,
+                                example=definition.get("example")
+                                if self.card_fields.example
+                                else None,
+                                part_of_speech=meaning.get("partOfSpeech")
+                                if self.card_fields.part_of_speech
+                                else None,
+                                audio_url=audio_url if self.card_fields.audio else None,
                             )
                         )
         meta = {"total": len(raw)}

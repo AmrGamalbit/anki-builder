@@ -32,6 +32,8 @@ async def lookup(
     else:
         terms = clean_content(content, content_options)
 
-    payload = {"words": terms}
-    dictionary_response = await dispatch("dictionary", provider, payload, api_key)
+    payload = {"terms": terms, "card_fields": request.definition_options.card_fields}
+    dictionary_response = await dispatch(
+        source="dictionary", provider=provider, api_key=api_key, payload=payload
+    )
     return dictionary_response

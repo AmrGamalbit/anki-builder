@@ -14,6 +14,5 @@ async def export(request: ExportRequest, background_tasks: BackgroundTasks):
     return await generator.export_deck(
         entries=request.data,
         deck_name=request.deck_name,
-        pronunciation_urls=request.pronunciation_urls,
         background_tasks=background_tasks,
     )

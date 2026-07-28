@@ -20,7 +20,7 @@ def get_base_form(term):
 
 
 def clean_content(content, options):
-    terms = [term.strip() for term in content.split(options.delimiter)]
+    terms = [term.strip() for term in content.split(options.delimiter) if term.strip()]
     if options.strip_punctuation:
         terms = [strip_punctuation(term) for term in terms]
     if options.lowercase:

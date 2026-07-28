@@ -7,7 +7,7 @@ class DefinitionResponse(BaseSchema):
     synonyms: list[str] | None = None
     antonyms: list[str] | None = None
     example: str | None = None
-    part_of_speech: str
+    part_of_speech: str | None = None
     audio_url: str | None = None
     pictogram_url: str | None = None
 

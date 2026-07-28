@@ -23,9 +23,31 @@ def build_extraction_prompt(content, source_language, provider, options):
     """
 
 
-def build_anki_prompt(content, source_language, mode, options, target_language=None):
-    """Call 2: generate Anki card data for the extracted terms"""
-    return f"""You are given the following terms in {source_language}: {content}
+def build_user_instructions(terms, definition_options):
+    terms_str = ", ".join(terms)
+    mode_instruction = MODE_INSTRUCTIONS[definition_options.mode].format(
+        source_language=definition_options.source_language,
+        target_language=definition_options.target_language,
+    )
 
-    Your task is to {MODE_INSTRUCTIONS[mode].format(target_language=target_language)}.
-    """
+    fields = definition_options.card_fields
+    requested_fields = []
+    if fields.part_of_speech:
+        requested_fields.append("part of speech")
+    if fields.example:
+        requested_fields.append("an example sentence")
+    if fields.synonyms:
+        requested_fields.append("synonyms")
+    if fields.antonyms:
+        requested_fields.append("antonyms")
+
+    fields_instruction = (
+        f"Include: {', '.join(requested_fields)}. Do not include any other fields."
+    )
+    return f"""Generate Anki flashcard data for the following {definition_options.source_language} terms: {terms_str}
+
+Task: {mode_instruction}
+
+{fields_instruction}
+
+Return one object per term. Do not skip any terms. If a term is unknown or ambiguous, make your best attempt."""

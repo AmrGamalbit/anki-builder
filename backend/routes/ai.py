@@ -3,11 +3,12 @@ from core.dispatcher import dispatch
 from models.requests import GenerateRequest
 from services.youtube import get_transcript
 from services.web import extract_article
-from utils.prompt_builders import build_anki_prompt
 from utils.vocabulary import clean_content, get_unusual_words
 from models.responses import GenerateResponse
 from core.registry import get_provider
 from dependencies import get_api_keys
+from utils.prompt_builders import build_user_instructions
+
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 
@@ -21,12 +22,8 @@ async def generate(
     content = request.content
     content_type = request.content_type
     content_options = request.content_options
-    definition_options = request.definition_options
-    provider = definition_options.provider
-    source_language = definition_options.source_language
-    target_language = definition_options.target_language
-    mode = definition_options.mode
-    model = definition_options.model
+    provider = request.definition_options.provider
+    source_language = request.definition_options.source_language
     api_key = api_keys.get(provider)
 
     if content_type == "youtube":
@@ -45,16 +42,13 @@ async def generate(
     else:
         terms = clean_content(content, content_options)
 
-    user_instructions = build_anki_prompt(
-        terms,
-        source_language,
-        mode,
-        content_options,
-        target_language,
-    )
-    payload = {"user_instructions": user_instructions}
+    payload = {'user_instructions': build_user_instructions(terms, request.definition_options)}
     ai_response = await dispatch(
-        source="ai", provider=provider, model=model, api_key=api_key, payload=payload
+        source='ai',
+        provider=provider,
+        api_key=api_key,
+        model=request.definition_options.model,
+        payload=payload
     )
     return ai_response
 

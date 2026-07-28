@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from groq import Groq
 from models.responses import DefinitionsResponse, GenerateResponse
 from sources.base import BaseProvider
+from utils.prompt_builders import build_user_instructions
 
 load_dotenv()
 
@@ -49,13 +50,14 @@ You must respond with a JSON object matching this exact structure:
 
 
 class GroqProvider(BaseProvider):
-    def __init__(self, api_key: str, model: str | None = None):
-        super().__init__(api_key, model)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.client = Groq(
-            api_key=api_key,
+            api_key=self.api_key,
         )
 
     async def fetch(self, payload):
+        print(payload.get('user_instructions'))
         try:
             chat_completion = self.client.chat.completions.create(
                 messages=[
@@ -89,7 +91,7 @@ class GroqProvider(BaseProvider):
                         },
                         {
                             "role": "user",
-                            "content": payload.get("user_instructions"),
+                            "content":  payload.get("user_instructions"),
                         },
                     ],
                     model=self.model,

@@ -64,23 +64,76 @@ class DeckGenerator:
         pictogram_service = PictogramService(media_folder=self.media_folder)
         pictograms = await pictogram_service.fetch_many(terms)
         await pictogram_service.close_session()
-        if pictograms:
-            return list(pictograms.keys()), list(pictograms.values())
-        return [], []
 
-    async def prepare_media(self, terms, pronunciation_urls=[]):
-        available_pronunciations, pronunciation_files = [], []
-        available_pictograms, pictogram_files = [], []
-        media_files = []
-        if self.definition_options.include_pronunciation:
-            (
-                available_pronunciations,
-                pronunciation_files,
-            ) = await self.prepare_pronunciations(terms, pronunciation_urls)
-        if self.definition_options.include_pictogram:
-            available_pictograms, pictogram_files = await self.prepare_pictograms(terms)
-        media_files = pronunciation_files + pictogram_files
-        return media_files, available_pronunciations, available_pictograms
+
+MODEL_FIELDS = [
+    {"name": "Term"},
+    {"name": "PartOfSpeech"},
+    {"name": "Definition"},
+    {"name": "Example"},
+    {"name": "Synonyms"},
+    {"name": "Antonyms"},
+    {"name": "Pronunciation"},
+    {"name": "Picture"},
+]
+
+MODEL_TEMPLATES = [
+    {
+        "name": "Card 1",
+        "qfmt": "{{Term}}<br><small>{{PartOfSpeech}}</small><br><em>{{Example}}</em>",
+        "afmt": "<span class='highlight'>{{FrontSide}}</span><hr id='answer'>{{Definition}}<br>{{#Synonyms}}<small>🔄 {{Synonyms}}</small>{{/Synonyms}} {{#Antonyms}}<small>🔃 {{Antonyms}}</small>{{/Antonyms}}<br>{{Picture}}<br>{{Pronunciation}}",
+    },
+]
+
+
+class DeckGenerator:
+    def __init__(self, definition_options, appearance_options):
+        self.definition_options = definition_options
+        self.definition_source = self.definition_options.source
+        self.use_dictionary_audio = getattr(
+            self.definition_options, "use_dictionary_audio", False
+        )
+        self.model = genanki.Model(
+            model_id=random.randrange(1 << 30, 1 << 31),
+            name="AnkiBuilderModel",
+            fields=MODEL_FIELDS,
+            templates=MODEL_TEMPLATES,
+            css=build_css(appearance_options.model_dump()),
+        )
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.media_folder = self.temp_dir.name
+
+    async def prepare_pronunciations(self, entries):
+        pronunciation_service = PronunciationService(
+            lang=self.definition_options.source_language, media_folder=self.media_folder
+        )
+        pronunciations = {}
+        terms = [entry.term for entry in entries]
+        audio_urls = {
+            entry.term: entry.audio_url for entry in entries if entry.audio_url
+        }
+        if self.definition_source == "dictionary" and self.use_dictionary_audio:
+            pronunciations = await pronunciation_service.fetch_many(terms, audio_urls)
+        else:
+            pronunciations = pronunciation_service.generate_many(terms)
+        await pronunciation_service.close_session()
+        return pronunciations
+
+    async def prepare_pictures(self, entries):
+        terms = [entry.term for entry in entries]
+        picture_service = PictogramService(self.media_folder)
+        pictures = await picture_service.fetch_many(terms)
+        await picture_service.close_session()
+        return pictures
+
+    async def prepare_media(self, entries):
+        pronunciations = {}
+        pictures = {}
+        if self.definition_options.card_fields.audio:
+            pronunciations = await self.prepare_pronunciations(entries)
+        if self.definition_options.card_fields.picture:
+            pictures = await self.prepare_pictures(entries)
+        return pronunciations, pictures
 
     def create_note(self, entry, has_pronunciation, has_pictogram) -> genanki.Note:
         sound = f"[sound:{entry.term}.mp3]" if has_pronunciation else ""
@@ -108,22 +161,16 @@ class DeckGenerator:
     async def export_deck(
         self,
         entries,
-        pronunciation_urls: list[str],
         deck_name: str,
         background_tasks: BackgroundTasks,
     ):
-        audio_urls = [entry.audio_url for entry in entries]
-        terms = [entry.term for entry in entries]
-        (
-            media_files,
-            available_pronunciations,
-            available_pictograms,
-        ) = await self.prepare_media(terms, audio_urls)
+        (pronunciations, pictures) = await self.prepare_media(entries)
+        media_files = list(pronunciations.values()) + list(pictures.values())
         notes = [
             self.create_note(
                 entry,
-                entry.term in available_pronunciations,
-                entry.term in available_pictograms,
+                entry.term in pronunciations,
+                entry.term in pictures,
             )
             for entry in entries
         ]

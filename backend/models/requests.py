@@ -28,12 +28,18 @@ class UrlOptions(BaseSchema):
     max_cards: int
     include_idioms: bool
 
+class CardFields(BaseSchema):
+    part_of_speech: bool
+    example: bool
+    synonyms: bool
+    antonyms: bool
+    audio: bool
+    picture: bool
 
 class DefinitionOptions(BaseSchema):
     source_language: str
     target_language: str
-    include_pronunciation: bool = False
-    include_pictogram: bool = False
+    card_fields: CardFields
 
 
 class DictionaryOptions(DefinitionOptions):

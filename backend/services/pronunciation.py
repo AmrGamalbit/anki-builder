@@ -37,8 +37,9 @@ class PronunciationService:
     async def fetch_many(
         self, terms: list[str], pronunciation_urls: dict[str, str]
     ) -> dict:
+        valid_terms = [term for term in terms if pronunciation_urls.get(term)]
         results = await asyncio.gather(
-            *[self.fetch(term, pronunciation_urls.get(term)) for term in terms]
+            *[self.fetch(term, pronunciation_urls.get(term)) for term in valid_terms]
         )
         return {k: v for d in results for k, v in d.items() if v is not None}
 

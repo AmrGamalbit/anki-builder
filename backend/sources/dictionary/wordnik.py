@@ -7,17 +7,20 @@ BASE_URL = "http://api.wordnik.com/v4/word.json/{word}"
 
 
 class WordnikProvider(BaseProvider):
-    def __init__(self, api_key: str, model: str | None):
-        super().__init__(api_key)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.endpoints_config = {
             "definitions": {
                 "api_key": self.api_key,
                 "limit": 10,
                 "sourceDictionaries": "ahd-5",
             },
-            "topExample": {"api_key": self.api_key},
-            "audio": {"api_key": self.api_key, "limit": 1},
         }
+        print(self.card_fields)
+        if self.card_fields.example:
+            self.endpoints_config["topExample"]: {"api_key": self.api_key}
+        if self.card_fields.audio:
+            self.endpoints_config["audio"]: {"api_key": self.api_key, "limit": 1}
 
     async def _fetch_url(self, url, session, params=None):
         try:
@@ -43,15 +46,15 @@ class WordnikProvider(BaseProvider):
         result = dict(zip(self.endpoints_config.keys(), responses))
         return result
 
-    async def fetch(self, payload, model=None):
+    async def fetch(self, payload):
         async with aiohttp.ClientSession() as session:
             responses = await asyncio.gather(
-                *[self._fetch_word(word, session) for word in payload.get("words")]
+                *[self._fetch_word(word, session) for word in payload.get("terms")]
             )
         responses = [response for response in responses if response is not None]
         return responses
 
-    def normalize(self, raw, model=None):
+    def normalize(self, raw):
         data = []
         for response in raw:
             for definition in response.get("definitions"):
@@ -60,9 +63,15 @@ class WordnikProvider(BaseProvider):
                         DefinitionResponse(
                             term=definition.get("word"),
                             definition=definition.get("text"),
-                            example=response.get("topExample").get("text"),
-                            part_of_speech=definition.get("partOfSpeech"),
-                            audio_url=response.get("audio")[0].get("fileUrl"),
+                            example=response.get("topExample").get("text")
+                            if self.card_fields.example
+                            else None,
+                            part_of_speech=definition.get("partOfSpeech")
+                            if self.card_fields.part_of_speech
+                            else None,
+                            audio_url=response.get("audio")[0].get("fileUrl")
+                            if response.get("audio") and self.card_fields.audio
+                            else None,
                         )
                     )
         meta = {"total": len(raw)}

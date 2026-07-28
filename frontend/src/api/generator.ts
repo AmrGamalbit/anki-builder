@@ -14,7 +14,7 @@ export async function generateDeck() {
       ],
     definitionOptions: generatorStore.definitionOptions,
   };
-  if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
+if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
   generatorStore.isGenerating = true;
   const endpoint =
     generatorStore.definitionOptions.source == 'ai' ? '/ai/generate' : '/dictionary/lookup';
@@ -40,7 +40,6 @@ export async function generateDeck() {
     audioUrl: card.audioUrl,
     pictogramUrl: card.pictogramUrl,
   }));
-  generatorStore.pronunciationUrls = r.pronunciations;
   lastGenerationPayload = JSON.stringify(generationPayload);
   generatorStore.isGenerating = false;
 }
@@ -53,7 +52,6 @@ export async function triggerDownload() {
     appearanceOptions: generatorStore.appearanceOptions,
     definitionOptions: generatorStore.definitionOptions,
     deckName: generatorStore.deckName,
-    pronunciationUrls: generatorStore.pronunciationUrls,
     data: generatorStore.cards.map(({ id, ...rest }) => rest),
   };
   console.log(payload);

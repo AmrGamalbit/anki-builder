@@ -52,8 +52,6 @@ interface CardFields {
 }
 
 export interface DefinitionOptions {
-  includePronunciation: boolean;
-  includePictogram: boolean;
   useDictionaryAudio: boolean;
   source: string;
   provider: string;
