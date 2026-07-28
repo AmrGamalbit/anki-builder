@@ -16,11 +16,10 @@ class WordnikProvider(BaseProvider):
                 "sourceDictionaries": "ahd-5",
             },
         }
-        print(self.card_fields)
         if self.card_fields.example:
-            self.endpoints_config["topExample"]: {"api_key": self.api_key}
+            self.endpoints_config["topExample"] = {"api_key": self.api_key}
         if self.card_fields.audio:
-            self.endpoints_config["audio"]: {"api_key": self.api_key, "limit": 1}
+            self.endpoints_config["audio"] = {"api_key": self.api_key, "limit": 1}
 
     async def _fetch_url(self, url, session, params=None):
         try:
