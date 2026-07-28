@@ -76,7 +76,7 @@ const cardFieldsSchema: Record<string, SchemaField> = {
   synonyms: { label: 'Synonyms', type: 'boolean' },
   antonyms: { label: 'Antonyms', type: 'boolean' },
   audio: { label: 'Audio', type: 'boolean' },
-  picture: { label: 'Picture', type: 'boolean' },
+  image: { label: 'Image', type: 'boolean' },
 };
 const { definitionOptions } = storeToRefs(generatorStore);
 const visibleDeckSchema = computed(() =>

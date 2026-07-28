@@ -43,7 +43,7 @@ export const useGeneratorStore = defineStore('generator', () => {
       synonyms: false,
       antonyms: false,
       audio: false,
-      picture: false,
+      image: false,
     },
   });
   const appearanceOptions = ref<AppearanceOptions>({

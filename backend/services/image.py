@@ -3,7 +3,7 @@ import asyncio
 import aiohttp
 
 
-class PictogramService:
+class ImageService:
     def __init__(self, media_folder):
         self.BASE_URL = "https://api.arasaac.org/api/pictograms/en/search/{term}"
         self.session = aiohttp.ClientSession()

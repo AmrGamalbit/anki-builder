@@ -48,7 +48,7 @@ interface CardFields {
   synonyms: boolean;
   antonyms: boolean;
   audio: boolean;
-  picture: boolean;
+  image: boolean;
 }
 
 export interface DefinitionOptions {

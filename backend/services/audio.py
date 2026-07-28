@@ -4,7 +4,7 @@ import asyncio
 import aiohttp
 
 
-class PronunciationService:
+class AudioService:
     def __init__(self, lang: str, media_folder: str):
         self.session = aiohttp.ClientSession()
         self.lang = lang

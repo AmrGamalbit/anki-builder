@@ -34,7 +34,7 @@ class CardFields(BaseSchema):
     synonyms: bool
     antonyms: bool
     audio: bool
-    picture: bool
+    image: bool
 
 class DefinitionOptions(BaseSchema):
     source_language: str
