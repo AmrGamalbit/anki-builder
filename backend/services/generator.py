@@ -29,7 +29,9 @@ MODEL_TEMPLATES = [
 
 
 class DeckGenerator:
-    def __init__(self, definition_options, appearance_options):
+    def __init__(self, definition_options, appearance_options, deck_name, tags=None):
+        self.deck_name = deck_name
+        self.tags = tags
         self.definition_options = definition_options
         self.definition_source = self.definition_options.source
         self.use_dictionary_audio = getattr(
@@ -92,6 +94,7 @@ class DeckGenerator:
                 audio,
                 image,
             ],
+            tags=self.tags,
         )
 
     def create_deck(self, notes: list, deck_name: str) -> genanki.Deck:
@@ -103,7 +106,6 @@ class DeckGenerator:
     async def export_deck(
         self,
         entries,
-        deck_name: str,
         background_tasks: BackgroundTasks,
     ):
         (audio, images) = await self.prepare_media(entries)
@@ -116,14 +118,14 @@ class DeckGenerator:
             )
             for entry in entries
         ]
-        deck = self.create_deck(notes, deck_name)
+        deck = self.create_deck(notes, self.deck_name)
         package = genanki.Package(deck)
         package.media_files = media_files
-        deck_path = os.path.join(tempfile.gettempdir(), f"{deck_name}.apkg")
+        deck_path = os.path.join(tempfile.gettempdir(), f"{self.deck_name}.apkg")
         package.write_to_file(deck_path)
         background_tasks.add_task(self.temp_dir.cleanup)
         return FileResponse(
             path=deck_path,
-            filename=f"{deck_name}.apkg",
+            filename=f"{self.deck_name}.apkg",
             media_type="application/octet-stream",
         )

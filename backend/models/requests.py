@@ -28,6 +28,7 @@ class UrlOptions(BaseSchema):
     max_cards: int
     include_idioms: bool
 
+
 class CardFields(BaseSchema):
     part_of_speech: bool
     example: bool
@@ -35,6 +36,7 @@ class CardFields(BaseSchema):
     antonyms: bool
     audio: bool
     image: bool
+
 
 class DefinitionOptions(BaseSchema):
     source_language: str
@@ -73,7 +75,7 @@ class GenerateRequest(BaseSchema):
     content_type: str
     content_options: Annotated[
         FileOptions | TextOptions | UrlOptions, Discriminator("type")
-    ] = None
+    ]
     appearance_options: AppearanceOptions
     definition_options: Annotated[
         AIOptions | DictionaryOptions, Discriminator("source")
@@ -97,6 +99,7 @@ class ExportRequest(BaseSchema):
         AIOptions | DictionaryOptions, Discriminator("source")
     ]
     deck_name: str
+    tags: list[str]
 
 
 class ApiKeysRequest(BaseSchema):

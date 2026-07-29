@@ -52,6 +52,7 @@ export async function triggerDownload() {
     appearanceOptions: generatorStore.appearanceOptions,
     definitionOptions: generatorStore.definitionOptions,
     deckName: generatorStore.deckName,
+    tags: generatorStore.tags,
     data: generatorStore.cards.map(({ id, ...rest }) => rest),
   };
   console.log(payload);
