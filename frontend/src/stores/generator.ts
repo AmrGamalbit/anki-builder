@@ -65,6 +65,7 @@ export const useGeneratorStore = defineStore('generator', () => {
   const isGenerating = ref<boolean>(false);
   const isExporting = ref<boolean>(false);
   const currentStep = ref<number>(0);
+  const tags = ref<string[]>([])
 
   function processContent() {
     const delimiter = contentOptions.value.text.delimiter;
@@ -112,5 +113,6 @@ export const useGeneratorStore = defineStore('generator', () => {
     deckName,
     addCard,
     cards,
+    tags,
   };
 });

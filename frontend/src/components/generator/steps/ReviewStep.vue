@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import CardCarousel from '@/components/ui/CardCarousel.vue';
 import CardDrawer from '@/components/CardDrawer.vue';
 import { Bars3Icon } from '@heroicons/vue/16/solid';
+import TagInput from '@/components/ui/TagInput.vue';
 
 const generatorStore = useGeneratorStore();
 const index = ref(0);
@@ -26,6 +27,7 @@ const showCardDrawer = ref(false);
             />
           </div>
         </div>
+        <TagInput v-model="generatorStore.tags" :max-tags="5" />
         <div class="flex">
           <div class="snap-center shrink-0 w-full max-w-[450px] mx-auto" @click="index++">
             <CardCarousel />
