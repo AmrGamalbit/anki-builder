@@ -56,22 +56,23 @@ class GroqProvider(BaseProvider):
             api_key=self.api_key,
         )
 
-    async def fetch(self, payload):
-        print(payload.get('user_instructions'))
-        try:
-            chat_completion = self.client.chat.completions.create(
-                messages=[
-                    {
-                        "role": "system",
-                        "content": SYSTEM_INSTRUCTIONS,
-                    },
-                    {
-                        "role": "user",
-                        "content": payload.get("user_instructions"),
-                    },
-                ],
-                model=self.model,
-                response_format={
+    def _create_completion(self, user_instructions, include_schema):
+        kwargs = {
+            "messages": [
+                {
+                    "role": "system",
+                    "content": SYSTEM_INSTRUCTIONS,
+                },
+                {
+                    "role": "user",
+                    "content": user_instructions,
+                },
+            ],
+            "model": self.model,
+        }
+        if include_schema:
+            kwargs["response_format"] = (
+                {
                     "type": "json_schema",
                     "json_schema": {
                         "name": "Learning_Vocab",
@@ -79,26 +80,20 @@ class GroqProvider(BaseProvider):
                     },
                 },
             )
-            return chat_completion.choices[0].message.content
+        chat_completion = self.client.chat.completions.create(**kwargs)
+        return chat_completion.choices[0].message.content
+
+    async def fetch(self, payload):
+        try:
+            return self._create_completion(
+                user_instructions=payload.get("user_instructions"), include_schema=True
+            )
 
         except Exception as e:
-            try:
-                chat_completion = self.client.chat.completions.create(
-                    messages=[
-                        {
-                            "role": "system",
-                            "content": SYSTEM_INSTRUCTIONS,
-                        },
-                        {
-                            "role": "user",
-                            "content":  payload.get("user_instructions"),
-                        },
-                    ],
-                    model=self.model,
-                )
-                return chat_completion.choices[0].message.content
-            except Exception as e:
-                print(f"First attempt failed: {e}")
+            return self._create_completion(
+                user_instructions=payload.get("user_instructions"),
+                include_schema=False,
+            )
 
     def normalize(self, raw):
         start = raw.index("{")
