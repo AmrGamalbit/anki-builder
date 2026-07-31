@@ -69,7 +69,6 @@ class AppearanceOptions(BaseSchema):
     color: str
     night_mode: bool
 
-
 class GenerateRequest(BaseSchema):
     content: str
     content_type: str
@@ -101,6 +100,11 @@ class ExportRequest(BaseSchema):
     deck_name: str
     tags: list[str]
 
+
+class ExtractRequest(BaseSchema):
+    url: str
+    provider: str
+    options: UrlOptions
 
 class ApiKeysRequest(BaseSchema):
     groq: str | None = None

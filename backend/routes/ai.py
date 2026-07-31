@@ -1,8 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, Depends
 from core.dispatcher import dispatch
 from models.requests import GenerateRequest
-from services.youtube import get_transcript
-from services.web import extract_article
 from utils.vocabulary import clean_content, get_unusual_words
 from models.responses import GenerateResponse
 from core.registry import get_provider
@@ -25,22 +23,7 @@ async def generate(
     provider = request.definition_options.provider
     source_language = request.definition_options.source_language
     api_key = api_keys.get(provider)
-
-    if content_type == "youtube":
-        content = get_transcript(content)
-        terms = await get_unusual_words(
-            content,
-            source_language,
-            provider,
-            content_options,
-        )
-    elif content_type == "web":
-        content = extract_article(content)
-        terms = await get_unusual_words(
-            content, source_language, provider, content_options
-        )
-    else:
-        terms = clean_content(content, content_options)
+    terms = clean_content(content, content_options)
 
     payload = {'user_instructions': build_user_instructions(terms, request.definition_options)}
     ai_response = await dispatch(
