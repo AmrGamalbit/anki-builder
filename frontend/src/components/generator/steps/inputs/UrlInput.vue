@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import OptionRow from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
 import { useGeneratorStore } from '@/stores/generator';
+import WordSelector from '@/components/ui/WordSelector.vue';
+import { extractWordsFromUrl } from '@/api/url';
+
+export interface ExtractedWord {
+  text: string
+  level: string
+}
 
 const generatorStore = useGeneratorStore();
 const props = defineProps({
-  urlType: String,
+  type: String,
 });
 const content = defineModel('content');
 const placeholder = computed(() => {
-  return props.urlType == 'web' ? 'https://' : 'https://www.youtube.com/watch?v=...';
+  return props.type == 'web' ? 'https://' : 'https://www.youtube.com/watch?v=...';
 });
 const urlOptionsSchema: Record<string, SchemaField> = {
-  vocabulary_level: {
+  vocabularyLevel: {
     label: 'Vocabulary Level',
     type: 'select',
     items: [
@@ -36,6 +43,18 @@ const urlOptionsSchema: Record<string, SchemaField> = {
   },
 };
 const urlOptions = generatorStore.contentOptions.url;
+const selectedWords = ref(['hello', 'yes', 'now']);
+const isExtracting = ref(false)
+const extractedWords = ref<ExtractedWord[]>([])
+async function handleExtract() {
+  if (!content.value) return;
+  isExtracting.value = true;
+  extractedWords.value = await extractWordsFromUrl(
+    content.value,
+    generatorStore.contentOptions.url,
+  );
+  isExtracting.value = false;
+}
 </script>
 
 <template>
@@ -56,5 +75,7 @@ const urlOptions = generatorStore.contentOptions.url;
         />
       </div>
     </div>
+    <button @click="handleExtract" class="bg-primary text-surface p-1 rounded">Extract Words</button>
+    <WordSelector :candidates="extractedWords" v-model="selectedWords" />
   </section>
 </template>

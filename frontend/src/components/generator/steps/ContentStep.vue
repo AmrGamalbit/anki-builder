@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import FileInput from './words/FileInput.vue';
-import TextInput from './words/TextInput.vue';
-import UrlInput from './words/UrlInput.vue';
+import FileInput from './inputs/FileInput.vue';
+import TextInput from './inputs/TextInput.vue';
+import UrlInput from './inputs/UrlInput.vue';
 import { useGeneratorStore } from '@/stores/generator.ts';
 
 const generatorStore = useGeneratorStore();
