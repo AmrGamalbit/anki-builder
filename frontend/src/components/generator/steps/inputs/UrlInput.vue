@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { watchDebounced } from '@vueuse/core';
 import OptionRow from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
 import WordSelector from '@/components/ui/WordSelector.vue';
 import { extractWordsFromUrl } from '@/api/url';
 import type { UrlOptions } from '@/types/option';
-import { useGeneratorStore } from '@/stores/generator';
 
 export interface ExtractedWord {
   text: string;
@@ -23,16 +23,7 @@ const placeholder = computed(() => {
 });
 const isExtracting = ref(false);
 const extractedWords = ref<Record<string, string>>({});
-const selectedWords = ref<ExtractedWord[]>([]);
-async function handleExtract() {
-  if (!url.value) return;
-  isExtracting.value = true;
-  extractedWords.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
-  isExtracting.value = false;
-}
-watch(selectedWords, (words) => {
-  content.value = words.join(', ')
-});
+const selectedWords = ref<Record<string, string>>({});
 const optionsSchema: Record<string, SchemaField> = {
   vocabularyLevel: {
     label: 'Vocabulary Level',
@@ -56,6 +47,21 @@ const optionsSchema: Record<string, SchemaField> = {
     type: 'boolean',
   },
 };
+
+watch(selectedWords, (words) => {
+  content.value = words.join(', ');
+});
+
+watchDebounced(
+  url,
+  async (newUrl) => {
+    if (!newUrl) return;
+    isExtracting.value = true;
+    extractedWords.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
+    isExtracting.value = false;
+  },
+  { debounce: 1000 },
+);
 </script>
 
 <template>
@@ -76,9 +82,6 @@ const optionsSchema: Record<string, SchemaField> = {
         />
       </div>
     </div>
-    <button @click="handleExtract" class="bg-primary text-surface p-1 rounded">
-      Extract Words
-    </button>
     <WordSelector :candidates="extractedWords" v-model="selectedWords" />
   </section>
 </template>
