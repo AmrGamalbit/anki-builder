@@ -55,7 +55,7 @@ watch(selectedTerms, (words) => {
 watchDebounced(
   url,
   async (newUrl) => {
-    if (!newUrl) return;
+    if (!newUrl || !props.urlType) return;
     isExtracting.value = true;
     terms.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
     isExtracting.value = false;
