@@ -4,21 +4,26 @@ import FileInput from './inputs/FileInput.vue';
 import TextInput from './inputs/TextInput.vue';
 import UrlInput from './inputs/UrlInput.vue';
 import { useGeneratorStore } from '@/stores/generator.ts';
+import { storeToRefs } from 'pinia';
 
 const generatorStore = useGeneratorStore();
-const options = ['Paste Text', 'CSV File', 'Web Article', 'Youtube'];
+const { content, contentOptions, contentType } = storeToRefs(generatorStore);
 const selectedInputIndex = ref<number>(0);
-const inputComponents = [
-  { component: TextInput, type: 'text' },
-  { component: FileInput, type: 'file' },
-  { component: UrlInput, type: 'web' },
-  { component: UrlInput, type: 'youtube' },
+const inputSources = [
+  { label: 'Paste Text', component: TextInput, type: 'text' },
+  { label: 'CSV File', component: FileInput, type: 'file' },
+  { label: 'Web Article', component: UrlInput, type: 'article' },
+  { label: 'Youtube', component: UrlInput, type: 'youtube' },
 ];
-generatorStore.contentType = inputComponents[selectedInputIndex.value]?.type;
-watch(selectedInputIndex, (newVal) => {
-  generatorStore.contentType = inputComponents[newVal]?.type;
-  generatorStore.content = '';
-});
+watch(
+  selectedInputIndex,
+  (newVal) => {
+    console.log(content.value);
+    contentType.value = inputSources[newVal]?.type as string;
+    content.value = '';
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -31,18 +36,18 @@ watch(selectedInputIndex, (newVal) => {
       <li
         class="cursor-pointer items-center p-2.5 flex-center"
         :class="selectedInputIndex === index ? 'bg-primary w-1/2 text-neutral font-semibold' : ''"
-        v-for="(option, index) in options"
+        v-for="(option, index) in inputSources"
         :key="index"
         @click="selectedInputIndex = index"
       >
-        {{ option }}
+        {{ option.label }}
       </li>
     </ul>
     <component
-      :is="inputComponents[selectedInputIndex]?.component"
-      :url-type="inputComponents[selectedInputIndex]?.type"
-      v-model:options="generatorStore.contentOptions"
-      v-model:content="generatorStore.content"
+      :is="inputSources[selectedInputIndex]?.component"
+      :urlType="inputSources[selectedInputIndex]?.type"
+      v-model:options="contentOptions[contentType as keyof typeof contentOptions]"
+      v-model:content="content"
     />
   </section>
 </template>

@@ -18,10 +18,8 @@ async def generate(
     api_keys=Depends(get_api_keys),
 ) -> GenerateResponse:
     content = request.content
-    content_type = request.content_type
     content_options = request.content_options
     provider = request.definition_options.provider
-    source_language = request.definition_options.source_language
     api_key = api_keys.get(provider)
     terms = clean_content(content, content_options)
 

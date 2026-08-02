@@ -39,7 +39,8 @@ export interface UrlOptions {
 export interface ContentOptions {
   file: FileOptions;
   text: TextOptions;
-  url: UrlOptions;
+  yotube: UrlOptions;
+  article: UrlOptions;
 }
 
 interface CardFields {

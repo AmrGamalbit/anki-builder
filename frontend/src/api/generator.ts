@@ -20,8 +20,9 @@ if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
     generatorStore.definitionOptions.source == 'ai' ? '/ai/generate' : '/dictionary/lookup';
   const payload = {
     ...generationPayload,
-    appearance_options: generatorStore.appearanceOptions,
+    appearanceOptions: generatorStore.appearanceOptions,
   };
+  console.log(payload)
   const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -29,6 +30,7 @@ if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
     credentials: 'include',
   });
   const r = await res.json();
+  console.log(r)
   generatorStore.cards = r.data.map((card: CardData) => ({
     id: crypto.randomUUID(),
     term: card.term,

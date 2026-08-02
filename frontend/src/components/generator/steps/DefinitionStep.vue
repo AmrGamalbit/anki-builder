@@ -9,8 +9,9 @@ import { fetchModels } from '@/api/models';
 import OptionGroup from '@/components/ui/OptionGroup.vue';
 import { storeToRefs } from 'pinia';
 
-const generatorStore = useGeneratorStore();
 const availableModels = ref<Record<string, OptionItem[]>>({});
+const generatorStore = useGeneratorStore();
+const { definitionOptions } = storeToRefs(generatorStore);
 
 type ProviderKey = 'dictionary' | 'ai';
 const providers: Record<ProviderKey, OptionItem[]> = {
@@ -23,6 +24,17 @@ const providers: Record<ProviderKey, OptionItem[]> = {
     { label: 'Groq', value: 'groq' },
   ],
 };
+const availableSources = computed(() => {
+  const isEnglish =
+    definitionOptions.value.targetLanguage == 'en' &&
+    definitionOptions.value.sourceLanguage == 'en';
+  return isEnglish
+    ? [
+        { label: 'Dictionary', value: 'dictionary' },
+        { label: 'AI', value: 'ai' },
+      ]
+    : [{ label: 'AI', value: 'ai' }];
+});
 
 async function loadModels() {
   for (const provider of providers.ai) {
@@ -36,10 +48,7 @@ const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
     source: {
       label: 'Source',
       type: 'select',
-      items: [
-        { label: 'Dictionary', value: 'dictionary' },
-        { label: 'AI', value: 'ai' },
-      ],
+      items: availableSources.value,
     },
     provider: {
       label: 'Provider',
@@ -78,7 +87,6 @@ const cardFieldsSchema: Record<string, SchemaField> = {
   audio: { label: 'Audio', type: 'boolean' },
   image: { label: 'Image', type: 'boolean' },
 };
-const { definitionOptions } = storeToRefs(generatorStore);
 const visibleDeckSchema = computed(() =>
   Object.fromEntries(
     Object.entries(definitionOptionsSchema.value).filter(

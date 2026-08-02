@@ -27,6 +27,7 @@ const buttonText = computed(() => {
 const canProceed = computed(() => {
   switch (currentStep.value) {
     case 2:
+      console.log(generatorStore.content)
       return generatorStore.content;
     case 3:
       return generatorStore.cards.length > 0;

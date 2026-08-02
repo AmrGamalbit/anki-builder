@@ -23,10 +23,14 @@ class TextOptions(BaseSchema):
 
 
 class UrlOptions(BaseSchema):
-    type: Literal["youtube", "web"]
+    type: Literal["youtube", "article"]
     vocabulary_level: str
     max_cards: int
     include_idioms: bool
+    delimiter: str = ','
+    strip_punctuation: bool = True
+    lowercase: bool = True
+    base_form: bool = False
 
 
 class CardFields(BaseSchema):
@@ -103,7 +107,6 @@ class ExportRequest(BaseSchema):
 
 class ExtractRequest(BaseSchema):
     url: str
-    provider: str
     options: UrlOptions
 
 class ApiKeysRequest(BaseSchema):

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import OptionField from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
-import { useGeneratorStore } from '@/stores/generator';
+import type { TextOptions } from '@/types/option';
 
-const generatorStore = useGeneratorStore();
 const content = defineModel<string>('content');
-const textOptionsSchema: Record<string, SchemaField> = {
+const options = defineModel<TextOptions>('options')
+const optionsSchema: Record<string, SchemaField> = {
   delimiter: {
     label: 'Delimiter',
     type: 'select' as const,
@@ -19,7 +19,6 @@ const textOptionsSchema: Record<string, SchemaField> = {
   lowercase: { label: 'All Lowercase', type: 'boolean' },
   baseForm: { label: 'Base Form Only', type: 'boolean' },
 };
-const textOptions = generatorStore.contentOptions.text;
 </script>
 
 <template>
@@ -36,10 +35,10 @@ const textOptions = generatorStore.contentOptions.text;
     </div>
     <div class="flex flex-col gap-4 p-3">
       <OptionField
-        v-for="(option, key) in textOptionsSchema"
+        v-for="(option, key) in optionsSchema"
         :option="option"
         :key="key"
-        v-model="textOptions[key as keyof typeof textOptions]"
+        v-model="options[key as keyof typeof options]"
       />
     </div>
   </section>

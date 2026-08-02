@@ -2,15 +2,16 @@
 import '@/assets/global.css';
 import OptionRow from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
-import { useGeneratorStore } from '@/stores/generator';
 import FilePicker from '@/components/ui/FilePicker.vue';
 import { ref, watch } from 'vue';
 import { extractWordsFromFile } from '@/api/file';
 import Modal from '@/components/ui/Modal.vue';
+import type { FileOptions } from '@/types/option';
 
-const generatorStore = useGeneratorStore();
 const content = defineModel<File | null>('content');
-const fileOptionsSchema: Record<string, SchemaField> = {
+const options = defineModel<FileOptions>('options');
+const showPreview = ref(false);
+const optionsSchema: Record<string, SchemaField> = {
   delimiter: {
     label: 'Delimiter',
     type: 'select',
@@ -26,11 +27,10 @@ const fileOptionsSchema: Record<string, SchemaField> = {
   lowercase: { label: 'All Lowercase', type: 'boolean' },
   baseForm: { label: 'Base Form Only', type: 'boolean' },
 };
-const showPreview = ref(false);
 
-watch([content, () => generatorStore.contentOptions.file], async ([newContent, newOptions]) => {
+watch([content, options], async ([newContent, newOptions]) => {
   if (newContent instanceof File) {
-    generatorStore.content = await extractWordsFromFile(newContent, newOptions);
+    content.value = await extractWordsFromFile(newContent, newOptions);
   }
 });
 </script>
@@ -54,7 +54,7 @@ watch([content, () => generatorStore.contentOptions.file], async ([newContent, n
           </tr>
         </thead>
         <tr
-          v-for="(word, index) in generatorStore.content.split(',')"
+          v-for="(word, index) in content.split(',')"
           class="border-t border-gray-100 even:bg-gray-50 hover:bg-gray-100 transition-colors"
         >
           <td class="px-4 py-3 text-gray-700">{{ index }}</td>
@@ -64,12 +64,10 @@ watch([content, () => generatorStore.contentOptions.file], async ([newContent, n
     </Modal>
     <div class="flex flex-col gap-4 p-3">
       <OptionRow
-        v-for="(option, key) in fileOptionsSchema"
+        v-for="(option, key) in optionsSchema"
         :option="option"
         :key="key"
-        v-model="
-          generatorStore.contentOptions.file[key as keyof typeof generatorStore.contentOptions.file]
-        "
+        v-model="options[key as keyof typeof options]"
       />
     </div>
   </section>

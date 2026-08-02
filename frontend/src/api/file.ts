@@ -15,6 +15,5 @@ export async function extractWordsFromFile(
     body: formData,
   });
   const r = await response.json();
-  console.log(r);
   return r;
 }

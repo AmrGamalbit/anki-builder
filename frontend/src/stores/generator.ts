@@ -4,8 +4,8 @@ import type { DefinitionOptions, AppearanceOptions, ContentOptions } from '@/typ
 import type { CardData } from '@/types/card';
 
 export const useGeneratorStore = defineStore('generator', () => {
-  const content = ref();
-  const contentType = ref();
+  const content = ref('');
+  const contentType = ref('');
   const contentOptions = ref<ContentOptions>({
     file: {
       type: 'file',
@@ -23,7 +23,12 @@ export const useGeneratorStore = defineStore('generator', () => {
       lowercase: true,
       baseForm: false,
     },
-    url: {
+    youtube: {
+      vocabularyLevel: 'b1',
+      maxCards: 20,
+      includeIdioms: true,
+    },
+    article: {
       vocabularyLevel: 'b1',
       maxCards: 20,
       includeIdioms: true,

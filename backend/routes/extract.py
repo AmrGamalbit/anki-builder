@@ -5,6 +5,7 @@ from models.requests import ExtractRequest
 from utils.vocabulary import get_unusual_words
 from services.fetcher import extract_content
 from services.analyzer import analyze_text
+
 router = APIRouter(prefix="/extract", tags=["file"])
 
 
