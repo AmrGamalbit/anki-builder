@@ -3,9 +3,9 @@ import { computed, ref, watch } from 'vue';
 import { watchDebounced } from '@vueuse/core';
 import OptionRow from '@/components/ui/OptionField.vue';
 import type { SchemaField } from '@/types/schema';
-import WordSelector from '@/components/ui/WordSelector.vue';
 import { extractWordsFromUrl } from '@/api/url';
 import type { UrlOptions } from '@/types/option';
+import TermSelector from '@/components/ui/TermSelector.vue';
 
 export interface ExtractedWord {
   text: string;
@@ -15,15 +15,15 @@ export interface ExtractedWord {
 const props = defineProps({
   urlType: String,
 });
-const content = defineModel<string>('content');
-const options = defineModel<UrlOptions>('options');
+const content = defineModel<string>('content', { default: '' });
+const options = defineModel<UrlOptions>('options', { default: () => {} });
 const url = ref('');
 const placeholder = computed(() => {
   return props.urlType == 'article' ? 'https://' : 'https://www.youtube.com/watch?v=...';
 });
 const isExtracting = ref(false);
-const extractedWords = ref<Record<string, string>>({});
-const selectedWords = ref<Record<string, string>>({});
+const terms = ref<Record<string, string>>({});
+const selectedTerms = ref<string[]>([]);
 const optionsSchema: Record<string, SchemaField> = {
   vocabularyLevel: {
     label: 'Vocabulary Level',
@@ -48,7 +48,7 @@ const optionsSchema: Record<string, SchemaField> = {
   },
 };
 
-watch(selectedWords, (words) => {
+watch(selectedTerms, (words) => {
   content.value = words.join(', ');
 });
 
@@ -57,7 +57,7 @@ watchDebounced(
   async (newUrl) => {
     if (!newUrl) return;
     isExtracting.value = true;
-    extractedWords.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
+    terms.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
     isExtracting.value = false;
   },
   { debounce: 1000 },
@@ -82,6 +82,6 @@ watchDebounced(
         />
       </div>
     </div>
-    <WordSelector :candidates="extractedWords" v-model="selectedWords" />
+    <TermSelector v-model:terms="terms" v-model:selected="selectedTerms" />
   </section>
 </template>
