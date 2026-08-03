@@ -60,9 +60,14 @@ def _extract_youtube_text(video_url: str) -> str:
 def _extract_article_text(url: str) -> str:
     config = Config()
     config.browser_user_agent = (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
     )
+    config.fetch_images = False
+    config.memoize_articles = False
     article = Article(url, config=config)
     article.download()
     article.parse()
+    print(article.text)
     return article.text
