@@ -58,7 +58,7 @@ function onNext() {
 </script>
 
 <template>
-  <section class="p-5 md:p-20 flex flex-col min-h-screen justify-between">
+  <section class="p-5 md:p-20 flex flex-col min-h-screen justify-between gap-1">
     <component :is="steps[currentStep]" />
     <div class="flex flex-col justify-around">
       <div>
