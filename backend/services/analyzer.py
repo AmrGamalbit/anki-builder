@@ -35,7 +35,7 @@ def analyze_text(text: str) -> dict:
     tokens = text_analyzer.analyze_doc(doc)
     result = {}
     for token in tokens:
-        word, score = token[0], token[3]
+        word, score = token[0].lower(), token[3]
         if score:
             result[word] = CEFRLevel(round(score)).name
     return result
