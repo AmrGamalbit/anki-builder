@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import ContentStep from '@/components/generator/steps/ContentStep.vue';
 import DefinitionStep from './steps/DefinitionStep.vue';
 import AppearanceStep from '@/components/generator/steps/AppearanceStep.vue';
@@ -8,12 +8,16 @@ import { useGeneratorStore } from '@/stores/generator.ts';
 import { storeToRefs } from 'pinia';
 import Alert from '../ui/Alert.vue';
 
+
 const emit = defineEmits(['generate-requested', 'export-requested']);
 const duplicatesCount = ref(0);
 const hasDuplicates = ref(false);
 const generatorStore = useGeneratorStore();
 const steps = [ContentStep, DefinitionStep, AppearanceStep, ReviewStep];
 const { currentStep } = storeToRefs(generatorStore);
+onMounted(() => {
+  currentStep.value = 0;
+});
 const buttonText = computed(() => {
   switch (currentStep.value) {
     case 2:
@@ -27,7 +31,7 @@ const buttonText = computed(() => {
 const canProceed = computed(() => {
   switch (currentStep.value) {
     case 2:
-      console.log(generatorStore.content)
+      console.log(generatorStore.content);
       return generatorStore.content;
     case 3:
       return generatorStore.cards.length > 0;
