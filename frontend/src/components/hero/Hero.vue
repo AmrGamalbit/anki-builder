@@ -16,7 +16,7 @@
         </div>
       </div>
       <div
-        class="bg-surface rounded-2xl flex-center text-center text-4xl font-medium text-neutral h-80 md:h-50 lg:h-76"
+        class="bg-surface rounded-2xl flex-center text-center text-4xl font-medium text-neutral h-80 p-5 md:h-full md:p-3"
       >
         We hope you have a wonderful experience!
       </div>
