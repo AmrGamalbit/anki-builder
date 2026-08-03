@@ -4,6 +4,7 @@ import { ref, computed } from 'vue';
 import { ArrowLeftIcon, ArrowRightIcon, PlusIcon } from '@heroicons/vue/16/solid';
 import { useGeneratorStore } from '@/stores/generator';
 import type { CardData } from '@/types/card';
+import { useBreakpoints, breakpointsTailwind } from '@vueuse/core';
 
 const emit = defineEmits<{ 'all-cards-deleted': [] }>();
 const generatorStore = useGeneratorStore();
@@ -12,6 +13,8 @@ const isAnimating = ref(false);
 const showModal = ref(false);
 const totalCards = computed(() => generatorStore.cards.length);
 const isDeckCleared = ref(false);
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const isMobile = breakpoints.smaller('md');
 function navigateCarousel(direction: 1 | -1) {
   if (totalCards.value <= 1 || isAnimating.value) return;
   isAnimating.value = true;
@@ -21,10 +24,22 @@ function navigateCarousel(direction: 1 | -1) {
   }, 400);
 }
 const visibleCards = computed(() => {
-  if (totalCards.value === 0) return [null, null, null];
-  return [0, 1, 2].map(
-    (i) => generatorStore.cards[(currentIndex.value + i) % totalCards.value] ?? null,
-  );
+  if (totalCards.value === 0) {
+    if (isMobile.value) {
+      return [null];
+    } else {
+      return [null, null, null];
+    }
+  }
+  if (isMobile.value) {
+    return [0].map(
+      (i) => generatorStore.cards[(currentIndex.value + i) % totalCards.value] ?? null,
+    );
+  } else {
+    return [0, 1, 2].map(
+      (i) => generatorStore.cards[(currentIndex.value + i) % totalCards.value] ?? null,
+    );
+  }
 });
 const displayIndex = computed({
   get: () => currentIndex.value + 1,
@@ -72,7 +87,8 @@ function handleAddCard() {
         }"
       />
       <div
-        class="absolute top-0 w-full h-full rounded-xl border-2 border-dashed border-gray-300 cursor-pointer hover:border-primary hover:text-primary text-gray-300 transition-colors flex items-center justify-end"
+        v-if="!isMobile"
+        class="w-full h-full rounded-xl border-2 border-dashed border-gray-300 cursor-pointer hover:border-primary hover:text-primary text-gray-300 transition-colors flex items-center justify-end"
         :style="{
           zIndex: 0,
           transform: `translate(${20 * 6}px, ${10 * 3}px) scale(${1 - 3 * 0.05})`,
@@ -82,7 +98,19 @@ function handleAddCard() {
         <PlusIcon class="w-8 h-8 m-6" />
       </div>
     </div>
-    <div class="flex justify-center items-center m-10 select-none gap-2">
+    <div v-if="isMobile">
+      <button
+        class="w-full mt-2 flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl p-3 text-sm text-gray-400 hover:border-primary hover:text-primary transition-colors cursor-pointer"
+        @click="handleAddCard"
+      >
+        <PlusIcon class="w-4 h-4" />
+        Add card
+      </button>
+    </div>
+    <div
+      class="flex justify-center items-center select-none gap-2"
+      :class="isMobile ? 'm-5' : 'm-10'"
+    >
       <ArrowLeftIcon
         class="w-10 h-10 p-2 rounded-full bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors text-gray-600"
         @click="navigateCarousel(-1)"
@@ -127,14 +155,16 @@ function handleAddCard() {
     <Transition name="modal">
       <div
         v-if="showModal"
-        class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-20"
         @click.self="showModal = false"
+        class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-5"
       >
-        <div class="w-full h-full">
-          <Card
-            :card="generatorStore.cards[currentIndex]"
-            class="hover:translate-y-0! hover:translate-x-0!"
-          />
+        <div class="aspect-3/2 w-full">
+          <div class="w-full h-full">
+            <Card
+              :card="generatorStore.cards[currentIndex]"
+              class="hover:translate-y-0! hover:translate-x-0!"
+            />
+          </div>
         </div>
       </div>
     </Transition>

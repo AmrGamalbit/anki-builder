@@ -35,7 +35,7 @@ watch(
     >
       <li
         class="cursor-pointer items-center p-2.5 flex-center"
-        :class="selectedInputIndex === index ? 'bg-primary w-1/2 text-neutral font-semibold' : ''"
+        :class="selectedInputIndex === index ? 'bg-primary w-1/2 text-neutral font-semibold rounded-tl-sm rounded-tr-sm' : ''"
         v-for="(option, index) in inputSources"
         :key="index"
         @click="selectedInputIndex = index"

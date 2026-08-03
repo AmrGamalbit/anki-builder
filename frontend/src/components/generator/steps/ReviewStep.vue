@@ -46,7 +46,7 @@ const showCardDrawer = ref(false);
           <div v-else>
             <button
               @click="showCardDrawer = true"
-              class="fixed right-0 top-1/2 w-10 h-10 text-gray-600 cursor-pointer flex items-center justify-center bg-surface shadow-md rounded-l-md hover:bg-gray-50 transition-colors"
+              class="fixed right-0 top-1/3 z-10 w-10 h-10 text-surface cursor-pointer flex items-center justify-center bg-neutral shadow-md rounded-l-md hover:bg-gray-400 transition-colors"
             >
               <Bars3Icon />
             </button>

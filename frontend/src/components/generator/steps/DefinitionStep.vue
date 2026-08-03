@@ -106,7 +106,7 @@ const visibleDeckSchema = computed(() =>
         v-model:targetLanguage="definitionOptions['targetLanguage']"
       />
       <OptionGroup
-        class="flex flex-col gap-4"
+        class="flex flex-col gap-2"
         :schema="visibleDeckSchema"
         v-model="definitionOptions"
       />

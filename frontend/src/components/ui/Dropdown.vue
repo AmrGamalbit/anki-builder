@@ -20,10 +20,14 @@ const mappedSelectedOption = computed(() => {
 });
 
 const longestLabel = computed(() => {
-  return props.options.reduce(
-    (longest, option) => (option.label.length > longest.length ? option.label : longest),
-    '',
-  );
+  if (!isMobile.value) {
+    return props.options.reduce(
+      (longest, option) => (option.label.length > longest.length ? option.label : longest),
+      '',
+    );
+  } else {
+    return '';
+  }
 });
 
 const changeDropDownVisibility = () => {
