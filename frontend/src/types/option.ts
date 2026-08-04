@@ -39,7 +39,7 @@ export interface UrlOptions {
 export interface ContentOptions {
   file: FileOptions;
   text: TextOptions;
-  yotube: UrlOptions;
+  youtube: UrlOptions;
   article: UrlOptions;
 }
 
