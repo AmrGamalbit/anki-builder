@@ -14,8 +14,9 @@ const selectedOption = defineModel<string>();
     <button
       type="button"
       v-for="option in props.options"
+      :key="option.value"
       aria-disabled="false"
-      class="leading-tight w-full md:w-fit cursor-pointer inline-flex items-center justify-center whitespace-nowrap px-3 py-1 text-sm font-semibold text-slate-950 transition-colors duration-200 disabled:cursor-not-allowed disabled:text-slate-400 first:rounded-t-md last:rounded-b-md md:first:rounded-l-md md:first:rounded-tr-none md:last:rounded-r-md md:last:rounded-bl-none drop-shadow"
+      class="leading-tight w-full md:w-fit cursor-pointer inline-flex items-center justify-center whitespace-nowrap px-3 py-1 text-sm font-semibold text-slate-950 transition-colors duration-200 disabled:cursor-not-allowed disabled:text-slate-400 first:rounded-t-md last:rounded-b-md md:first:rounded-l-md md:first:rounded-tr-none md:last:rounded-r-md md:last:rounded-bl-none md:only:rounded-md drop-shadow"
       :class="
         selectedOption === option.value
           ? 'bg-primary dark:text-white hover:bg-primary/80'
