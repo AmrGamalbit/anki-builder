@@ -82,6 +82,6 @@ watchDebounced(
         />
       </div>
     </div>
-    <TermSelector v-model:terms="terms" v-model:selected="selectedTerms" />
+    <TermSelector v-model:terms="terms" v-model:selected="selectedTerms" :loading="isExtracting" />
   </section>
 </template>
