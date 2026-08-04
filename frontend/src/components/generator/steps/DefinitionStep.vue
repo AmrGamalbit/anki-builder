@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import LanguagePairSelector from '@/components/generator/deck/LanguagePairSelector.vue';
 import type { OptionItem } from '@/types/option';
 import type { SchemaField } from '@/types/schema';
@@ -24,18 +24,24 @@ const providers: Record<ProviderKey, OptionItem[]> = {
     { label: 'Groq', value: 'groq' },
   ],
 };
+const isEnglish = computed(() => {
+  return (
+    definitionOptions.value.targetLanguage == 'en' && definitionOptions.value.sourceLanguage == 'en'
+  );
+});
 const availableSources = computed(() => {
-  const isEnglish =
-    definitionOptions.value.targetLanguage == 'en' &&
-    definitionOptions.value.sourceLanguage == 'en';
-  return isEnglish
+  return isEnglish.value
     ? [
         { label: 'Dictionary', value: 'dictionary' },
         { label: 'AI', value: 'ai' },
       ]
     : [{ label: 'AI', value: 'ai' }];
 });
-
+watch(isEnglish, (newIsEnglish) => {
+  if (!newIsEnglish) {
+    generatorStore.definitionOptions.source = 'ai';
+  }
+});
 async function loadModels() {
   for (const provider of providers.ai) {
     availableModels.value[provider.value] = await fetchModels(provider.value);
