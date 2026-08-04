@@ -10,4 +10,6 @@ async def save_api_keys(request: Request, body: ApiKeysRequest):
         cleaned_key = key.strip() if isinstance(key, str) else key
         if cleaned_key:
             request.session[provider] = cleaned_key
+        else:
+            request.session.pop(provider, None)
     return {"status": "success", "saved_providers": list(request.session.keys())}

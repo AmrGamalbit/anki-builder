@@ -1,6 +1,6 @@
 export async function syncApiKeys() {
-  const savedKeys = JSON.parse(localStorage.getItem('apikeys') ?? '{}');
-  if (!savedKeys) return;
+  const savedKeys = JSON.parse(localStorage.getItem('apikeys') ?? '{}') as Record<string, string>;
+  if (Object.values(savedKeys).every((v) => !v.trim())) return;
   const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/apikeys`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
