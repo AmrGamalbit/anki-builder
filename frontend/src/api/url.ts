@@ -5,7 +5,6 @@ export async function extractWordsFromUrl(
   urlType: string,
   options: UrlOptions,
 ): Promise<Record<string, string>> {
-  console.log(urlType);
   options.type = urlType;
   const payload = { url: url, options: options };
   const response = await fetch(`${import.meta.env.VITE_API_URL}/extract/url`, {
@@ -14,5 +13,9 @@ export async function extractWordsFromUrl(
     body: JSON.stringify(payload),
   });
   const r = await response.json();
+  if (!response.ok) {
+    console.log(r);
+    throw new Error('Failed to extract words. Please try again.');
+  }
   return r;
 }

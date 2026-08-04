@@ -15,5 +15,9 @@ export async function extractWordsFromFile(
     body: formData,
   });
   const r = await response.json();
+  if (!response.ok) {
+    console.log(r)
+    throw new Error('Failed to extract words. Please try again.');
+  }
   return r;
 }

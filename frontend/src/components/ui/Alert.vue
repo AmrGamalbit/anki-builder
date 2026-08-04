@@ -7,9 +7,9 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/16/solid';
 import { cva } from 'class-variance-authority';
-import { computed, watch } from 'vue';
+import { computed, onMounted } from 'vue';
 
-const isVisible = defineModel();
+const emit = defineEmits<{ close: [] }>();
 const props = withDefaults(
   defineProps<{
     intent: 'info' | 'success' | 'warning' | 'danger';
@@ -20,12 +20,10 @@ const props = withDefaults(
     intent: 'info',
   },
 );
-watch(isVisible, (newVal) => {
-  if (newVal) {
-    setTimeout(() => {
-      isVisible.value = false;
-    }, 3000);
-  }
+onMounted(() => {
+  setTimeout(() => {
+    emit('close');
+  }, 3000);
 });
 
 const iconComponents = {
@@ -116,15 +114,15 @@ const iconCompontent = computed(() => {
 </script>
 
 <template>
-  <Transition leave-active-class="duration-300" leave-to-class="opacity-0">
-    <div :class="containerClass" v-if="isVisible">
+  <Transition leave-active-class="duration-300" leave-to-class="opacity-0" appear>
+    <div :class="containerClass">
       <div class="shrink-0"><component :is="iconCompontent" :class="iconClass" /></div>
       <div class="flex-1 space-y-2">
         <h2 :class="titleClass">{{ props.title }}</h2>
         <div :class="contentClass">{{ props.content }}</div>
       </div>
       <div class="shrink-0">
-        <button :class="closeButtonClass" @click="isVisible = false">
+        <button :class="closeButtonClass" @click="emit('close')">
           <XMarkIcon class="w-6 h-6" />
         </button>
       </div>

@@ -18,7 +18,6 @@ const inputSources = [
 watch(
   selectedInputIndex,
   (newVal) => {
-    console.log(content.value);
     contentType.value = inputSources[newVal]?.type as string;
     content.value = '';
   },

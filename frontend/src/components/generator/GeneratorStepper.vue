@@ -8,10 +8,8 @@ import { useGeneratorStore } from '@/stores/generator.ts';
 import { storeToRefs } from 'pinia';
 import Alert from '../ui/Alert.vue';
 
-
 const emit = defineEmits(['generate-requested', 'export-requested']);
 const duplicatesCount = ref(0);
-const hasDuplicates = ref(false);
 const generatorStore = useGeneratorStore();
 const steps = [ContentStep, DefinitionStep, AppearanceStep, ReviewStep];
 const { currentStep } = storeToRefs(generatorStore);
@@ -31,7 +29,6 @@ const buttonText = computed(() => {
 const canProceed = computed(() => {
   switch (currentStep.value) {
     case 2:
-      console.log(generatorStore.content);
       return generatorStore.content;
     case 3:
       return generatorStore.cards.length > 0;
@@ -44,7 +41,6 @@ function onNext() {
   switch (currentStep.value) {
     case 0:
       duplicatesCount.value = generatorStore.processContent();
-      hasDuplicates.value = duplicatesCount.value > 0;
       break;
     case 2:
       emit('generate-requested');
@@ -104,10 +100,11 @@ function onNext() {
       </div>
     </div>
     <Alert
-      v-model="hasDuplicates"
+      v-if="duplicatesCount > 0"
       intent="warning"
       title="Duplicate words detected"
       :content="`${duplicatesCount} duplicate words were removed from your list.`"
+      @close="duplicatesCount = 0"
     />
   </section>
 </template>

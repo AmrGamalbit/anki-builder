@@ -8,10 +8,12 @@ import { ref } from 'vue';
 import { fetchModels } from '@/api/models';
 import OptionGroup from '@/components/ui/OptionGroup.vue';
 import { storeToRefs } from 'pinia';
+import Alert from '@/components/ui/Alert.vue';
 
 const availableModels = ref<Record<string, OptionItem[]>>({});
 const generatorStore = useGeneratorStore();
 const { definitionOptions } = storeToRefs(generatorStore);
+const error = ref<string | null>();
 
 type ProviderKey = 'dictionary' | 'ai';
 const providers: Record<ProviderKey, OptionItem[]> = {
@@ -47,7 +49,13 @@ async function loadModels() {
     availableModels.value[provider.value] = await fetchModels(provider.value);
   }
 }
-onMounted(() => loadModels());
+onMounted(() => {
+  try {
+    loadModels();
+  } catch (e: any) {
+    error.value = e.message;
+  }
+});
 
 const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
   return {
@@ -124,5 +132,6 @@ const visibleDeckSchema = computed(() =>
         v-model="definitionOptions.cardFields"
       />
     </div>
+    <Alert v-if="error" intent="danger" :title="error" @close="error = null" />
   </section>
 </template>

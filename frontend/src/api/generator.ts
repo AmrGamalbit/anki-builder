@@ -14,7 +14,7 @@ export async function generateDeck() {
       ],
     definitionOptions: generatorStore.definitionOptions,
   };
-if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
+  if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
   generatorStore.isGenerating = true;
   const endpoint =
     generatorStore.definitionOptions.source == 'ai' ? '/ai/generate' : '/dictionary/lookup';
@@ -22,15 +22,17 @@ if (lastGenerationPayload === JSON.stringify(generationPayload)) return;
     ...generationPayload,
     appearanceOptions: generatorStore.appearanceOptions,
   };
-  console.log(payload)
-  const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     credentials: 'include',
   });
-  const r = await res.json();
-  console.log(r)
+  const r = await response.json();
+  if (!response.ok) {
+    console.log(r);
+    throw new Error('Generation failed. Please try again.');
+  }
   generatorStore.cards = r.data.map((card: CardData) => ({
     id: crypto.randomUUID(),
     term: card.term,
@@ -57,14 +59,15 @@ export async function triggerDownload() {
     tags: generatorStore.tags,
     data: generatorStore.cards.map(({ id, ...rest }) => rest),
   };
-  console.log(payload);
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/deck/export`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/deck/export`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  console.log(res);
-  const blob = await res.blob();
+  if (!response.ok) {
+    throw new Error('Export failed. Please try again.');
+  }
+  const blob = await response.blob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

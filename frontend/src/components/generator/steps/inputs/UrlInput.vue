@@ -6,6 +6,7 @@ import type { SchemaField } from '@/types/schema';
 import { extractWordsFromUrl } from '@/api/url';
 import type { UrlOptions } from '@/types/option';
 import TermSelector from '@/components/ui/TermSelector.vue';
+import Alert from '@/components/ui/Alert.vue';
 
 export interface ExtractedWord {
   text: string;
@@ -21,6 +22,7 @@ const url = ref('');
 const placeholder = computed(() => {
   return props.urlType == 'article' ? 'https://' : 'https://www.youtube.com/watch?v=...';
 });
+const error = ref<string | null>('');
 const isExtracting = ref(false);
 const terms = ref<Record<string, string>>({});
 const selectedTerms = ref<string[]>([]);
@@ -57,7 +59,12 @@ watchDebounced(
   async (newUrl) => {
     if (!newUrl || !props.urlType) return;
     isExtracting.value = true;
-    terms.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
+    try {
+      terms.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
+    } catch (e: any) {
+      console.log('error detected')
+      error.value = e.message;
+    }
     isExtracting.value = false;
   },
   { debounce: 1000 },
@@ -83,5 +90,6 @@ watchDebounced(
       </div>
     </div>
     <TermSelector v-model:terms="terms" v-model:selected="selectedTerms" :loading="isExtracting" />
+    <Alert v-if="error" intent="danger" :title="error" @close="error = null" />
   </section>
 </template>

@@ -7,9 +7,11 @@ import { ref, watch } from 'vue';
 import { extractWordsFromFile } from '@/api/file';
 import Modal from '@/components/ui/Modal.vue';
 import type { FileOptions } from '@/types/option';
+import Alert from '@/components/ui/Alert.vue';
 
 const content = defineModel<File | null>('content');
 const options = defineModel<FileOptions>('options');
+const error = ref<string | null>('');
 const showPreview = ref(false);
 const optionsSchema: Record<string, SchemaField> = {
   delimiter: {
@@ -30,7 +32,11 @@ const optionsSchema: Record<string, SchemaField> = {
 
 watch([content, options], async ([newContent, newOptions]) => {
   if (newContent instanceof File) {
-    content.value = await extractWordsFromFile(newContent, newOptions);
+    try {
+      content.value = await extractWordsFromFile(newContent, newOptions);
+    } catch (e: any) {
+      error.value = e.message;
+    }
   }
 });
 </script>
@@ -70,5 +76,6 @@ watch([content, options], async ([newContent, newOptions]) => {
         v-model="options[key as keyof typeof options]"
       />
     </div>
+    <Alert v-if="error" intent="danger" :title="error" @close="error = null" />
   </section>
 </template>
