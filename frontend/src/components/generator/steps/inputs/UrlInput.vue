@@ -39,15 +39,15 @@ const optionsSchema: Record<string, SchemaField> = {
       { label: 'C2', value: 'C2' },
     ],
   },
-  maxCards: {
-    label: 'Max Cards',
-    type: 'range',
-    props: { min: 1, max: 40, step: 1 },
-  },
-  includeIdioms: {
-    label: 'Include idioms',
-    type: 'boolean',
-  },
+  // maxCards: {
+  //   label: 'Max Cards',
+  //   type: 'range',
+  //   props: { min: 1, max: 40, step: 1 },
+  // },
+  // includeIdioms: {
+  //   label: 'Include idioms',
+  //   type: 'boolean',
+  // },
 };
 
 watch(selectedTerms, (words) => {
@@ -62,13 +62,20 @@ watchDebounced(
     try {
       terms.value = await extractWordsFromUrl(url.value, props.urlType, options.value);
     } catch (e: any) {
-      console.log('error detected')
+      console.log('error detected');
       error.value = e.message;
     }
     isExtracting.value = false;
   },
   { debounce: 1000 },
 );
+
+const filteredTerms = computed(() => {
+  const targetLevel = options.value.vocabularyLevel;
+  return Object.fromEntries(
+    Object.entries(terms.value).filter(([_, level]) => level.toLowerCase() == targetLevel),
+  );
+});
 </script>
 
 <template>
@@ -89,7 +96,7 @@ watchDebounced(
         />
       </div>
     </div>
-    <TermSelector v-model:terms="terms" v-model:selected="selectedTerms" :loading="isExtracting" />
+    <TermSelector v-model:terms="filteredTerms" v-model:selected="selectedTerms" :loading="isExtracting" />
     <Alert v-if="error" intent="danger" :title="error" @close="error = null" />
   </section>
 </template>
