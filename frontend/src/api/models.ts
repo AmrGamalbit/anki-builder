@@ -8,8 +8,10 @@ export async function fetchModels(provider: string): Promise<OptionItem[]> {
   });
   const r = await response.json();
   if (!response.ok) {
-    console.log(r)
-    throw new Error('Could not retrieve models for the selected provider. Please try again.');
-  }  
+    console.log(r);
+    throw new Error(
+      `Failed to retrieve models for ${provider}. Please verify your API key and try again.`,
+    );
+  }
   return r;
 }

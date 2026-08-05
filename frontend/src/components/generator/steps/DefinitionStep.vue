@@ -45,16 +45,21 @@ watch(isEnglish, (newIsEnglish) => {
   }
 });
 async function loadModels() {
+  const apiKeys = JSON.parse(localStorage.getItem('apikeys') ?? '{}')
   for (const provider of providers.ai) {
-    availableModels.value[provider.value] = await fetchModels(provider.value);
+    const savedKey = apiKeys[provider.value];
+    if (savedKey) {
+      console.log(provider);
+      try {
+        availableModels.value[provider.value] = await fetchModels(provider.value);
+      } catch (e: any) {
+        error.value = e.message;
+      }
+    }
   }
 }
 onMounted(() => {
-  try {
-    loadModels();
-  } catch (e: any) {
-    error.value = e.message;
-  }
+  loadModels()
 });
 
 const definitionOptionsSchema = computed<Record<string, SchemaField>>(() => {
