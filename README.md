@@ -119,6 +119,7 @@ npm install
 
 ```env
 SESSION_SECRET_KEY=your_secret_key_here
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
 Generate a secret key by running:
@@ -126,6 +127,8 @@ Generate a secret key by running:
 ```bash
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
+- `SESSION_SECRET_KEY` is used to secure user sessions.
+- `ALLOWED_ORIGINS` must match the URL where your frontend is running (for example `http://localhost:5173` during development or your deployed frontend URL in production).
 
 **Frontend** — create a `.env` file inside the `frontend` folder:
 
