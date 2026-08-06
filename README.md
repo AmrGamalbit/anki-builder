@@ -7,13 +7,26 @@
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![Coding Time](https://img.shields.io/badge/hackatime-181h%2050m-5b3758?style=flat-square&logo=clock&logoColor=white)
+![Coding Time](https://img.shields.io/badge/hackatime-184h%2038m-5b3758?style=flat-square&logo=clock&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square&logo=open-source-initiative&logoColor=white)
 
 A web app that turns your content into ready-to-use Anki flashcard decks — effortlessly.
 
 Provide words from any source, customize how they look, and export a `.apkg` file straight into Anki with definitions, pronunciations, and examples included.
 
+## How It Works
+
+| Step 1 | Step 2 |
+|--------|--------|
+| ![step1](assets/screenshots/step1.png)<br>Add your content using any supported source: paste text, upload a CSV, or enter a YouTube or article URL. | ![step2](assets/screenshots/step2.png)<br>Configure how definitions are generated: choose between AI or dictionary sources, set your language pair, and select which fields to include on each card. |
+
+| Step 3 | Step 4 |
+|--------|--------|
+| ![step3](assets/screenshots/step3.png)<br>Customize the appearance of your cards: font, colors, and text alignment. | ![step4](assets/screenshots/step4.png)<br>Review and edit the generated cards before exporting. Add, delete, or reorder cards as needed. |
+
+| Result |
+|--------|
+| ![result](assets/screenshots/result.png)<br>Export a ready-to-use .apkg file and import it directly into Anki. |
 
 ## Features
 
