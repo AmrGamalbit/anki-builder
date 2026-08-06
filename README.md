@@ -113,6 +113,28 @@ cd frontend
 npm install
 ```
 
+### 4. Configure environment variables
+
+**Backend** — create a `.env` file inside the `backend` folder:
+
+```env
+SESSION_SECRET_KEY=your_secret_key_here
+```
+
+Generate a secret key by running:
+
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+**Frontend** — create a `.env` file inside the `frontend` folder:
+
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+> Replace `http://localhost:8000` with your backend URL if running on a different host or port.
+
 ## Running the application
 
 Open **two terminals**.
