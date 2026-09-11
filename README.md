@@ -92,18 +92,11 @@ cd anki-builder
 
 ### 2. Set up the backend
 
+Make sure [uv](https://docs.astral.sh/uv/getting-started/installation/) is installed, then:
+
 ```bash
 cd backend
-
-python -m venv venv
-
-# Linux/macOS
-source venv/bin/activate
-
-# Windows
-venv\Scripts\activate
-
-pip install -r requirements.txt
+uv sync
 ```
 
 ### 3. Set up the frontend
@@ -146,14 +139,7 @@ Open **two terminals**.
 
 ```bash
 cd backend
-
-# Linux/macOS
-source venv/bin/activate
-
-# Windows
-venv\Scripts\activate
-
-uvicorn main:app --reload
+uv run uvicorn main:app --reload
 ```
 
 The backend will run at:
