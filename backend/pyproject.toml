@@ -45,7 +45,7 @@ dependencies = [
     "en-core-web-sm",
     "et-xmlfile==2.0.0",
     "executing==2.2.1",
-    "fastapi==0.129.0",
+    "fastapi[standard]==0.129.0",
     "fastjsonschema==2.21.2",
     "feedfinder2==0.0.4",
     "feedparser==6.0.12",
